@@ -13,7 +13,7 @@ const HospitalAdmin = () => {
       try {
         alert(hospitalId);
         const token=localStorage.getItem("token");
-        console.log(adminId);
+        console.log(adminId); 
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/api/department/getAllDepartmentsByHospitalId/${hospitalId}/${adminId }`,
           {
