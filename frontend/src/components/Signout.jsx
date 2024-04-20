@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-
+import {useAuth} from "./AuthContext";
 const SignOut = () => {
     const navigate = useNavigate();
-
+   const {logout}=useAuth();
     useEffect(() => {
         const signOut = () => {
             if(localStorage.getItem("username")) {
@@ -12,6 +12,7 @@ const SignOut = () => {
                     duration: 2000,
                     position: 'top-center', 
                 });
+                logout();
                 localStorage.removeItem("username");
                 localStorage.removeItem("id");
                 localStorage.removeItem("token");

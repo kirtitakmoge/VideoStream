@@ -1,0 +1,54 @@
+// Hospital Admin 
+//admin2.js
+
+only admin can fetch
+Fetching Departments:
+`${process.env.REACT_APP_API_URL}/api/department/getAllDepartmentsByHospitalId/${hospitalId}/${adminId}`
+Method: GET
+
+
+
+Fetching Hospital Name:
+`${process.env.REACT_APP_API_URL}/api/hospital/getHospitalById/${adminId}/${hospitalId}`
+Method: GET
+
+
+Hospital Dashboard
+
+done 
+
+
+
+
+Here are the API calls made in your CameraMediaPage component along with the corresponding HTTP methods:
+CameraMediaPage.js
+
+//this is in Hospital admin for bucket data to see ,share and delete from wasabi bucket
+Fetching Camera Media:
+`${process.env.REACT_APP_API_URL}/api/bucket/device/getObjectFromBucket/${cameraId}/`
+Method: GET
+
+Sharing Media:
+`${process.env.REACT_APP_API_URL}/api/patientcontent/createpatientContents`
+Method: POST
+
+
+Deleting Media:
+`${process.env.REACT_APP_API_URL}/api/bucket/device/deleteObjectFromBucket/${adminId}`
+Method: DELETE
+
+done
+
+
+In your DepartmentForm component, there's one API call for fetching hospitals and another for creating a department. Here are the details:
+//this compoenent is used for creating department from  dropdown hospital
+Fetching Hospitals:
+`${process.env.REACT_APP_API_URL}/api/hospital/getAllHospitals`
+Method: GET
+This call fetches all hospitals available in your system.
+
+
+Creating Department:
+`${process.env.REACT_APP_API_URL}/api/department/createDepartment`
+Method: POST
+This call creates a new department. It sends a JSON object in the request body containing the department name and the selected hospital ID.

@@ -50,6 +50,7 @@ const RegistrationForm = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            
           },
         });
         if (response.ok) {
@@ -66,11 +67,13 @@ const RegistrationForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log(formData);
+    const token=localStorage.getItem("item");
     try {
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/signup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(formData),
       });

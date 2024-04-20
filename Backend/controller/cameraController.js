@@ -7,7 +7,7 @@ exports.createCamera = async (req, res) => {
         
         // Attempt to save the camera document
         const savedCamera = await camera.save();
-        
+        console.log(savedCamera);
         // Return the saved camera in the response
         return res.status(201).json({ savedCamera });
     } catch (error) {

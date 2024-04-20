@@ -19,7 +19,7 @@ const checkHospitalAdminAuthorization = async (req, res, next) => {
         const hospitalId = req.params.hospitalId;
 
         // Check if the authenticated admin has authority for the requested hospital
-        if (admin.hospitalID &&admin.hospitalId.toString() === hospitalId) {
+        if (admin.hospitalId.toString() === hospitalId) {
             next();
         } else {
             return res.status(403).json({ error: "You are not authorized to access this hospital" });

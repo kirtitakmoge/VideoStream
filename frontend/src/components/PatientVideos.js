@@ -7,7 +7,14 @@ const PatientVideos = () => {
     const fetchVideos = async () => {
       try {
         const patientId = localStorage.getItem("id");
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/PatientContent/patientcontents/${patientId}`);
+        const token=localStorage.getItem("token");
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/PatientContent/patientcontents/${patientId}`, {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+               "Authorization": `Bearer ${token}` // Include the token in the Authorization header
+          },
+      });
         if (response.ok) {
           const data = await response.json();
           console.log(data);

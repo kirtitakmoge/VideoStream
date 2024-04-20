@@ -6,7 +6,8 @@ const DepartmentForm = () => {
     hospitalId: '',
   });
   const [hospitals, setHospitals] = useState([]);
-
+  const adminId=localStorage.getItem("id");
+const token=localStorage.getItem("token");
   useEffect(() => {
     const fetchHospitals = async () => {
       try {
@@ -14,8 +15,10 @@ const DepartmentForm = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           },
         });
+       
         if (response.ok) {
           const userData = await response.json();
           setHospitals(userData);
@@ -34,10 +37,11 @@ const DepartmentForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/department/createDepartment`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/department/createDepartment/${adminId}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify(formData),
       });

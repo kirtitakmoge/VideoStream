@@ -19,6 +19,7 @@ const isAdmin1= async (req, res, next) => {
 
         // Check if the user's role is "Hospital Admin"
         if (user.role === "Hospital Admin") {
+            console.log("yes he is hospital admin")
             next();
         } else {
             return res.status(403).json({ error: "You are not a hospital admin" });

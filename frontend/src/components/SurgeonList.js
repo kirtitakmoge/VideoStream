@@ -14,9 +14,15 @@ const SurgeonList = () => {
   }, []);
 
   const fetchSurgeons = async () => {
-    
+    const token=localStorage.getItem("token");
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/getUsersByDepartmentId/${departmentId}`)
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/getUsersByDepartmentId/${departmentId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+             "Authorization": `Bearer ${token}` // Include the token in the Authorization header
+        },
+    });
       if (!response.ok) {
         throw new Error('Failed to fetch surgeons');
       }

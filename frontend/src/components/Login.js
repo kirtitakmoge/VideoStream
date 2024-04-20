@@ -1,14 +1,14 @@
-// Login.js
-
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
+import { useAuth } from "./AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [userType, setUserType] = useState("patient");
   const navigate = useNavigate();
+  const { login } = useAuth(); // Use useAuth directly within the component body
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,12 +35,13 @@ const Login = () => {
           duration: 2000,
           position: "top-center",
         });
+        login();
         localStorage.setItem("username", userData.user.firstname);
         localStorage.setItem("id", userData.user._id);
         localStorage.setItem("token", userData.token);
         setPassword("");
         setEmail("");
-        console.log(userData.user)
+        console.log(userData.user);
         if (userData.user.role === "Hospital Admin") {
           navigate(`/hospitalAdmin/${userData.user.hospitalId}`);
         } else if (
@@ -53,14 +54,14 @@ const Login = () => {
           navigate(`/notactive/${userData.user.firstname}`);
         } else if (userType === "patient") {
           navigate("/patient");
-        } }
-      else {
+        }
+      } else {
         toast.error(`Login Failed or invalid email`, {
           duration: 2000,
           position: "top-center",
         });
-      }}
-     catch (error) {
+      }
+    } catch (error) {
       console.error("An error occurred during login:", error.message);
     }
   };
@@ -77,9 +78,6 @@ const Login = () => {
             >
               Email
             </label>
-           -
-
-           
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="email"

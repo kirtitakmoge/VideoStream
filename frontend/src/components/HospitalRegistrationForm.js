@@ -15,14 +15,17 @@ const HospitalRegistrationForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      const token=localStorage.getItem("token");
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/hospital/createHospital`, {
           method: 'Post',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify(formData)
         });
-    
+       
+      
         if (response.ok) {
           toast.success(`Hospital Registered succesfully`, {
             duration: 2000,

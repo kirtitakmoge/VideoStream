@@ -5,7 +5,7 @@ const SurgeonData = ({ selectedUser, handleChangeFlag, onDelete, onUpdate }) => 
   const [isActive, setIsActive] = useState(selectedUser.active);
   const [isBucketActive, setIsBucketActive] = useState(selectedUser.bucketActive);
   const [isCameraActive, setIsCameraActive] = useState(selectedUser.cameraActive);
-
+const token=localStorage.getItem("token");
   useEffect(() => {
     setUser(selectedUser);
    
@@ -22,10 +22,12 @@ const SurgeonData = ({ selectedUser, handleChangeFlag, onDelete, onUpdate }) => 
       const response = await fetch( `${process.env.REACT_APP_API_URL}/api/users/updateUserActiveStatus/${selectedUser._id}/activate`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({  bucketActive: isBucketActive, cameraActive: isCameraActive })
       });
+      
       if (!response.ok) {
         throw new Error('Failed to update user active status');
       }

@@ -13,7 +13,14 @@ const CameraList = ({  }) => {
   useEffect(() => {
     async function fetchCameras() {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/camera/getCamerasByDepartmentId/${departmentId}`);
+        const token=localStorage.getItem("token");
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/camera/getCamerasByDepartmentId/${departmentId}`, {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+               "Authorization": `Bearer ${token}` // Include the token in the Authorization header
+          },
+      });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }

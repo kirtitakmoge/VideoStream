@@ -10,8 +10,15 @@ const navigate=useNavigate();
 
   useEffect(() => {
     async function fetchCameras() {
+      const token=localStorage.getItem("token");
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/camera/getCamerasByDepartmentId/${departmentId}`);
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/camera/getCamerasByDepartmentId/${departmentId}`, {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+               "Authorization": `Bearer ${token}` // Include the token in the Authorization header
+          },
+        });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
