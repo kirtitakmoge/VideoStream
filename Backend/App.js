@@ -18,6 +18,16 @@ const PORT = 8081;
 const winston = require('winston');
 const patientContentRoutes = require('./routes/patientContentRoutes');
 const patientRoutes=require("./routes/patientRoutes");
+const dotenv = require('dotenv');
+const result = dotenv.config();
+
+/*if (result.error) {
+    console.error('Error loading .env file:', result.error);
+} else {
+    console.log('Environment variables loaded successfully:', result.parsed);
+}*/
+
+
 // Initialize logger
 const logger = winston.createLogger({
     level: 'info',

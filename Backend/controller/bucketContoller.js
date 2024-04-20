@@ -2,17 +2,17 @@ const { isValidObjectId } = require("mongoose");
 const Camera=require("../models/Camera"); // Assuming you have a Camera model defined
 
 const AWS = require('aws-sdk');
-const ENDPOINT = new AWS.Endpoint('s3.wasabisys.com');
+const ENDPOINT = new AWS.Endpoint('s3.wasabisys.com');/*
 const REGION = 'us-east-1'; // Adjust the region if necessary
 const ACCESS_KEY ='BSQNQEBMHJYFDGD7436X';
-const SECRET_ACCESS_KEY = 'CK5beQ9OzoCMFMenVH5q7NVLDSp7hdVsbQHDVyRo';
+const SECRET_ACCESS_KEY = 'CK5beQ9OzoCMFMenVH5q7NVLDSp7hdVsbQHDVyRo';*/
 
 // Configure AWS SDK with your credentials
 const s3 = new AWS.S3({
     endpoint: ENDPOINT,
-  accessKeyId: ACCESS_KEY,
-  secretAccessKey:SECRET_ACCESS_KEY,
-  region: REGION
+  accessKeyId:process.env.ACCESS_KEY,
+  secretAccessKey:process.env.SECRET_ACCESS_KEY,
+  region: process.env.REGION
   
 });
 // Controller function

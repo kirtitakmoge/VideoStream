@@ -1,7 +1,7 @@
 
 
 const mongoose = require('mongoose');
-
+var a = 'mongodb://127.0.0.1:27017/my_database';
 
 // Connection URI
 const uri = 'mongodb://127.0.0.1:27017';
@@ -54,7 +54,7 @@ const roleData1= [{
 
 /// Function to create roles in the specified database
 async function createRoles() {try {
-  await mongoose.connect('mongodb://127.0.0.1:27017/my_database', {
+  await mongoose.connect(process.env.DATABASE_CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     //useCreateIndex: true, // Optionally add this if you encounter deprecation warnings

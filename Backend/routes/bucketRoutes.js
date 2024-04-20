@@ -5,6 +5,6 @@ const router = express.Router();
 const bucketController = require('../controller/bucketContoller');
 
 // Define routes
-router.get('/device/:cameraId', bucketController.getBucketData);
-router.delete("/device/deleteObjectFromBucket/",bucketController.deleteObjectFromBucket);
+router.get('/device/:cameraId/', bucketController.getBucketData);
+router.delete("/device/deleteObjectFromBucket/:adminId",bucketController.deleteObjectFromBucket);
 module.exports = router;
