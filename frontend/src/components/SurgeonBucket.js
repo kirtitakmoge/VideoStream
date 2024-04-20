@@ -9,13 +9,19 @@ const SurgeonBucket = () => {
   const [userId, setUserId] = useState("");
   const [input, setInput] = useState(false);
   const[selectmedia,setSelectedmedia]=useState();
-
+ const token=localStorage.getItem("token");
   useEffect(() => {
     async function fetchData() {
       try {
         const photosResponse = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/bucket/device/${cameraId}`
-        );
+          `${process.env.REACT_APP_API_URL}/api/bucket/device/getObjectFromBucket/${cameraId}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
+            },
+          });
+        
 
         if (!photosResponse.ok) {
           throw new Error("Network response was not ok");
@@ -41,7 +47,7 @@ const SurgeonBucket = () => {
     try {
       const token=localStorage.getItem("token");
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/patientcontent/patientContents`,
+        `${process.env.REACT_APP_API_URL}/api/patientcontent/createpatientContents`,
         {
           method: "POST",
           headers: {

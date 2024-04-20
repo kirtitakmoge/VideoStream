@@ -39,6 +39,7 @@ const Login = () => {
         localStorage.setItem("username", userData.user.firstname);
         localStorage.setItem("id", userData.user._id);
         localStorage.setItem("token", userData.token);
+        localStorage.setItem("isLoggedIn", true);
         setPassword("");
         setEmail("");
         console.log(userData.user);

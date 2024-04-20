@@ -7,7 +7,7 @@ const HospitalRegistrationForm = () => {
     phoneNumber: '',
     location: ''
   });
-
+ const id=localStorage.getItem("id");
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };

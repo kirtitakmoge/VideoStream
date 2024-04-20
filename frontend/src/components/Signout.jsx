@@ -16,6 +16,8 @@ const SignOut = () => {
                 localStorage.removeItem("username");
                 localStorage.removeItem("id");
                 localStorage.removeItem("token");
+                localStorage.removeItem("isLoggedIn", true);
+                alert(localStorage.getItem("id"));
             } else {
                 toast.success(`Already Logged Out`, {
                     duration: 2000,
