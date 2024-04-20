@@ -57,7 +57,7 @@ app.get('/protected', verifyToken, (req, res) => {
 
 // Routes
 app.use('/api/users', userRoutes);
-app.use("/api/video", videoRoutes);
+app.use("/api/video", videoRoutes);   
 app.use("/api/public", publicRoutes);
 app.use("/api/hospital", hospitalRoutes);
 app.use("/api/superAdminPlan", subscriptionPlanRoutes);
