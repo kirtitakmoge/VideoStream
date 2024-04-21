@@ -10,7 +10,7 @@ const HospitalAdmin = () => {
   const { hospitalId } = useParams();
   const [HospitalName, setHospitalName] = useState("");
   const token=localStorage.getItem("token");
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn } = useAuth(); 
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
