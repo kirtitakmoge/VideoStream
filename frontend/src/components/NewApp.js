@@ -36,10 +36,11 @@ import PatientVideos from "./PatientVideos";
 import DeviceList from "./DeviceList";
 import HospitalAdmin from "./Admin2";
 import PatientUpdate from "./PatientUpdate";
-
+import CreateSubScriptionPlan from "./CreateSubScriptionPlan";
 import { useAuth } from "./AuthContext";
 
 import { useEffect } from "react";
+import SuperAdminDashboard from "./SuperAdminDashboard";
 
 const NewApp = () => {
   return (
@@ -108,156 +109,65 @@ const NewApp = () => {
             <Route path="/signup" element={<Register />} />
             <Route path="/home" element={<Home />} />
 
-            <Route
-              path="/profileupdate"
-              element={
-                localStorage.getItem("id") ? (
-                  <ProfileUpdate />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
+            <Route path="/profileupdate" element={<ProfileUpdate />} />
 
             <Route path="/signout" element={<SignOut />} />
             <Route path="/registration" element={<RegistrationPage />} />
-            <Route
-              path="/showvideo"
-              element={
-                localStorage.getItem("id") ? (
-                  <ShowVideo />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
+            <Route path="/showvideo" />
             <Route
               path="/subscriptionPlan"
-              element={
-                localStorage.getItem("id") ? (
-                  <SubscriptionPlanPage />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
+              element={<SubscriptionPlanPage />}
             />
             <Route
               path="/subscription/:id"
-              element={
-                localStorage.getItem("id") ? (
-                  <SubscriptionDetailsPage />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
+              element={<SubscriptionDetailsPage />}
             />
             <Route
               path="/hospitalRegistration"
-              element={
-                localStorage.getItem("id")==null ? (
-                  <HospitalRegistrationForm />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
+              element={<HospitalRegistrationForm />}
             />
             <Route
               path="/surgeonDashboard/:departmentId"
-              element={
-                localStorage.getItem("id") ? (
-                  <SurgeonDashBoard />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
+              element={<SurgeonDashBoard />}
             />
             <Route
               path="/surgeonList/:departmentId"
-              element={
-                localStorage.getItem("id") ? (
-                  <SurgeonList />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
+              element={<SurgeonList />}
             />
-            <Route
-              path="/cameralist/:departmentId"
-              element={
-                localStorage.getItem("id") ? (
-                  <CameraList />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
-            <Route
-              path="/deviceList/:departmentId"
-              element={
-                localStorage.getItem("id") ? (
-                  <DeviceList />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
+            <Route path="/cameralist/:departmentId" element={<CameraList />} />
+            <Route path="/deviceList/:departmentId" element={<DeviceList />} />
             <Route
               path="/deviceListadmin/:departmentId"
-              element={
-                localStorage.getItem("id") ? (
-                  <DeviceListAdmin />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
+              element={<DeviceListAdmin />}
             />
             <Route
               path="/department-details/:departmentId"
-              element={
-                localStorage.getItem("id") ? (
-                  <DepartmentDetails />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
+              element={<DepartmentDetails />}
             />
-            <Route
-              path="/showvideo/:departmentId"
-              element={
-                localStorage.getItem("id") ? (
-                  <ShowVideo />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
-            />
+            <Route path="/showvideo/:departmentId" element={<ShowVideo />} />
             <Route
               path="/createCamera/:departmentId"
-              element={
-                localStorage.getItem("id") ? (
-                  <CameraForm />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
+              element={<CameraForm />}
             />
 
             <Route path="notactive/:name" element={<MessageComponent />} />
             <Route
               path="/hospitalAdmin/:hospitalId"
-              element={
-                localStorage.getItem("id")==null ? (
-                  <HospitalAdmin />
-                ) : (
-                  <Navigate to="/login" />
-                )
-              }
+              element={<HospitalAdmin />}
             />
             <Route path="/device/:cameraId" element={<CameraMediaPage />} />
             <Route path="/signupPatient" element={<PatientRegistration />} />
             <Route path="/patient" element={<PatientDashboard />} />
             <Route path="/patientvideos" element={<PatientVideos />} />
             <Route path="/device" element={<DeviceList />} />
+            <Route
+              path="/createSubscriptionPlan"
+              element={<CreateSubScriptionPlan />}
+            />
+            <Route
+              path="/superAdminDashboard"
+              element={<SuperAdminDashboard />}
+            />
             <Route
               path="/surgeonBucket/:cameraId"
               element={<SurgeonBucket />}

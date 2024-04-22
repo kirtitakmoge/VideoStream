@@ -21,7 +21,8 @@ router.delete('/deleteDepartmentById/:departmentId', departmentController.delete
 
 // Only hospital admin can create department in hospital
 router.post('/createDepartment/:adminId',verifyToken,isAdmin1, departmentController.createDepartment);
-
+//route to all
+router.get('/getAllDepartmentsByHospitalId/:hospitalId',departmentController.getAllDepartmentsByHospitalId);
 //hospital Admin to get all department from given hospitalId(checked)
 router.get('/getAllDepartmentsByHospitalId/:hospitalId/:adminId',verifyToken,isAdmin1,departmentController.getAllDepartmentsByHospitalId);
 module.exports = router;

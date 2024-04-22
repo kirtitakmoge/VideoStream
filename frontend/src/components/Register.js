@@ -31,9 +31,17 @@ const RegistrationForm = () => {
         if (response.ok) {
           const userData = await response.json();
           setHospitals(userData);
+          toast.success(`Welcome ${userData.user.firstname}`, {
+            duration: 2000,
+            position: "top-center",
+          });
         }
       } catch (error) {
         console.error('Error fetching hospitals:', error);
+        toast.error(`Failed Registration`, {
+          duration: 2000,
+          position: "top-center",
+        });
       }
     };
     fetchHospitals();
@@ -108,9 +116,9 @@ const RegistrationForm = () => {
   };
 
   return (
-    <div className="container mt-0 mx-auto">
+    <div className="container mt-2 mx-auto">
       <div className="max-w-md mx-auto  p-6 bg-white shadow-lg rounded-lg">
-        <h2 className="text-xl font-bold mb-4 text-center">User Registration</h2>
+        <h2 className="text-xl font-bold m2-4 text-center">User Registration</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="firstname" className="block font-medium">First Name</label>

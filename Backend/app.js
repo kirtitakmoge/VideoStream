@@ -49,7 +49,10 @@ app.use(cors());
 app.use(express.json());
 
 createRole();
-
+app.get("/public",(req,res)=>
+{
+    res.status(200).json("Welcome to streaming app");
+})
 // Protected route that requires authentication
 app.get('/protected', verifyToken, (req, res) => {
     res.json({ message: 'Protected route accessed successfully', user: req.user });
@@ -75,10 +78,7 @@ app.use((err, req, res, next) => {
     // Send an error response
     res.status(500).json({ error: 'Internal Server Error' });
 });
-app.get("/public",(req,res)=>
-{
-    res.status(200).json("Welcome to streaming app");
-})
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });

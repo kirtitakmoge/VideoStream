@@ -69,9 +69,7 @@ const HospitalAdmin = () => {
 
   return (
     <div className="container mx-auto mt-10">
-       <div>
-      {isLoggedIn ? <p>User is logged in</p> : <p>User is not logged in</p>}
-    </div>
+       
       <h1 className="text-center text-2xl font-bold mb-4">
         Welcome to {HospitalName}'s Dashboard
       </h1>

@@ -43,8 +43,8 @@ const HospitalRegistrationForm = () => {
           console.error('Validation Error:', errorMessage);
         }
       } catch (error) {
-        console.error('Error updating profile:', error);
-        toast.error(`Profile updation unsuccessfull `, {
+        console.error('Failed Hospital Registration :', error);
+        toast.error(`Failed Hospital Registration`, {
           duration: 2000,
           position: "top-center",
         });
@@ -56,7 +56,7 @@ const HospitalRegistrationForm = () => {
   };
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto mt-2 p-6">
       <div className="max-w-md mx-auto bg-white shadow-md rounded px-8 py-6">
         <h2 className="text-2xl font-bold mb-4 text-center">Hospital Registration</h2>
         <form onSubmit={handleSubmit}>

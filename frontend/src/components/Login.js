@@ -43,6 +43,8 @@ const Login = () => {
         setPassword("");
         setEmail("");
         console.log(userData.user);
+        if(userData.user.role === "Super Admin")
+        navigate(`/superAdminDashboard`);
         if (userData.user.role === "Hospital Admin") {
           navigate(`/hospitalAdmin/${userData.user.hospitalId}`);
         } else if (
