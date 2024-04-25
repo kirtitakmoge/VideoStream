@@ -4,15 +4,16 @@ import {toast} from "react-hot-toast"
 const CameraForm = () => {
   const [departments, setDepartments] = useState([]);
   const {departmentId}=useParams();
-  
-  const [formData, setFormData] = useState({
+  const reset={
     Specialization: '',
     ipAddress: '',
     deviceId: '',
     streamKey: '',
     departmentId:departmentId,
     link: ''
-  });
+  }
+  const [formData, setFormData] = useState(reset);
+  
 
     const adminId=localStorage.getItem("id");
     // Fetch departments when component mounts
@@ -36,6 +37,7 @@ const CameraForm = () => {
           duration: 2000,
           position: "top-center",
         });
+        setFormData(reset);
         console.log("Camera created successfully!");
       } else {
         // Handle non-successful responses (status codes other than 2xx)
@@ -45,6 +47,7 @@ const CameraForm = () => {
           duration: 2000,
           position: "top-center",
         });
+        setFormData(reset);
       }
     } catch (error) {
       console.error('Error creating camera:', error);

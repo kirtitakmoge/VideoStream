@@ -9,12 +9,12 @@ const HospitalGallery = () => {
             <Link
               to={`/department-details/${department.departmentId}`}
               className="bg-gray-100 block p-4 rounded-md hover:bg-gray-200"
-            >
+            > </Link>
               <h2 className="text-2xl font-bold mb-4">
                 {" "}
                 {department.department_name}
               </h2>
-            </Link>
+           
           </div>
         ))}
       </div>

@@ -32,4 +32,6 @@ router.put("/super/updateRoleById/:superAdminId/:surgeonId",verifyToken,requireS
 router.get("/super/all-User",requireSuperAdmin,userController.getAllUser);
 router.get("/getUsersByDepartmentId/:departmentId",userController.getUsersByDepartmentId);
 router.put('/updateUserActiveStatus/:id/activate',verifyToken, userController.updateUserActiveStatus);
+router.get("/getHospitalAdminByHospitalId/:hospitalId/:superAdminId",verifyToken,requireSuperAdmin,userController.geHospitalAdminByHospitalId);
+router.put("/updateHospitalAdminActiveStatus/:superAdminId/activate",verifyToken,requireSuperAdmin,userController.updateHospitalAdminActiveStatus);
 module.exports = router;

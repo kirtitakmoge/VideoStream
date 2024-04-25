@@ -1,5 +1,3 @@
-// RegistrationForm.js
-
 import React, { useState, useEffect } from 'react';
 import { toast } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
@@ -12,58 +10,28 @@ const RegistrationForm = () => {
     password: '',
     hospitalId: '',
     mobile_no: '',
-    departmentId: '', // New state for department
+    departmentId: null,
+    role: 'Surgeon', // Default role for surgeons
   };
   const navigate = useNavigate();
-  const [hospitals, setHospitals] = useState([]);
-  const [departments, setDepartments] = useState([]); // State for departments
+  const [departments, setDepartments] = useState([]);
   const [formData, setFormData] = useState(reset);
-
-  useEffect(() => {
-    const fetchHospitals = async () => {
-      try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/hospital/getAllHospitals`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (response.ok) {
-          const userData = await response.json();
-          setHospitals(userData);
-          toast.success(`Welcome ${userData.user.firstname}`, {
-            duration: 2000,
-            position: "top-center",
-          });
-        }
-      } catch (error) {
-        console.error('Error fetching hospitals:', error);
-        toast.error(`Failed Registration`, {
-          duration: 2000,
-          position: "top-center",
-        });
-      }
-    };
-    fetchHospitals();
-  }, []);
 
   const handleChange = async (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
-    if (name === 'hospitalId') {
+    if (name === 'hospitalId' && value.length === 24) {
       try {
-        console.log("fetching department");
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/department/getAllDepartmentsByHospitalId/${value}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            
           },
+          
         });
         if (response.ok) {
           const departmentsData = await response.json();
-          console.log(departmentsData.departments);
           setDepartments(departmentsData.departments);
         }
       } catch (error) {
@@ -90,14 +58,14 @@ const RegistrationForm = () => {
         localStorage.setItem("username", userData.user.firstname);
         localStorage.setItem("id", userData.user._id);
         localStorage.setItem("token", userData.token);
-        toast.success(` Welcome  ${userData.user.firstname}`, {
+        toast.success(`Thank you For Registration...`, {
           duration: 2000,
           position: "top-center",
         });
-        if(userData.user.active==false)
-        navigate(`/notactive/${userData.user.firstname}`);
+        if(userData.user.active === false) {
+          navigate(`/notactive/${userData.user.firstname}`);
+        }
         setFormData(reset);
-
       } else {
         const errorMessage = await response.text();
         console.log(errorMessage)
@@ -105,6 +73,7 @@ const RegistrationForm = () => {
           duration: 2000,
           position: "top-center",
         });
+        setFormData(reset);
       }
     } catch (error) {
       console.error('Error signing up:', error.message);
@@ -116,9 +85,9 @@ const RegistrationForm = () => {
   };
 
   return (
-    <div className="container mt-2 mx-auto">
+    <div className="container  mx-auto">
       <div className="max-w-md mx-auto  p-6 bg-white shadow-lg rounded-lg">
-        <h2 className="text-xl font-bold m2-4 text-center">User Registration</h2>
+        <h2 className="text-xl font-bold  text-center">User Registration</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="firstname" className="block font-medium">First Name</label>
@@ -137,14 +106,10 @@ const RegistrationForm = () => {
             <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500" />
           </div>
           <div className="mb-4">
-            <label htmlFor="hospitalId" className="block font-medium">Hospital</label>
-            <select id="hospitalId" name="hospitalId" value={formData.hospitalId} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500">
-              <option value="">Select Hospital</option>
-              {hospitals.map(hospital => (
-                <option key={hospital._id} value={hospital._id}>{hospital.Hospital_Name}</option>
-              ))}
-            </select>
+            <label htmlFor="hospitalId" className="block font-medium">Hospital ID</label>
+            <input type="text" id="hospitalId" name="hospitalId" value={formData.hospitalId} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500" />
           </div>
+          
           <div className="mb-4">
             <label htmlFor="departmentId" className="block font-medium">Department</label>
             <select id="departmentId" name="departmentId" value={formData.departmentId} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500">

@@ -11,8 +11,9 @@ const DepartmentGallery = ({ departments }) => {
               className="bg-gray-100 block p-4 rounded-md hover:bg-gray-200"
             >
               <h2 className="text-2xl font-bold mb-4">
-                {" "}
+                {""}
                 {department.department_name}
+                
               </h2>
             </Link>
           </div>
@@ -21,10 +22,11 @@ const DepartmentGallery = ({ departments }) => {
       <div className="grid m-6 ml-6 grid-cols-3 gap-4 ">
         <div className=" col-span-1 shadow-md">
           <Link
-            to={`/createDepartment`}
+            to={`/createDepartment/`}
             className="bg-gray-100 block p-4 rounded-md hover:bg-gray-200"
           >
             <h2 className="text-2xl font-bold mb-4">Add New Department</h2>
+        
           </Link>
         </div>
       </div>

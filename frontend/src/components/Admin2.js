@@ -15,7 +15,7 @@ const HospitalAdmin = () => {
     const fetchDepartments = async () => {
       try {
         
-       
+       console.log(hospitalId);
         console.log(adminId); 
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/api/department/getAllDepartmentsByHospitalId/${hospitalId}/${adminId }`,

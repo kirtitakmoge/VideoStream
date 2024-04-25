@@ -100,7 +100,8 @@ exports. deleteDepartmentById = async (req, res) => {
 
 //By HospitalId
 exports.getAllDepartmentsByHospitalId = async (req, res) => {
-    try {console.log("indepartment");
+    try {
+        console.log("indepartment");
         const hospitalId = req.params.hospitalId;
         console.log(hospitalId);
         const departments = await Department.find({ hospitalId });

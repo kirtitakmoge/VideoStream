@@ -4,11 +4,9 @@ import {
   Routes,
   Route,
   Link,
-  Navigate,
 } from "react-router-dom";
-import { AuthProvider } from "./AuthContext";
-import PrivateRoute from "./PrivateRoute";
-
+import { useAuth } from "./AuthContext"; // Import the useAuth hook
+import Navbar from "./Navbar";
 import Home from "./Home";
 import Login from "./Login";
 import Register from "./Register";
@@ -26,7 +24,6 @@ import CameraForm from "./CameraForm";
 import MessageComponent from "./MessageComponent";
 import DeviceListAdmin from "./DeviceListAdmin";
 import DepartmentDetails from "./DepartmentDetails";
-import Navbar from "./Navbar";
 import SurgeonBucket from "./SurgeonBucket";
 import SurgeonDashBoard from "./SurgeonDashBoard";
 import CameraMediaPage from "./CameraMediaPage";
@@ -37,12 +34,14 @@ import DeviceList from "./DeviceList";
 import HospitalAdmin from "./Admin2";
 import PatientUpdate from "./PatientUpdate";
 import CreateSubScriptionPlan from "./CreateSubScriptionPlan";
-import { useAuth } from "./AuthContext";
-
-import { useEffect } from "react";
 import SuperAdminDashboard from "./SuperAdminDashboard";
+import AllHospitals from "./AllHospital";
+import HospitalAdminData from "./HospitalAdminData";
+import LeftNavBar from "./leftNavBar";
 
 const NewApp = () => {
+  const { user } = useAuth(); // Get the user object from the AuthContext
+ 
   return (
     <Router>
       <div className="flex">
@@ -58,121 +57,46 @@ const NewApp = () => {
             <p className="text-white text-lg font-semibold">Taurean Surgical</p>
           </div>
           {/* Navigation Links */}
-          <ul className="py-4 flex flex-col items-start">
-            <li className="my-2">
-              <Link to="/login" className="text-white hover:text-gray-300">
-                Login
-              </Link>
-            </li>
-            <li className="my-2">
-              <Link to="/signup" className="text-white hover:text-gray-300">
-                SignUp
-              </Link>
-            </li>
-            <li className="my-2">
-              <Link
-                to="/hospitalRegistration"
-                className="text-white hover:text-gray-300"
-              >
-                Hospital Registration
-              </Link>
-            </li>
-            <li className="my-2">
-              <Link
-                to="/profileupdate"
-                className="text-white hover:text-gray-300"
-              >
-                Profile Update
-              </Link>
-            </li>
-            <li className="my-2">
-              <Link to="/signout" className="text-white hover:text-gray-300">
-                Sign Out
-              </Link>
-            </li>
-            <li className="my-2">
-              <Link
-                to="/subscriptionPlan"
-                className="text-white hover:text-gray-300"
-              >
-                Subscription Plan
-              </Link>
-            </li>
-          </ul>
+        <LeftNavBar userType={user}/>
         </div>
         {/* Content */}
         <div className="w-full content flex flex-col">
-          <Navbar />
+          <Navbar/>
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/login" element={<Login />} />
+            <Route path="/login/:userType" element={<Login />} />
             <Route path="/signup" element={<Register />} />
             <Route path="/home" element={<Home />} />
-
             <Route path="/profileupdate" element={<ProfileUpdate />} />
-
             <Route path="/signout" element={<SignOut />} />
-            <Route path="/registration" element={<RegistrationPage />} />
-            <Route path="/showvideo" />
-            <Route
-              path="/subscriptionPlan"
-              element={<SubscriptionPlanPage />}
-            />
-            <Route
-              path="/subscription/:id"
-              element={<SubscriptionDetailsPage />}
-            />
-            <Route
-              path="/hospitalRegistration"
-              element={<HospitalRegistrationForm />}
-            />
-            <Route
-              path="/surgeonDashboard/:departmentId"
-              element={<SurgeonDashBoard />}
-            />
-            <Route
-              path="/surgeonList/:departmentId"
-              element={<SurgeonList />}
-            />
-            <Route path="/cameralist/:departmentId" element={<CameraList />} />
-            <Route path="/deviceList/:departmentId" element={<DeviceList />} />
-            <Route
-              path="/deviceListadmin/:departmentId"
-              element={<DeviceListAdmin />}
-            />
-            <Route
-              path="/department-details/:departmentId"
-              element={<DepartmentDetails />}
-            />
+            <Route path="/registration/:userType" element={<RegistrationPage />} />
+            <Route path="/showvideo" element={<ShowVideo />} />
+            <Route path="/subscriptionPlan" element={<SubscriptionPlanPage />} />
+            <Route path="/subscription/:id" element={<SubscriptionDetailsPage />} />
+            <Route path="/hospitalRegistration" element={<HospitalRegistrationForm />} />
+            <Route path="/surgeonDashboard/:departmentId" element={<SurgeonDashBoard />} />
+            <Route path="/surgeonList/:departmentId" element={<SurgeonList />} />
+            <Route path="/cameralist" element={<CameraList />} />{/*  for surgeon  */}
+            <Route path="/deviceList" element={<DeviceList />} />{/*  for surgeon device list  */}
+            <Route path="/deviceListadmin/:departmentId" element={<DeviceListAdmin />} />
+            <Route path="/department-details/:departmentId" element={<DepartmentDetails />} />
             <Route path="/showvideo/:departmentId" element={<ShowVideo />} />
-            <Route
-              path="/createCamera/:departmentId"
-              element={<CameraForm />}
-            />
-
-            <Route path="notactive/:name" element={<MessageComponent />} />
-            <Route
-              path="/hospitalAdmin/:hospitalId"
-              element={<HospitalAdmin />}
-            />
+            <Route path="/createCamera/:departmentId" element={<CameraForm />} />
+            <Route path="/notactive/:name" element={<MessageComponent />} />
+            <Route path="/hospitalAdmin/:hospitalId" element={<HospitalAdmin />} />
             <Route path="/device/:cameraId" element={<CameraMediaPage />} />
             <Route path="/signupPatient" element={<PatientRegistration />} />
             <Route path="/patient" element={<PatientDashboard />} />
             <Route path="/patientvideos" element={<PatientVideos />} />
             <Route path="/device" element={<DeviceList />} />
-            <Route
-              path="/createSubscriptionPlan"
-              element={<CreateSubScriptionPlan />}
-            />
-            <Route
-              path="/superAdminDashboard"
-              element={<SuperAdminDashboard />}
-            />
-            <Route
-              path="/surgeonBucket/:cameraId"
-              element={<SurgeonBucket />}
-            />
+            <Route path="/createDepartment" element={<DepartmentForm />} />
+            <Route path="/createCamera" element={<CameraForm />} />
+            <Route path="/createSubscriptionPlan" element={<CreateSubScriptionPlan />} />
+            <Route path="/superAdminDashboard" element={<SuperAdminDashboard />} />
+            <Route path="/surgeonBucket/:cameraId" element={<SurgeonBucket />} />
             <Route path="/patientprofileupdate" element={<PatientUpdate />} />
+            <Route path="/allHospitals" element={<AllHospitals />} />
+            <Route path="/hospitalAdminData/:hospitalId" element={<HospitalAdminData/>}/>
           </Routes>
         </div>
       </div>

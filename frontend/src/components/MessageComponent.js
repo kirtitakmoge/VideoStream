@@ -7,8 +7,8 @@ const MessageComponent = () => {
       <div className="max-w-md mx-auto mt-2 p-4 bg-white shadow-lg rounded-lg">
         <h2 className="text-lg font-bold mb-4 text-center"></h2>
         <div className="space-y-4">
-        <p> Welcome {name}</p>
-         <p> your account will be active soon</p>
+       
+         <p> Thank you for registering. Your account activation is under process.</p>
          <p> Please wait</p>
         </div>
       </div>

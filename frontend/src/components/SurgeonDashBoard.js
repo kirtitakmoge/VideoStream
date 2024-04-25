@@ -21,7 +21,7 @@ const SurgeonDashboard = () => {
           </Link>
         </div>
         <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
-        <Link to={`/cameralist/${departmentId}`}>Live Streaming Camera</Link>
+        <Link to={`/cameralist`}>Live Streaming Camera</Link>
 
         </div>
         <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
