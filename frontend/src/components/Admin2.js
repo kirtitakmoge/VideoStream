@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import DepartmentGallery from "./DepartmentGallery";
 import DepartmentDetails from "./DepartmentDetails";
+import { useAuth } from './AuthContext';
 import { useParams } from "react-router-dom";
 // This component is HospitalAdmin 
 const HospitalAdmin = () => {
@@ -8,12 +9,14 @@ const HospitalAdmin = () => {
   const  adminId  = localStorage.getItem("id");
   const { hospitalId } = useParams();
   const [HospitalName, setHospitalName] = useState("");
+  const token=localStorage.getItem("token");
+  const { isLoggedIn } = useAuth(); 
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
-        alert(hospitalId);
-        const token=localStorage.getItem("token");
-        console.log(adminId);
+        
+       console.log(hospitalId);
+        console.log(adminId); 
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/api/department/getAllDepartmentsByHospitalId/${hospitalId}/${adminId }`,
           {
@@ -39,7 +42,14 @@ const HospitalAdmin = () => {
     const fetchHospitalName = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/hospital/getHospitalById//${adminId}/${hospitalId}`
+          `${process.env.REACT_APP_API_URL}/api/hospital/getHospitalById/${adminId}/${hospitalId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}` // Include the token in the Authorization header
+          },
+          }
         );
         if (response.ok) {
           const data = await response.json();
@@ -59,10 +69,11 @@ const HospitalAdmin = () => {
 
   return (
     <div className="container mx-auto mt-10">
+       
       <h1 className="text-center text-2xl font-bold mb-4">
         Welcome to {HospitalName}'s Dashboard
       </h1>
-      <h1 className="text-2xl font-bold mb-4 ml-6">Department Gallery</h1>
+      <h1 className="text-2xl text-center font-bold mb-4 ml-6">Department Gallery</h1>
       <DepartmentGallery departments={departments} />
     </div>
   );

@@ -8,10 +8,18 @@ const CameraMediaPage = () => {
   const [deviceVideos, setDeviceVideos] = useState([]);
   const { cameraId } = useParams();
   const[userId,setUserId]=useState();
+  const token=localStorage.getItem("token");
+  const surgeonId=localStorage.getItem("id");
   useEffect(() => {
     async function fetchData() {
       try {
-        const photosResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/bucket/device/${cameraId}`);
+        const photosResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/bucket/device/getObjectFromBucket/${cameraId}/`, {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+               "Authorization": `Bearer ${token}` // Include the token in the Authorization header
+          },
+      });
 
         if (!photosResponse.ok) {
           throw new Error('Network response was not ok');
@@ -34,7 +42,7 @@ const CameraMediaPage = () => {
  
 
 const handleShareMedia = async (media) => {
-  const surgeonId=localStorage.getItem("id");
+  
   if (media.length === 0 ) {
    
     alert("Please select media and enter user ID.");
@@ -42,10 +50,11 @@ const handleShareMedia = async (media) => {
   }
   console.log(media.url);
   try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/patientcontent/patientContents`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/patientcontent/createPatientContents`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify({
         userId:"661d83353ec48f2e3af17a5f",
@@ -53,7 +62,7 @@ const handleShareMedia = async (media) => {
         link:media.url
       }),
     });
-
+   
     if (!response.ok) {
       throw new Error('Failed to assign media.');
     }
@@ -81,10 +90,11 @@ const handleDeleteMedia = async (media) => {
   }
   try {
     console.log(media.key);
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/bucket/device/deleteObjectFromBucket/`, {
-      method: 'DELETE',
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/api/bucket/device/deleteObjectFromBucket/${surgeonId}`, {
+      method:'DELETE',
       headers: {
         'Content-Type': 'application/json',
+        "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify({
         cameraId,
@@ -92,14 +102,21 @@ const handleDeleteMedia = async (media) => {
       }),
     });
 
+   
     if (!response.ok) {
+      toast.error(`Failed ${media.key} media items}`, {
+        duration: 2000,
+        position: "top-center",
+      });
       throw new Error('Failed to delete media.');
-    }
 
+    }
     toast.success(`Deleted ${media.key} media items}`, {
       duration: 2000,
       position: "top-center",
     });
+
+   
     
     
     // Update the state after successful deletion
@@ -112,10 +129,7 @@ const handleDeleteMedia = async (media) => {
   } catch (error) {
     console.error('Error deleting media:', error);
     
-    toast.success(`Failed to delete media. Please try again}`, {
-      duration: 2000,
-      position: "top-center",
-    });
+  
     
   }
 };

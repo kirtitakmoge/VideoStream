@@ -2,18 +2,26 @@ import React, { useEffect, useState } from "react";
 import Hls from "hls.js";
 import { useParams,useNavigate} from "react-router-dom";
 import CameraData from "./CameraData";
+import { useAuth } from "./AuthContext";
 const CameraList = ({  }) => {
-  const {departmentId}=useParams();
+  
 
   const [cameras, setCameras] = useState([]);
   const [selectedCamera, setSelectedCamera] = useState(null);
   const [show, setShow] = useState(true);
   const navigate = useNavigate();
-
+const {user}=useAuth();
   useEffect(() => {
     async function fetchCameras() {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/camera/getCamerasByDepartmentId/${departmentId}`);
+        const token=localStorage.getItem("token");
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/camera/getCamerasByDepartmentId/${user.departmentId}`, {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+               "Authorization": `Bearer ${token}` // Include the token in the Authorization header
+          },
+      });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -25,7 +33,7 @@ const CameraList = ({  }) => {
     }
 
     fetchCameras();
-  }, [departmentId]);
+  }, [user.departmentId]);
 
   const handleCameraData = (camera) => {
     setShow(false);

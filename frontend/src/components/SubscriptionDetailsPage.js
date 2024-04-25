@@ -54,10 +54,12 @@ const SubscriptionDetailsPage = () => {
 
   const handleSubscribe = async () => {
     try {
+      const token=localStorage.getItem("token");
       const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/createSubscription/65ed4769c351559d4f542034`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({ subscriptionId: id }),
       });

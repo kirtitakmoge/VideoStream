@@ -12,11 +12,12 @@ const UpdateProfileForm = ({ userId }) => {
     specialization: '',
     mobile_no: ''
   });
+  const token = localStorage.getItem("token");
   const id=localStorage.getItem("id");
   useEffect(() => {
     const fetchUserData = async () => {
         try {
-            const token = localStorage.getItem("token");
+          
             if (!token) {
                 // Handle case where token is not available
                 return;
@@ -50,11 +51,12 @@ const UpdateProfileForm = ({ userId }) => {
     e.preventDefault();
     console.log("button Clicked")
     try {
-      const response = await fetch(`http://localhost:8080/api/users/updateUserById/${id}`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/updateUserById/${id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
-        },
+          "Content-Type": "application/json",
+           "Authorization": `Bearer ${token}` // Include the token in the Authorization header
+      },
         body: JSON.stringify(userData)
       });
   
@@ -85,38 +87,38 @@ const UpdateProfileForm = ({ userId }) => {
 
   return (
     <div className="container mx-auto">
-      <div className="max-w-md mx-auto p-4 bg-white shadow-lg rounded-lg">
-        <h2 className="text-2xl text-center font-bold mb-4">Update Profile</h2>
+      <div className="max-w-xl mx-auto p-4 bg-white shadow-lg rounded-lg">
+        <h2 className="text-2xl text-center font-bold mb-2">Update Profile</h2>
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
+          <div className="mb-2">
             <label htmlFor="firstname" className="block font-medium">First Name</label>
             <input type="text" id="firstname" name="firstname" value={userData.firstname} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2" />
           </div>
-          <div className="mb-4">
+          <div className="mb-2">
             <label htmlFor="lastname" className="block font-medium">Last Name</label>
             <input type="text" id="lastname" name="lastname" value={userData.lastname} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2" />
           </div>
-          <div className="mb-4">
+          <div className="mb-2">
             <label htmlFor="email" className="block font-medium">Email</label>
             <input type="email" id="email" name="email" value={userData.email} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2" />
           </div>
-          <div className="mb-4">
+         { /*<div className="mb-2">
             <label htmlFor="password" className="block font-medium">Password</label>
             <input type="password" id="password" name="password" value={userData.password} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2" />
-          </div>
-          <div className="mb-4">
+  </div> */}
+          <div className="mb-2">
             <label htmlFor="hospitalId" className="block font-medium">Hospital</label>
             <input type="text" id="hospitalId" name="hospitalId" value={userData.hospitalId.Hospital_Name} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2" />
           </div>
-          <div className="mb-4">
+          <div className="mb-2">
             <label htmlFor="specialization" className="block font-medium">Specialization</label>
             <input type="text" id="specialization" name="specialization" value={userData.Specialization} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2" />
           </div>
-          <div className="mb-4">
+          <div className="mb-2">
             <label htmlFor="mobile_no" className="block font-medium">Mobile Number</label>
             <input type="text" id="mobile_no" name="mobile_no" value={userData.mobile_no} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2" />
           </div>
-          <div className="mb-4">
+          <div className="mb-2">
             <label htmlFor="role" className="block font-medium">Role</label>
             <input type="text" id="role" name="role" value={userData.role} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2" />
           </div>

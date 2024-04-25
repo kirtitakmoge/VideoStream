@@ -14,12 +14,14 @@ const ShowVideo = () => {
       try {
         
         const id = localStorage.getItem("id");
+        const token=localStorage.getItem("token");
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/api/camera/getCamerasByDepartmentId/${departmentId}`,
           {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`
             },
           }
         );

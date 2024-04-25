@@ -9,6 +9,7 @@ const verifyToken = (req, res, next) => {
  
    if (!authHeader || !authHeader.startsWith('Bearer ')) {
         
+       console.log(authHeader);
        return res.status(401).json({ message: 'Unauthorized: Missing or invalid token' });
        
     }

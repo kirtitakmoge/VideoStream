@@ -31,5 +31,7 @@ router.get("/getCameraUrlByUserId/:surgeonId",userController.getCameraUrlByUserI
 router.put("/super/updateRoleById/:superAdminId/:surgeonId",verifyToken,requireSuperAdmin,userController.updateRole);
 router.get("/super/all-User",requireSuperAdmin,userController.getAllUser);
 router.get("/getUsersByDepartmentId/:departmentId",userController.getUsersByDepartmentId);
-router.put('/updateUserActiveStatus/:id/activate', userController.updateUserActiveStatus);
+router.put('/updateUserActiveStatus/:id/activate',verifyToken, userController.updateUserActiveStatus);
+router.get("/getHospitalAdminByHospitalId/:hospitalId/:superAdminId",verifyToken,requireSuperAdmin,userController.geHospitalAdminByHospitalId);
+router.put("/updateHospitalAdminActiveStatus/:superAdminId/activate",verifyToken,requireSuperAdmin,userController.updateHospitalAdminActiveStatus);
 module.exports = router;

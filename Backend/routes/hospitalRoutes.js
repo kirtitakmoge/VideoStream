@@ -3,10 +3,16 @@ const router = express.Router();
 const hospitalController = require('../controller/hospitalController');
 const requireSuperAdmin = require('../auth/requireSuperAdmin');
 const verifyToken = require('../auth/verifyToken');
+const isAdmin1=require("../auth/isAdmin1");
 //router.post('/createHospital/:superAdminId',verifyToken,requireSuperAdmin, hospitalController.createHospital);
+
+
+//this for register surgeon  accessible to all
 router.get('/getAllHospitalNames', hospitalController.getAllHospitalNames);
-router.get('/getAllHospitals', hospitalController.getAllHospitals);
-router.get('/getHospitalById//:adminId/:hospitalId', hospitalController.getHospitalById);
+
+
+router.get('/getAllHospitals',hospitalController.getAllHospitals);
+router.get('/getHospitalById/:adminId/:hospitalId',verifyToken,isAdmin1, hospitalController.getHospitalById);
 //router.put('/updateHospitalById/:hospitalId',hospitalController.updateHospital);
 //router.delete('/deleteHospital/:hospitalId', hospitalController.deleteHospital);
 router.post('/createHospital', hospitalController.createHospital);

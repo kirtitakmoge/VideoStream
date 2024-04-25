@@ -18,6 +18,16 @@ const PORT = 8081;
 const winston = require('winston');
 const patientContentRoutes = require('./routes/patientContentRoutes');
 const patientRoutes=require("./routes/patientRoutes");
+const dotenv = require('dotenv');
+const result = dotenv.config();
+
+/*if (result.error) {
+    console.error('Error loading .env file:', result.error);
+} else {
+    console.log('Environment variables loaded successfully:', result.parsed);
+}*/
+
+
 // Initialize logger
 const logger = winston.createLogger({
     level: 'info',
@@ -39,7 +49,10 @@ app.use(cors());
 app.use(express.json());
 
 createRole();
-
+app.get("/public",(req,res)=>
+{
+    res.status(200).json("Welcome to streaming app");
+})
 // Protected route that requires authentication
 app.get('/protected', verifyToken, (req, res) => {
     res.json({ message: 'Protected route accessed successfully', user: req.user });
@@ -47,7 +60,7 @@ app.get('/protected', verifyToken, (req, res) => {
 
 // Routes
 app.use('/api/users', userRoutes);
-app.use("/api/video", videoRoutes);
+app.use("/api/video", videoRoutes);   
 app.use("/api/public", publicRoutes);
 app.use("/api/hospital", hospitalRoutes);
 app.use("/api/superAdminPlan", subscriptionPlanRoutes);
@@ -69,3 +82,4 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+// Main file To run

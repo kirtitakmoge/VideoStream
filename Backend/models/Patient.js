@@ -16,6 +16,10 @@ const patientSchema = new Schema({
         required: [true, 'Age is required'],
         min: [0, 'Age must be a positive number']
     },
+    role:{
+        type: String,
+        default:"Patient"
+    },
     gender: {
         type: String,
         enum: {

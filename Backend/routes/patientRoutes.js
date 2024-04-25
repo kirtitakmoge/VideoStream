@@ -1,13 +1,19 @@
 const express = require('express');
 const router = express.Router();
 const patientController = require('../controller/patientController');
+const verifyToken = require('../auth/verifyToken');
+const isAdmin1=require("../auth/isAdmin1");
 
 // Routes for patient CRUD operations
 router.post('/', patientController.createPatient);
 router.post('/login', patientController.loginPatient);
-router.get('/', patientController.getAllPatients);
-router.get('/:id', patientController.getPatientById);
-router.put('/:id', patientController.updatePatientById);
-router.delete('/:id', patientController.deletePatientById);
+
+//this is for Hospital Admin
+router.get('/getAllPatient/:adminId',verifyToken,isAdmin1,patientController.getAllPatients);
+
+
+router.get('/getPatientById/:id',verifyToken, patientController.getPatientById);
+router.put('/updatePatientById/:id',verifyToken, patientController.updatePatientById);
+router.delete('/deletePatient/:id',verifyToken,patientController.deletePatientById);
 
 module.exports = router;

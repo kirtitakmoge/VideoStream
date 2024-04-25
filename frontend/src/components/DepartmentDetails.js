@@ -21,7 +21,7 @@ const DepartmentDetails = () => {
           </Link>
         </div>
         <div className="col-span-1  shadow-md ">
-          <Link to={`/cameralist/${departmentId}`} className="bg-gray-100 p-4 rounded-md block hover:bg-gray-200">
+          <Link to={`/cameralist`} className="bg-gray-100 p-4 rounded-md block hover:bg-gray-200">
             <h2 className="text-2xl font-bold mb-4">Live Streaming from Camera</h2>
             
           </Link>
@@ -32,6 +32,12 @@ const DepartmentDetails = () => {
             
           </Link>
         </div>
+        <div className="col-span-1 shadow-md">
+          <Link to={`/createCamera/${departmentId}`} className="bg-gray-100 block p-4 rounded-md hover:bg-gray-200">
+            <h2 className="text-2xl font-bold mb-4">Add new Camera</h2>
+          </Link>
+        </div>
+   
       </div>
     </div>
   );

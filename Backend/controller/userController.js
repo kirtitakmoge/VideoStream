@@ -13,17 +13,17 @@ exports.signupUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(newUser.password, 10);
         console.log(req.body);
         // Finding department by name
-        const department=await Department.findById(newUser.departmentId);
+       /* const department=await Department.findById(newUser.departmentId);
         if(!department)
         {
             return res.status(404).json({error:"not found hospital id"});
-        }
+        }*/
 
         newUser.password = hashedPassword;
         await newUser.save();
         const notification = new Notification({
-            hospitalId: department.hospitalId,
-            userId: department._id,
+            hospitalId: newUser.hospitalId,
+            userId: newUser._id,
             message: "Activate user"
           });
           
@@ -119,6 +119,7 @@ exports.getAllUser = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 }
+
 exports.getUserByID=async (req,res)=>
 {
     const surgeonId=req.params.surgeonId;
@@ -137,6 +138,30 @@ exports.getUserByID=async (req,res)=>
         return res.status(404).json({error:"User not Found of this surgeonId"});
     }
 }
+
+exports.geHospitalAdminByHospitalId=async (req,res)=>
+{
+    const hospitalId=req.params.hospitalId;
+    if(!isValidObjectId(hospitalId))
+    {
+      
+     return res.status(400).json({message:"invalid id"});
+    }
+   
+    try {
+        const users = await User.find({ hospitalId, role: 'Super Admin' });
+
+        if (users) {
+            res.status(200).json(users);
+        } else {
+            res.status(404).json({ error: "No Hospital Admins found for the given hospital ID" });
+        }
+    } catch (error) {
+        console.error('Error fetching Hospital Admins:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 
 exports.deleteUserById=async(req,res)=>
 {
@@ -301,3 +326,23 @@ exports.updateUserActiveStatus = async (req, res) => {
       return res.status(500).json({ message: 'Internal server error' });
     }
   };
+
+  exports.updateHospitalAdminActiveStatus = async (req, res) => {
+    const { superAdminId } = req.params;
+    const { active } = req.body; 
+   // Assuming you pass the new active status in the request body
+    try {
+      const user = await User.findById(superAdminId );
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+    
+      user.active = active; // Update the active field
+      await user.save();
+      return res.status(200).json({ message: 'User updated successfully', user });
+    } catch (error) {
+      console.error('Error updating user:', error);
+      return res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+  

@@ -34,8 +34,9 @@ const userSchema = new Schema({
         // Custom validation to check if hospitalId references a valid hospital
         validate: {
             validator: async function (value) {
+                if(value!=null){
                 const hospital = await Hospital.findById(value);
-                return !!hospital;
+                return !!hospital;}
             },
             message: props => `Hospital with ID ${props.value} does not exist`
         }
@@ -56,6 +57,12 @@ const userSchema = new Schema({
         match: [/^\d{10}$/, "Please enter a valid 10-digit mobile number"]
     },
     bucketActive:{
+        type:Boolean,
+        required:true,
+        default:false
+    },
+    active:
+    {
         type:Boolean,
         required:true,
         default:false

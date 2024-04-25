@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-
+import {toast} from "react-hot-toast"
 const SurgeonData = ({ selectedUser, handleChangeFlag, onDelete, onUpdate }) => {
   const [user, setUser] = useState(selectedUser);
   const [isActive, setIsActive] = useState(selectedUser.active);
   const [isBucketActive, setIsBucketActive] = useState(selectedUser.bucketActive);
   const [isCameraActive, setIsCameraActive] = useState(selectedUser.cameraActive);
-
+const token=localStorage.getItem("token");
   useEffect(() => {
     setUser(selectedUser);
    
@@ -22,14 +22,24 @@ const SurgeonData = ({ selectedUser, handleChangeFlag, onDelete, onUpdate }) => 
       const response = await fetch( `${process.env.REACT_APP_API_URL}/api/users/updateUserActiveStatus/${selectedUser._id}/activate`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          "Authorization": `Bearer ${token}`
         },
         body: JSON.stringify({  bucketActive: isBucketActive, cameraActive: isCameraActive })
       });
+      
       if (!response.ok) {
+        toast.error("Failed to update user active status", {
+          duration: 2000,
+          position: 'top-center', 
+      });
         throw new Error('Failed to update user active status');
       }
       const data = await response.json();
+      toast.success("User active status updated successfully:", {
+        duration: 2000,
+        position: 'top-center', 
+    });
       console.log('User active status updated successfully:', data.user);
     } catch (error) {
       console.error('Error updating user active status:', error);
@@ -76,25 +86,25 @@ const SurgeonData = ({ selectedUser, handleChangeFlag, onDelete, onUpdate }) => 
         />
         {isCameraActive ? 'Yes' : 'No'}
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center  justify-between">
         <button
           type="button"
           onClick={handleUpdate}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-blue-500 hover:bg-blue-700 mx-2 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         >
           Update
         </button>
         <button
           type="button"
           onClick={handleBack}
-          className="bg-blue-500 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-blue-500 hover:bg-blue-800 mx-2 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         >
           Back
         </button>
         <button
           type="button"
           onClick={handleDelete}
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-red-500 hover:bg-red-700 mx-2 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         >
           Delete
         </button>

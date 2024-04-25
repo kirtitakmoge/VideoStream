@@ -14,11 +14,13 @@ const SubscriptionPlanPage = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const token=localStorage.getItem("token");
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/superAdminPlan/getAllPlans`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           },
         });
   

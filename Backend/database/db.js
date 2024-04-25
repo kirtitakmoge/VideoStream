@@ -1,11 +1,12 @@
 
 
 const mongoose = require('mongoose');
-
+var a = 'mongodb://127.0.0.1:27017/my_database';
 
 // Connection URI
 const uri = 'mongodb://127.0.0.1:27017';
-
+//mongodbpassword=a5XKWQsaxKYwk8X7;
+//mongodb+srv://kirtitakmoge:a5XKWQsaxKYwk8X7@cluster0.sw5idg1.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
 // Database Name
 const dbName = 'my_database';
 // Define the role data
@@ -54,7 +55,7 @@ const roleData1= [{
 
 /// Function to create roles in the specified database
 async function createRoles() {try {
-  await mongoose.connect('mongodb://127.0.0.1:27017/my_database', {
+  await mongoose.connect(process.env.DATABASE_CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     //useCreateIndex: true, // Optionally add this if you encounter deprecation warnings

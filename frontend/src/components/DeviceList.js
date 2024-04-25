@@ -1,9 +1,9 @@
 // DeviceList.js
 import React ,{useState,useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-
+import{useAuth} from "./AuthContext"
 const DeviceList = () => {
-const {departmentId}=useParams();
+const {user}=useAuth();
 const [show,setShow]=useState(true);
 const navigate=useNavigate();
   const [cameras, setCameras] = useState([]);
@@ -11,7 +11,14 @@ const navigate=useNavigate();
   useEffect(() => {
     async function fetchCameras() {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/camera/getCamerasByDepartmentId/${departmentId}`);
+        const token=localStorage.getItem("token");
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/camera/getCamerasByDepartmentId/${user.departmentId}`, {
+          method: "GET",
+          headers: {
+              "Content-Type": "application/json",
+               "Authorization": `Bearer ${token}` // Include the token in the Authorization header
+          },
+        });
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -23,7 +30,7 @@ const navigate=useNavigate();
     }
 
     fetchCameras();
-  }, [departmentId]);
+  }, [user.departmentId]);
 
   const handleDeviceClick = (camera) => {
     navigate(`/surgeonbucket/${camera._id}`);

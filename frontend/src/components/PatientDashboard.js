@@ -8,7 +8,7 @@ const PatientDashboard = () => {
       <div className="grid grid-cols-3 gap-8">
        
         <div className="col-span-1 shadow-md">
-          <Link to={`/profileupdate`} className="bg-gray-100 block p-4 rounded-md hover:bg-gray-200">
+          <Link to={`/patientprofileupdate`} className="bg-gray-100 block p-4 rounded-md hover:bg-gray-200">
             <h2 className="text-2xl font-bold mb-4">Profile Update</h2>
           </Link>
         </div>
