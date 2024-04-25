@@ -55,7 +55,7 @@ const roleData1= [{
 
 /// Function to create roles in the specified database
 async function createRoles() {try {
-  await mongoose.connect(a , {
+  await mongoose.connect(process.env.DATABASE_CONNECTION_STRING, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     //useCreateIndex: true, // Optionally add this if you encounter deprecation warnings
