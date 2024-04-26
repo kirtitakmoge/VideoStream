@@ -7,18 +7,18 @@ import { useParams } from "react-router-dom";
 const HospitalAdmin = () => {
   const [departments, setDepartments] = useState([]);
   const  adminId  = localStorage.getItem("id");
-  const { hospitalId } = useParams();
+ 
   const [HospitalName, setHospitalName] = useState("");
   const token=localStorage.getItem("token");
-  const { isLoggedIn } = useAuth(); 
+  const { user} = useAuth(); 
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
         
-       console.log(hospitalId);
+       console.log(user.hospitalId);
         console.log(adminId); 
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/department/getAllDepartmentsByHospitalId/${hospitalId}/${adminId }`,
+          `${process.env.REACT_APP_API_URL}/api/department/getAllDepartmentsByHospitalId/${user.hospitalId}/${adminId }`,
           {
             method: "GET",
             headers: {
@@ -42,7 +42,7 @@ const HospitalAdmin = () => {
     const fetchHospitalName = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/hospital/getHospitalById/${adminId}/${hospitalId}`,
+          `${process.env.REACT_APP_API_URL}/api/hospital/getHospitalById/${adminId}/${user.hospitalId}`,
           {
             method: "GET",
             headers: {

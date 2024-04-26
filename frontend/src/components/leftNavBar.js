@@ -26,6 +26,9 @@ const LeftNavBar = () => {
           <li>
             <Link to="/login/Surgeon">Surgeon Login</Link>
           </li>
+          <li>
+            <Link to="/signout">Logout</Link>
+          </li>
           
           </>
       ):(<>

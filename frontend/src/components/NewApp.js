@@ -63,7 +63,7 @@ const NewApp = () => {
         <div className="w-full content flex flex-col">
           <Navbar/>
           <Routes>
-            <Route path="/" element={<Login />} />
+            <Route path="/login/?userType=Surgeon" element={<Login />} />
             <Route path="/login/:userType" element={<Login />} />
             <Route path="/signup" element={<Register />} />
             <Route path="/home" element={<Home />} />
@@ -83,7 +83,7 @@ const NewApp = () => {
             <Route path="/showvideo/:departmentId" element={<ShowVideo />} />
             <Route path="/createCamera/:departmentId" element={<CameraForm />} />
             <Route path="/notactive/:name" element={<MessageComponent />} />
-            <Route path="/hospitalAdmin/:hospitalId" element={<HospitalAdmin />} />
+            <Route path="/hospitalAdmin" element={<HospitalAdmin />} />
             <Route path="/device/:cameraId" element={<CameraMediaPage />} />
             <Route path="/signupPatient" element={<PatientRegistration />} />
             <Route path="/patient" element={<PatientDashboard />} />

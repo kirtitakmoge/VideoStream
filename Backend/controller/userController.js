@@ -139,7 +139,7 @@ exports.getUserByID=async (req,res)=>
     }
 }
 
-exports.geHospitalAdminByHospitalId=async (req,res)=>
+exports.getHospitalAdminByHospitalId=async (req,res)=>
 {
     const hospitalId=req.params.hospitalId;
     if(!isValidObjectId(hospitalId))
@@ -149,8 +149,8 @@ exports.geHospitalAdminByHospitalId=async (req,res)=>
     }
    
     try {
-        const users = await User.find({ hospitalId, role: 'Super Admin' });
-
+        const users = await User.findOne({ hospitalId, role: 'Super Admin' });
+       console.log(users);
         if (users) {
             res.status(200).json(users);
         } else {

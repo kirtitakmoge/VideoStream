@@ -10,7 +10,7 @@ const superAdminId=localStorage.getItem("id");
 useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/getHospitalAdminByhospitalId/${hospitalId}/${superAdminId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/getHospitalAdminByHospitalId/${hospitalId}/${superAdminId}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -46,7 +46,7 @@ useEffect(() => {
           'Content-Type': 'application/json',
           "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({  isActive })
+        body: JSON.stringify({ active: isActive })
       });
       
       if (!response.ok) {
@@ -76,15 +76,15 @@ if(user!=null)
       <h2 className="text-lg font-bold mb-4 text-center">Hospital Admin Details Details</h2>
       <div className="mb-4">
         <label className="block text-gray-700 font-bold mb-2">First Name:</label>
-        <p>{user[0].firstname}</p>
+        <p>{user.firstname}</p>
       </div>
       <div className="mb-4">
         <label className="block text-gray-700 font-bold mb-2">Last Name:</label>
-        <p>{user[0].lastname}</p>
+        <p>{user.lastname}</p>
       </div>
       <div className="mb-4">
         <label className="block text-gray-700 font-bold mb-2">Email:</label>
-        <p>{user[0].email}</p>
+        <p>{user.email}</p>
       </div>
      
       <div className="mb-4">

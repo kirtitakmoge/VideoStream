@@ -44,7 +44,7 @@ const patientContentController = {
     getPatientContentById: async (req, res) => {
         try {
             // Find patient content by user ID
-            const patientContent = await PatientContent.find({ userId: req.params.userId });
+            const patientContent = await PatientContent.find({ userId: req.params.userId }).populate("surgeonId");
             
             // Check if patient content exists
             if (!patientContent || patientContent.length === 0) {
@@ -53,12 +53,14 @@ const patientContentController = {
     
             // Create an array to store promises for generating pre-signed URLs
             const promises = [];
-    
+     
             // Iterate over each patient content
             patientContent.forEach(patient => {
                 // Iterate over each item in the link array
+                console.log(patient);
                 patient.link.forEach(item => {
                     // Generate a pre-signed URL for each item and add the promise to the array
+                    promises.push(patient.surgeonId.firstname);
                     promises.push(generatePresignedUrl(item));
                 });
             });

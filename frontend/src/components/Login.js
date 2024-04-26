@@ -48,7 +48,7 @@ const Login = () => {
         if (userData.user.role === "Patient")
         navigate("/patient")
         if (userData.user.role === "Hospital Admin") {
-          navigate(`/hospitalAdmin/${userData.user.hospitalId}`);
+          navigate(`/hospitalAdmin`);
         } else if (
           userData.user.role === "Surgeon" &&
           (userData.user.bucketActive === true ||

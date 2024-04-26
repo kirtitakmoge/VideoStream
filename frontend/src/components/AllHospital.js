@@ -14,6 +14,7 @@ const AllHospitals=()=>
             });
             if (response.ok) {
               const userData = await response.json();
+              console.log(userData);
               setHospitals(userData);
              
             }
