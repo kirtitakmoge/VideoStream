@@ -53,6 +53,7 @@ const roleData1= [{
 }
 ];
 
+
 /// Function to create roles in the specified database
 async function createRoles() {try {
   await mongoose.connect(process.env.DATABASE_CONNECTION_STRING, {
