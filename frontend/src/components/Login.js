@@ -47,7 +47,7 @@ const Login = () => {
         navigate(`/superAdminDashboard`);
         if (userData.user.role === "Patient")
         navigate("/patient")
-        if (userData.user.role === "Hospital Admin" && userData.user.active==true) {
+        if (userData.user.role === "Hospital Admin" && userData.user.active===true) {
           navigate(`/hospitalAdmin`);
         } else if (
           userData.user.role === "Surgeon" &&
