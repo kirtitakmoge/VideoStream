@@ -42,15 +42,24 @@ const PatientVideos = () => {
       <h2 className="text-2xl text-center font-semibold mb-4">Patient Media</h2>
       {videos.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {videos.map(([sharedBy, { objectKey, signedUrl }], index) => (
+          {videos.map((item, index) => (
             <div key={index} className="bg-white rounded-lg shadow-md p-4">
-              <img
-                src={signedUrl}
-                alt={`Photo ${index + 1}`}
-                className="w-full h-48 object-cover"
-              />
-              <h3 className="text-lg font-semibold mt-2">{`Photo ${index + 1}`}</h3>
-              <p>{`Shared By Surgeon ${sharedBy}`}</p>
+              {isPhoto(item.url.objectKey) ? (
+                <img
+                  src={item.url.signedUrl}
+                  alt={`Photo ${index + 1}`}
+                  className="w-full h-48 object-cover"
+                />
+              ) : (
+                
+
+                <video controls className="object-cover w-full h-48">
+                <source    src={item.url.signedUrl}   type="video/mp4" />
+                Your browser does not support the video tag.
+              </video>
+              )}
+              <h3 className="text-lg font-semibold mt-2">{`Media ${index + 1}`}</h3>
+              <p>{`Shared By Surgeon ${item.surgeonName}`}</p>
             </div>
           ))}
         </div>

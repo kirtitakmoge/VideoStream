@@ -10,9 +10,9 @@ const isAdmin1=require("../auth/isAdmin1");
 // Department routes
 router.get('/getAllDepartments',departmentController.getAllDepartments);
 router.get('/getDepartmentById/:departmentId', departmentController.getDepartmentById);
-
-router.patch('/updateDepartmentById/:departmentId', departmentController.updateDepartmentById);
-router.delete('/deleteDepartmentById/:departmentId', departmentController.deleteDepartmentById);
+//hospital Admin
+router.put('/updateDepartmentById/:departmentId/:adminId', departmentController.updateDepartmentById);
+router.delete('/deleteDepartmentById/:departmentId/:adminId',verifyToken,isAdmin1, departmentController.deleteDepartmentById);
 
 
 

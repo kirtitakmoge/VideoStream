@@ -1,79 +1,57 @@
 import React, { useState, useEffect } from "react";
 import DepartmentGallery from "./DepartmentGallery";
-import DepartmentDetails from "./DepartmentDetails";
+
 import { useAuth } from './AuthContext';
-import { useParams } from "react-router-dom";
-// This component is HospitalAdmin 
+
+import { useHospitalContext } from "./HospitalContext";
+import { useDepartment } from './DepartmentContext';
 const HospitalAdmin = () => {
   const [departments, setDepartments] = useState([]);
-  const  adminId  = localStorage.getItem("id");
- 
-  const [HospitalName, setHospitalName] = useState("");
-  const token=localStorage.getItem("token");
-  const { user} = useAuth(); 
+  const adminId = localStorage.getItem("id");
+  const {fetchDepartments}=useDepartment();
+  const [hospitalName, setHospitalName] = useState("");
+  const token = localStorage.getItem("token");
+  const { user } = useAuth(); 
+  const { getHospitalById }  = useHospitalContext();
   useEffect(() => {
-    const fetchDepartments = async () => {
+    const fetchDepartmentsData = async () => {
       try {
-        
-       console.log(user.hospitalId);
-        console.log(adminId); 
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/department/getAllDepartmentsByHospitalId/${user.hospitalId}/${adminId }`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}` // Include the token in the Authorization header
-          },
-          }
-        );
-        if (response.ok) {
-          const departmentsData = await response.json();
-          console.log(departmentsData.departments);
-          setDepartments(departmentsData.departments);
-        } else {
-          console.error("Error fetching departments:", response.status);
+        const data = await fetchDepartments(user.hospitalId,adminId, token); // Call fetchDepartments
+        if (data != null) {
+          setDepartments(data.departments);
         }
       } catch (error) {
-        console.error("Error fetching departments:", error);
+        console.error('Error fetching departments:', error);
       }
     };
+  
+    fetchDepartmentsData();
+  }, [user.hospitalId, token, fetchDepartments]);
 
+  useEffect(() => {
     const fetchHospitalName = async () => {
       try {
-        const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/hospital/getHospitalById/${adminId}/${user.hospitalId}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}` // Include the token in the Authorization header
-          },
-          }
-        );
-        if (response.ok) {
-          const data = await response.json();
-          console.log(data);
-          setHospitalName(data.Hospital_Name);
-        } else {
-          console.log("failed to fetch hospital");
-        }
+        // Call getHospitalById function with adminId, user.hospitalId, and token from hospital Context
+        const data = await getHospitalById(adminId, user.hospitalId, token);
+        // Set hospitalName state with response data
+        if(data!=null)
+        setHospitalName(data.Hospital_Name);
       } catch (error) {
         console.error(error);
       }
     };
+  
     fetchHospitalName();
-
-    fetchDepartments();
-  }, []); // Empty dependency array ensures useEffect runs only once after the initial render
+  }, [adminId, user.hospitalId, token, getHospitalById]);
+  
 
   return (
     <div className="container mx-auto mt-10">
-       
       <h1 className="text-center text-2xl font-bold mb-4">
-        Welcome to {HospitalName}'s Dashboard
+        Welcome to {hospitalName}'s Dashboard
       </h1>
       <h1 className="text-2xl text-center font-bold mb-4 ml-6">Department Gallery</h1>
+      {/* Pass departments and updateDepartments as props to DepartmentGallery */}
       <DepartmentGallery departments={departments} />
     </div>
   );

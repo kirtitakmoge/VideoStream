@@ -42,7 +42,7 @@ const LeftNavBar = () => {
           </li>
           <Link to="/signout">Signout</Link></>
         )}
-        {user.role === "Surgeon" && (
+        {user.role === "Surgeon" && user.bucketActive && user.cameraActive &&(
           <>
             <li>
               <Link to={`/surgeonDashboard/${user.departmentId}`}>
@@ -63,7 +63,8 @@ const LeftNavBar = () => {
         </li>
           </>
         )}
-        {user.role === "Hospital Admin" && (
+        {user.role === "Hospital Admin" && user.
+active && (
           <>
             <li>
               <Link to="/hospitalAdmin">Hospital Admin Dashboard</Link>
@@ -72,7 +73,7 @@ const LeftNavBar = () => {
               <Link to="/profileupdate">Profile Update</Link>
             </li>
             <li>
-              <Link to="/createDepartment">Create Department</Link>
+              <Link to="/createDepartment">Add New Department</Link>
             </li>
             <li>
           <Link to="/signout">Signout</Link>

@@ -7,7 +7,7 @@ const UserIcon = ({ username }) => {
   const initials = username ? username.charAt(0).toUpperCase() : '';
 
   return (
-    <div className="rounded-full h-6 w-6 bg-blue-200 flex items-center justify-center text-gray-600">
+    <div className="rounded-full h-8 w-8 bg-red-500 flex items-center justify-center text-gray-600">
       {initials}
     </div>
   );
@@ -44,10 +44,10 @@ const Navbar = () => {
 
         <div className="flex items-center">
          
-          <div className="relative ml-4">
+          <div className="relative ">
             <div className="flex cursor-pointer" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
-              <p>{localStorage.getItem('username')}</p>
-              <UserIcon username={localStorage.getItem('username')} />
+              <p className='px-3'>{localStorage.getItem('username')}</p>
+              <UserIcon className="bg-red-500" username={localStorage.getItem('username')} />
             </div>
             {isDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg">

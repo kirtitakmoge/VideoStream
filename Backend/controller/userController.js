@@ -128,7 +128,7 @@ exports.getUserByID=async (req,res)=>
       
      return res.status(400).json({message:"invalid id"});
     }
-    const user=await User.findById(surgeonId).populate('hospitalId');
+    const user=await User.findById(surgeonId).populate('departmentId').populate("hospitalId");
     console.log(user);
     if(user)
     {

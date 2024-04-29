@@ -57,7 +57,7 @@ const handleShareMedia = async (media) => {
         "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify({
-        userId:"661d83353ec48f2e3af17a5f",
+        userId:"662abafb507b632757a8972d",
          surgeonId:surgeonId,
         link:media.url
       }),

@@ -6,7 +6,7 @@ const secretKey = 'KirtiTakmogeSuhasShelke'; // Replace with your own secret key
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
     const authHeader = req.headers.authorization;
- 
+  console.log("in verify token");
    if (!authHeader || !authHeader.startsWith('Bearer ')) {
         
        console.log(authHeader);

@@ -40,6 +40,7 @@ exports.createDepartment = async (req, res) => {
     try {
         const newDepartment = await department.save();
         console.log(newDepartment);
+        
         res.status(201).json(newDepartment);
     } catch (err) {
         res.status(400).json({ message: err.message });
@@ -75,26 +76,25 @@ exports.updateDepartmentById = async (req, res) => {
         res.status(400).json({ message: err.message });
     }
 };
-
 // DELETE a department by ID
-exports. deleteDepartmentById = async (req, res) => {
-    const departmentId=req.params.departmentId;
-    if(!isValidObjectId(departmentId))
-    {
-     return res.status(400).json({ error: "Invalid departmentID" });
+exports.deleteDepartmentById = async (req, res) => {
+    const departmentId = req.params.departmentId;
+    if (!isValidObjectId(departmentId)) {
+        return res.status(400).json({ error: "Invalid departmentID" });
     }
     try {
         const department = await Department.findById(departmentId);
         if (!department) {
             return res.status(404).json({ message: 'Department not found' });
         }
-        
-        await department.remove();
+        console.log(department);
+        await department.deleteOne(); // Use deleteOne() instead of remove()
         res.json({ message: 'Department deleted' });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 };
+
 
 
 

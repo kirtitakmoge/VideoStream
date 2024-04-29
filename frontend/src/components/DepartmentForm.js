@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useAuth } from './AuthContext';
-
+import { useNavigate } from 'react-router-dom';
 const DepartmentForm = () => {
   const [formData, setFormData] = useState({
     department_name: '',
@@ -11,7 +11,7 @@ const DepartmentForm = () => {
   const adminId = localStorage.getItem('id');
   const token = localStorage.getItem('token');
   const hospitalId = user ? user.hospitalId : null;
-
+const navigate=useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -40,6 +40,7 @@ const DepartmentForm = () => {
           duration: 2000,
           position: 'top-center',
         });
+        navigate(-1);
       } else {
         const errorMessage = await response.text();
         console.error(errorMessage);

@@ -38,7 +38,9 @@ import SuperAdminDashboard from "./SuperAdminDashboard";
 import AllHospitals from "./AllHospital";
 import HospitalAdminData from "./HospitalAdminData";
 import LeftNavBar from "./leftNavBar";
-
+import RenameDepartment from "./RenameDepartment";
+import DeleteDepartment from "./DeleteDepartment";
+import Layout from "./Layout";
 const NewApp = () => {
   const { user } = useAuth(); // Get the user object from the AuthContext
  
@@ -46,7 +48,7 @@ const NewApp = () => {
     <Router>
       <div className="flex">
         {/* Left Navigation */}
-        <div className="left-nav bg-gray-800 h-screen w-48 flex flex-col">
+        <div className="left-nav px-4  bg-gray-800 h-screen w-48 flex flex-col">
           {/* Logo and Name */}
           <div className="flex justify-center p-4">
             <img
@@ -61,16 +63,17 @@ const NewApp = () => {
         </div>
         {/* Content */}
         <div className="w-full content flex flex-col">
-          <Navbar/>
+          <Navbar/> <Layout>
           <Routes>
-            <Route path="/login/?userType=Surgeon" element={<Login />} />
+           
+            <Route path="/" element={<Login />} />
             <Route path="/login/:userType" element={<Login />} />
             <Route path="/signup" element={<Register />} />
             <Route path="/home" element={<Home />} />
             <Route path="/profileupdate" element={<ProfileUpdate />} />
             <Route path="/signout" element={<SignOut />} />
             <Route path="/registration/:userType" element={<RegistrationPage />} />
-            <Route path="/showvideo" element={<ShowVideo />} />
+          
             <Route path="/subscriptionPlan" element={<SubscriptionPlanPage />} />
             <Route path="/subscription/:id" element={<SubscriptionDetailsPage />} />
             <Route path="/hospitalRegistration" element={<HospitalRegistrationForm />} />
@@ -79,7 +82,7 @@ const NewApp = () => {
             <Route path="/cameralist" element={<CameraList />} />{/*  for surgeon  */}
             <Route path="/deviceList" element={<DeviceList />} />{/*  for surgeon device list  */}
             <Route path="/deviceListadmin/:departmentId" element={<DeviceListAdmin />} />
-            <Route path="/department-details/:departmentId" element={<DepartmentDetails />} />
+            <Route path="/department-details/:departmentId/:department_name" element={<DepartmentDetails />} />
             <Route path="/showvideo/:departmentId" element={<ShowVideo />} />
             <Route path="/createCamera/:departmentId" element={<CameraForm />} />
             <Route path="/notactive/:name" element={<MessageComponent />} />
@@ -87,9 +90,11 @@ const NewApp = () => {
             <Route path="/device/:cameraId" element={<CameraMediaPage />} />
             <Route path="/signupPatient" element={<PatientRegistration />} />
             <Route path="/patient" element={<PatientDashboard />} />
+            <Route path="/renameDepartment/:departmentId" element={<RenameDepartment />} />
             <Route path="/patientvideos" element={<PatientVideos />} />
             <Route path="/device" element={<DeviceList />} />
             <Route path="/createDepartment" element={<DepartmentForm />} />
+            <Route path="/deleteDepartment/:departmentId" element={<DeleteDepartment/>}/>
             <Route path="/createCamera" element={<CameraForm />} />
             <Route path="/createSubscriptionPlan" element={<CreateSubScriptionPlan />} />
             <Route path="/superAdminDashboard" element={<SuperAdminDashboard />} />
@@ -97,7 +102,9 @@ const NewApp = () => {
             <Route path="/patientprofileupdate" element={<PatientUpdate />} />
             <Route path="/allHospitals" element={<AllHospitals />} />
             <Route path="/hospitalAdminData/:hospitalId" element={<HospitalAdminData/>}/>
+         
           </Routes>
+          </Layout>
         </div>
       </div>
     </Router>

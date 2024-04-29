@@ -60,16 +60,25 @@ const patientContentController = {
                 console.log(patient);
                 patient.link.forEach(item => {
                     // Generate a pre-signed URL for each item and add the promise to the array
-                    promises.push(patient.surgeonId.firstname);
-                    promises.push(generatePresignedUrl(item));
+                    const url=generatePresignedUrl(item);
+                    promises.push(url);
+                    console.log(url)
                 });
             });
     
             // Wait for all promises to resolve
             const urls = await Promise.all(promises);
-    
+            const dataWithUrls = patientContent.map((patient, index) => {
+                return {
+                  surgeonName:patient.surgeonId.firstname,
+                  url: urls[index]
+                };
+              });
+          
+              // Respond to the client with both patient data and URLs
+              res.status(200).json(dataWithUrls); 
             // Send the array of URLs in the response
-            res.status(200).json(urls);
+           
         } catch (error) {
             console.error('Error getting patient content by ID:', error);
             res.status(500).json({ error: 'Internal server error' });

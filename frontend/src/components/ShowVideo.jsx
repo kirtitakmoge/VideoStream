@@ -62,7 +62,7 @@ const ShowVideo = () => {
     <div className="flex flex-row mt-5">
       {flag ? (
         cameras.map((camera, index) => (
-          <div key={index} className="bg-gray-900 mx-10 w-full rounded-lg overflow-hidden shadow-lg">
+          <div key={index} className="bg-gray-900 mx-10  rounded-lg overflow-hidden shadow-lg">
             <video
               ref={(el) => (videoRefs.current[index] = el)}
               className="max-w-3xl h-auto rounded-lg"

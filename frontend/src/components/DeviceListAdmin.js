@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 const DeviceListAdmin = () => {
 const {departmentId}=useParams();
-const [show,setShow]=useState(true);
+
 const navigate=useNavigate();
   const [cameras, setCameras] = useState([]);
 
