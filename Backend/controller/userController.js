@@ -142,6 +142,7 @@ exports.getUserByID=async (req,res)=>
 exports.getHospitalAdminByHospitalId=async (req,res)=>
 {
     const hospitalId=req.params.hospitalId;
+  
     if(!isValidObjectId(hospitalId))
     {
       
@@ -149,7 +150,7 @@ exports.getHospitalAdminByHospitalId=async (req,res)=>
     }
    
     try {
-        const users = await User.findOne({ hospitalId, role: 'Super Admin' });
+        const users = await User.findOne({ hospitalId ,role:"Hospital Admin"});
        console.log(users);
         if (users) {
             res.status(200).json(users);
@@ -328,15 +329,15 @@ exports.updateUserActiveStatus = async (req, res) => {
   };
 
   exports.updateHospitalAdminActiveStatus = async (req, res) => {
-    const { superAdminId } = req.params;
+    const { adminId } = req.params;
     const { active } = req.body; 
    // Assuming you pass the new active status in the request body
     try {
-      const user = await User.findById(superAdminId );
+      const user = await User.findById(adminId );
       if (!user) {
         return res.status(404).json({ message: 'User not found' });
       }
-    
+    console.log(user);
       user.active = active; // Update the active field
       await user.save();
       return res.status(200).json({ message: 'User updated successfully', user });

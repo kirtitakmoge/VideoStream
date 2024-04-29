@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaSignOutAlt } from 'react-icons/fa';
 import { toast } from 'react-hot-toast';
 
 const UserIcon = ({ username }) => {
@@ -15,36 +14,33 @@ const UserIcon = ({ username }) => {
 
 const Navbar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    if (localStorage.getItem('username')) {
-      toast.success(`Signed Out Successfully`, {
-        duration: 2000,
-        position: 'top-center',
-      });
-      localStorage.removeItem('username');
-      localStorage.removeItem('id');
-      localStorage.removeItem('token');
-    } else {
-      toast.success(`Already Logged Out`, {
-        duration: 2000,
-        position: 'top-center',
-      });
+  
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false);
     }
-    navigate('/login');
   };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <nav className="bg-white-100 shadow-xl w-full py-2">
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-        <Link to="/" className="text-blacktext-lg font-semibold">
+        <Link to="/" className="text-black text-lg font-semibold">
           Taurean Surgical
         </Link>
 
         <div className="flex items-center">
-         
-          <div className="relative ">
+          <div className="relative" ref={dropdownRef}>
             <div className="flex cursor-pointer" onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
               <p className='px-3'>{localStorage.getItem('username')}</p>
               <UserIcon className="bg-red-500" username={localStorage.getItem('username')} />
@@ -61,7 +57,13 @@ const Navbar = () => {
                   >
                     Profile Update
                   </button>
-                  <Link className="block px-4 py-2 cursor-pointer text-sm text-gray-700 hover:bg-gray-100 w-full text-left" to="/signout">Signout</Link>
+                  <Link
+                    className="block px-4 py-2 cursor-pointer text-sm text-gray-700 hover:bg-gray-100 w-full text-left"
+                    to="/signout"
+                    onClick={() => setIsDropdownOpen(false)} // Close dropdown on click
+                  >
+                    Signout
+                  </Link>
                 </div>
               </div>
             )}

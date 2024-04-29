@@ -42,24 +42,25 @@ const Login = () => {
         localStorage.setItem("isLoggedIn", true);
         setPassword("");
         setEmail("");
-        console.log(userData.user);
-        if(userData.user.role === "Super Admin")
+        console.log(userData.user.role);
+        if(userData.user.role==="Super Admin")
         navigate(`/superAdminDashboard`);
-        if (userData.user.role === "Patient")
+        else if (userData.user.role === "Patient")
         navigate("/patient")
-        if (userData.user.role === "Hospital Admin" && userData.user.active===true) {
+        else if (userData.user.role === "Hospital Admin" && userData.user.active===true) {
           navigate(`/hospitalAdmin`);
-        } else if (
+        }
+         else if (
           userData.user.role === "Surgeon" &&
           (userData.user.bucketActive === true ||
             userData.user.cameraActive === true)
         ) {
           navigate(`/surgeonDashboard/${userData.user.departmentId}`);
-        } else if (userData.user.role === "Surgeon") {
-          navigate(`/notactive/${userData.user.firstname}`);
-        } else if (userType === "patient") {
+        }  else if (userType === "Patient") {
           navigate("/patient");
-        }
+        }else 
+          navigate(`/notactive/${userData.user.firstname}`);
+        
       } else {
         toast.error(`Login Failed or invalid email`, {
           duration: 2000,

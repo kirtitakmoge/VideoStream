@@ -11,7 +11,7 @@ const AllHospitals = () => {
  const token=localStorage.getItem("token");
   useEffect(() => {
     fetchHospitals(superAdminId,token);
-  }, [fetchHospitals]);
+  },[]);
 
 
   return (

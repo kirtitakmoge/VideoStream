@@ -1,111 +1,68 @@
-import React, { useMemo, useState, useRef, useEffect } from "react";
+import React, { useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 
 const LeftNavBar = () => {
-  const { user } = useAuth();
+  const { user, isLoggedIn } = useAuth();
 
   const navLinks = useMemo(() => {
-    
-    return (
-      <ul>{user==null?(
-      <>
-          
-          <li>
-            <Link to="/login/Patient">Patient Login</Link>
-          </li>
-          <li>
-            <Link to="/registration/Patient">Patient Registration</Link>
-          </li>
-       
-          <li>
-            <Link to="/registration/Surgeon">Surgeon Registration</Link>
-          </li>
-        
-       
-          <li>
-            <Link to="/login/Surgeon">Surgeon Login</Link>
-          </li>
-          <li>
-            <Link to="/signout">Logout</Link>
-          </li>
-          
-          </>
-      ):(<>
-        
-        {user.role === "Patient" && (<>
-          <li>
-            <Link to="/patient">Patient Dashboard</Link>
-          </li>
-          <li>
-             <Link to="/patientvideos">Shared Surgery Videos by Surgeon</Link>
-          </li>
-          <Link to="/signout">Signout</Link></>
-        )}
-        {user.role === "Surgeon" && user.bucketActive && user.cameraActive &&(
-          <>
-            <li>
-              <Link to={`/surgeonDashboard/${user.departmentId}`}>
-                Surgeon Dashboard
-              </Link>
-            </li>
-            <li>
-              <Link to="/profileupdate">Profile Update</Link>
-            </li>
-            <li>
-              <Link to="/cameralist">Camera</Link>
-            </li>
-            <li>
-              <Link to="/devicelist">Devices</Link>
-            </li>
-            <li>
-          <Link to="/signout">Signout</Link>
-        </li>
-          </>
-        )}
-        {user.role === "Hospital Admin" && user.
-active && (
-          <>
-            <li>
-              <Link to="/hospitalAdmin">Hospital Admin Dashboard</Link>
-            </li>
-            <li>
-              <Link to="/profileupdate">Profile Update</Link>
-            </li>
-            <li>
-              <Link to="/createDepartment">Add New Department</Link>
-            </li>
-            <li>
-          <Link to="/signout">Signout</Link>
-        </li>
-          </>
-        )}
+    if (!isLoggedIn || !user) {
+      // Show login and registration links if user is not logged in
+      return (
+        <ul>
+          <li><Link to="/login/Patient">Patient Login</Link></li>
+          <li><Link to="/registration/Patient">Patient Registration</Link></li>
+          <li><Link to="/registration/Surgeon">Surgeon Registration</Link></li>
+          <li><Link to="/login/Surgeon">Surgeon Login</Link></li>
+        </ul>
+      );
+    } else {
+      // User is logged in, show appropriate links based on role
+      if (user.role === "Patient") {
+        return (
+          <ul>
+            <li><Link to="/patient">Patient Dashboard</Link></li>
+            <li><Link to="/patientvideos">Shared Surgery Videos by Surgeon</Link></li>
+          </ul>
+        );
+      } else if (user.role === "Surgeon" && user.activeBucket && user.activeCamera) {
+        return (
+          <ul>
+            <li><Link to={`/surgeonDashboard/${user.departmentId}`}>Surgeon Dashboard</Link></li>
+            <li><Link to="/profileupdate">Profile Update</Link></li>
+            <li><Link to="/cameralist">Camera</Link></li>
+            <li><Link to="/devicelist">Devices</Link></li>
+          </ul>
+        );
+      } else if (user.role === "Hospital Admin" && user.active) {
+        return (
+          <ul>
+            <li><Link to="/hospitalAdmin">Hospital Admin Dashboard</Link></li>
+            <li><Link to="/profileupdate">Profile Update</Link></li>
+            <li><Link to="/createDepartment">Add New Department</Link></li>
+          </ul>
+        );
+      } else if (user.role === "Super Admin") {
+        return (
+          <ul>
+            <li><Link to="/superAdminDashboard">Super Admin Dashboard</Link></li>
+            <li><Link to="/profileupdate">Profile Update</Link></li>
+            <li><Link to="/allHospitals">Hospitals</Link></li>
+            <li><Link to="/activateHospitalAdmin">Activate Hospital Admin</Link></li>
+          </ul>
+        );
+      }
+    }
+  }, [user, isLoggedIn]);
 
-{user.role === "Super Admin" && (
-          <>
-            <li>
-              <Link to="/superAdminDashboard">Super Admin Dashboard</Link>
-            </li>
-            <li>
-              <Link to="/profileupdate">Profile Update</Link>
-            </li>
-            <li>
-              <Link to="/allHospitals">Hospitals</Link>
-            </li>
-            <li>
-            <Link to="/allHospitals">Activate Hospital Admin</Link>
-            </li>
-            <li>
-          <Link to="/signout">Signout</Link>
-        </li>
-          </>
-        )}
-      </> ) }
+  return (
+    <nav>
+      {navLinks}
+      <ul>
+        <li><Link to="/signout">Signout</Link></li>
       </ul>
-    );
-  }, [user]);
-
-  return <nav>{navLinks}</nav>;
+    </nav>
+  );
 };
 
 export default LeftNavBar;

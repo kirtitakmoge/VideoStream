@@ -23,6 +23,7 @@ useEffect(() => {
         const data = await response.json();
         console.log(data);
         setUser(data);
+        console.log(data.active);
       } catch (error) {
         console.error('Error fetching hospital admins:', error);
         // Handle error
@@ -40,7 +41,7 @@ useEffect(() => {
 
   const handleUpdate = async () => {
     try {
-      const response = await fetch( `${process.env.REACT_APP_API_URL}/api/users/updateHospitalAdminActiveStatus/${superAdminId}/activate`, {
+      const response = await fetch( `${process.env.REACT_APP_API_URL}/api/users/updateHospitalAdminActiveStatus/${user._id}/${superAdminId}/activate`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -62,6 +63,7 @@ useEffect(() => {
         duration: 2000,
         position: 'top-center', 
     });
+    setUser(data.user);
       console.log('Hospital Admin active status updated successfully:', data.user);
     } catch (error) {
       console.error('Error updating user active status:', error);
@@ -86,7 +88,10 @@ if(user!=null)
         <label className="block text-gray-700 font-bold mb-2">Email:</label>
         <p>{user.email}</p>
       </div>
-     
+      <div className="mb-4">
+        <label className="block text-gray-700 font-bold mb-2">Active</label>
+        <p>{user.active?"Yes" :"No"}</p>
+      </div>
       <div className="mb-4">
         <label className="block text-gray-700 font-bold mb-2">Active</label>
         <input

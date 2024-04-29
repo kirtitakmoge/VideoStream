@@ -14,7 +14,7 @@ const requireSuperAdmin = async(req, res, next) => {
     // Assuming that the authenticated user's role is stored in req.user.role
     if (sadmin &&sadmin.role=== 'Super Admin') {
         // User is a Super Admin, proceed to the next middleware or route handler
-        console.log("verified")
+        console.log(" super admin verified")
         next();
     } else {
         // User is not authorized, return 403 Forbidden status
