@@ -27,6 +27,16 @@ const DepartmentGallery = ({ departments}) => {
           >
             <h2 className="text-2xl font-bold mb-4">Add New Department</h2>
           </Link>
+
+        </div>
+        <div className=" col-span-1 shadow-md">
+          <Link
+            to={`/patientData`}
+            className="bg-gray-100 block p-4 rounded-md hover:bg-gray-200"
+          >
+            <h2 className="text-2xl font-bold mb-4">Patient</h2>
+          </Link>
+          
         </div>
       </div>
     </>

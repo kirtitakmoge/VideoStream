@@ -8,7 +8,8 @@ const PatientData = () => {
   const { user } = useAuth();
   const token = localStorage.getItem("token");
   useEffect(() => {
-    const fetchPatients = async () => {
+    if(user.role==="Surgeon"){
+    const fetchPatientsByDepartmentId = async () => {
       try {
         const response = await fetch(
           `${process.env.REACT_APP_API_URL}/api/patient/getAllPatientByDepartmentId/${user.departmentId}`,
@@ -30,7 +31,34 @@ const PatientData = () => {
       }
     };
 
-    fetchPatients();
+    fetchPatientsByDepartmentId();}
+    else if(user.role==="Hospital Admin")
+      {
+        const fetchPatientsByHospitalId = async () => {
+          try {
+            console.log(user.role)
+            const response = await fetch(
+              `${process.env.REACT_APP_API_URL}/api/patient/getAllPatientByHospitalId/${user.hospitalId}/${user._id}`,
+              {
+                method: "GET",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${token}`, // Include the token in the Authorization header
+                },
+              }
+            ); // Replace with your API endpoint
+            const data = await response.json();
+            setPatients(data);
+            console.log(data);
+            setLoading(false);
+          } catch (error) {
+            setError("Error fetching patients");
+            setLoading(false);
+          }
+        };
+    
+        fetchPatientsByHospitalId();
+      }
   }, []);
 
   return (
