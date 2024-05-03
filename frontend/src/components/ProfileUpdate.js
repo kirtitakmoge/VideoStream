@@ -31,8 +31,9 @@ const UpdateProfileForm = ({ userId }) => {
                 },
             });
             
-            if (response.status === 200) {
+            if (response.ok) {
                 const userData = await response.json();
+                alert(userData.hospitalId.Hospital_Name);
                 setUserData(userData);
             }
         } catch (error) {
@@ -108,11 +109,19 @@ const UpdateProfileForm = ({ userId }) => {
   </div> */}
           <div className="mb-2">
             <label htmlFor="hospitalId" className="block font-medium">Hospital</label>
-            <input type="text" id="hospitalId" name="hospitalId" value={userData.hospitalId.Hospital_Name} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2" />
+            <input 
+  type="text" 
+  id="hospitalId" 
+  name="hospitalId" 
+  value={userData.hospitalId ? (userData.hospitalId.Hospital_Name || '') : ''} 
+  onChange={handleChange} 
+  className="w-full border border-gray-300 rounded px-3 py-2" 
+/>
+
           </div>
           <div className="mb-2">
             <label htmlFor="specialization" className="block font-medium">Specialization</label>
-            <input type="text" id="specialization" name="specialization" value={userData.departmentId} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2" />
+            <input type="text" id="specialization" name="specialization" value={userData.departmentId?userData.departmentId.department_name:""} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2" />
           </div>
           <div className="mb-2">
             <label htmlFor="mobile_no" className="block font-medium">Mobile Number</label>

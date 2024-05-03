@@ -72,7 +72,7 @@ const getAllPatientsByDepartmentId = async (req, res, next) => {
     const { departmentId } = req.params;
 
     try {
-        const patients = await Patient.find({ departmentId }).populate("patientcontentId");
+        const patients = await Patient.find({departmentId: departmentId }).populate("patientcontentId");
         
         console.log(patients);
       

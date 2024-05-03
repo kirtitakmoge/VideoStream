@@ -41,11 +41,11 @@ const patientContentController = {
                 date,
                 time,
             });
-     
+            await patientContent.save();
             patient.patientcontentId = patientContent._id; // Assuming this is how you associate patient content with patient
             await patient.save(); // Save the patient after updating patient content ID
            console.log(patientContent._id,patient);
-            await patientContent.save(); // Save the patient content
+            // Save the patient content
     
             res.status(201).json({ message: 'Patient content created successfully', data: patientContent });
         } catch (error) {
