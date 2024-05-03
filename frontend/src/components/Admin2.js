@@ -49,7 +49,9 @@ const HospitalAdmin = () => {
     <div className="container mx-auto mt-10">
       <h1 className="text-center text-2xl font-bold mb-4">
         Welcome to {hospitalName}'s Dashboard
+        
       </h1>
+      <h2 className="text-center text-2xl font-bold mb-4"> Hospital Admin : {user.firstname}</h2>
       <h1 className="text-2xl text-center font-bold mb-4 ml-6">Department Gallery</h1>
       {/* Pass departments and updateDepartments as props to DepartmentGallery */}
       <DepartmentGallery departments={departments} />

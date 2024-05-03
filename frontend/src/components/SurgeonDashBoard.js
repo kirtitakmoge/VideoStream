@@ -1,16 +1,16 @@
 import React from "react";
 import ShowVideo from "./ShowVideo";
 import { Link } from "react-router-dom";
-
+import {useAuth} from "./AuthContext"
 import { useParams } from "react-router-dom";
 import DeviceList from "./DeviceList";
 const SurgeonDashboard = () => {
   const { departmentId } = useParams();
-
+ const {user}=useAuth();
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl text-center font-semibold mb-8">
-        Surgeon Dashboard
+        Surgeon   {user.firstname}   Dashboard  
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

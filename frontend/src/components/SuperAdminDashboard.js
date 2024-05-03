@@ -2,15 +2,15 @@ import React from "react";
 
 import { Link } from "react-router-dom";
 
-import { useParams } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
 const SuperAdminDashboard = () => {
- 
+ const {user} =useAuth();
 
   return (
     <div className="container mx-auto p-6">
       <h1 className="text-3xl text-center font-semibold mb-8">
-        Super Admin Dashboard
+        Super Admin {user.firstname} Dashboard
       </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
