@@ -67,16 +67,6 @@ const deletePatientById = async (req, res, next) => {
     }
 };
 
-const getAllPatientsByHospitalId = async (req, res, next) => {
-    const { hospitalId } = req.params;
-
-    try {
-        const patients = await Patient.find({ hospitalId });
-        res.status(200).json(patients);
-    } catch (error) {
-        next(error);
-    }
-};
 
 const getAllPatientsByDepartmentId = async (req, res, next) => {
     const { departmentId } = req.params;
@@ -88,9 +78,27 @@ const getAllPatientsByDepartmentId = async (req, res, next) => {
       
         res.status(200).json(patients);
     } catch (error) {
-        next(error);
+        console.error("Error fetching patients:", error);
+        res.status(500).json({ message: "Internal server error" });
     }
 };
+const getAllPatientsByHospitalId = async (req, res) => {
+    const { hospitalId } = req.params;
+  
+    try {
+        const patients = await Patient.find({ hospitalId }).populate("patientcontentId");
+        
+        if (!patients || patients.length === 0) {
+            return res.status(404).json({ message: "No patients found for the given hospital ID" });
+        }
+
+        res.status(200).json(patients);
+    } catch (error) {
+        console.error("Error fetching patients:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+};
+
 
 const loginPatient= async (req, res, next) => {
     const { email, password } = req.body;

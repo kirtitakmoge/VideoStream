@@ -288,19 +288,24 @@ exports.getCamerasForUser=async (req,res) => {
 exports. getUsersByDepartmentId = async (req, res) => {
     try {
       const departmentId = req.params.departmentId;
-      
+      console.log(departmentId);
       // Validate departmentId if needed, e.g., check if it's a valid ObjectId
-      
+      if(!isValidObjectId(departmentId))
+        {
+            console.log("invalid");
+            return res.status(404).json({error:"invalid department ID"});
+        }
       // Fetch users by departmentId from the User collection
-      const users = await User.find({ departmentId }).populate('departmentId');
+      const users = await User.find({ departmentId: departmentId });
     console.log(users);
-      // If there are no users for the department, return 404 Not Found
-      if (!users) {
+    if (!users || users.length === 0) {
+        console.log(users.length);
         return res.status(404).json({ error: 'Users not found for the department' });
       }
   
+  
       // If users found, return them
-      res.json(users);
+     return res.status(200).json(users);
     } catch (error) {
       // Handle errors
       console.error('Error fetching users by department ID:', error);

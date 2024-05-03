@@ -9,6 +9,7 @@ const SurgeonList = () => {
   const [selectedsurgeon, setSelectedSurgeon] = useState([]);
   const [show,setShow]=useState(true);
   useEffect(() => {
+    alert("HospitalAdmin");
     // Fetch surgeons when component mounts
     fetchSurgeons();
   }, []);

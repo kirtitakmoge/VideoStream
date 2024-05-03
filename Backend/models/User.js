@@ -42,7 +42,7 @@ const userSchema = new Schema({
         }
     },
     departmentId: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'Department'
       },
     Specialization: { 
