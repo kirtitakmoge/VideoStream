@@ -40,6 +40,8 @@ import HospitalAdminData from "./HospitalAdminData";
 import LeftNavBar from "./leftNavBar";
 import RenameDepartment from "./RenameDepartment";
 import DeleteDepartment from "./DeleteDepartment";
+
+import PatientData from "./PatientData";
 import Layout from "./Layout";
 const NewApp = () => {
   const { user } = useAuth(); // Get the user object from the AuthContext
@@ -48,7 +50,7 @@ const NewApp = () => {
     <Router>
       <div className="flex">
         {/* Left Navigation */}
-        <div className="left-nav px-4  bg-gray-800 h-screen w-48 flex flex-col">
+        <div className="left-nav px-4 bg-gray-800 overflow-y-auto h-screen w-48 flex flex-col">
           {/* Logo and Name */}
           <div className="flex justify-center p-4">
             <img
@@ -66,7 +68,7 @@ const NewApp = () => {
           <Navbar/> <Layout>
           <Routes>
            
-            <Route path="/" element={<Login />} />
+            <Route path="/" element={<Home />} />
             <Route path="/login/:userType" element={<Login />} />
             <Route path="/signup" element={<Register />} />
             <Route path="/home" element={<Home />} />
@@ -100,6 +102,7 @@ const NewApp = () => {
             <Route path="/superAdminDashboard" element={<SuperAdminDashboard />} />
             <Route path="/surgeonBucket/:cameraId" element={<SurgeonBucket />} />
             <Route path="/patientprofileupdate" element={<PatientUpdate />} />
+            <Route path="/patientData" element={<PatientData/>}/>
             <Route path="/allHospitals" element={<AllHospitals />} />
             <Route path="/hospitalAdminData/:hospitalId" element={<HospitalAdminData/>}/>
          

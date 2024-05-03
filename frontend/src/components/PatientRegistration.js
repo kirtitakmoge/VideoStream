@@ -14,12 +14,32 @@ const PatientRegistration = () => {
     address: "",
   });
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+ 
+  const [departments, setDepartments] = useState([]);
+  const handleChange = async (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+
+    if (name === 'hospitalId' && value.length === 24) {
+      try {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/department/getAllDepartmentsByHospitalId/${value}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          
+        });
+        if (response.ok) {
+          const departmentsData = await response.json();
+          setDepartments(departmentsData.departments);
+        }
+      } catch (error) {
+        console.error('Error fetching departments:', error);
+      }
+    }
   };
+
+ 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -125,6 +145,20 @@ const PatientRegistration = () => {
             required
           />
         </div>
+        <div className="mb-4">
+            <label htmlFor="hospitalId" className="block font-medium">Hospital ID</label>
+            <input type="text" id="hospitalId" name="hospitalId" value={formData.hospitalId} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500" />
+          </div>
+          
+          <div className="mb-4">
+            <label htmlFor="departmentId" className="block font-medium">Department</label>
+            <select id="departmentId" name="departmentId" value={formData.departmentId} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500">
+              <option value="">Select Department</option>
+              {departments.map(department => (
+                <option key={department._id} value={department._id}>{department.department_name}</option>
+              ))}
+            </select>
+          </div>
         <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Register</button>
       </form>
     </div>

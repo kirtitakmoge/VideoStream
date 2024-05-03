@@ -1,92 +1,144 @@
 const PatientContent = require('../models/PatientContent');
-const generatePresignedUrl=require("../auth/generatePresignedUrl");
+const { generatePresignedUrl, extractBucketAndKey } = require('../auth/generatePresignedUrl');
+const User=require("../models/User");
+const Patient = require('../models/Patient');
 const patientContentController = {
     // Create a new patient content
     createPatientContent: async (req, res) => {
         try {
-            const {userId, surgeonId, link} = req.body;
-
-            // Get the current date and time
-            const currentDate = new Date();
-            const currentTime = currentDate.toLocaleTimeString(); // Format the time as a string
-        console.log(link);
-            // Create a new instance of PatientContent with the provided data
-            const newPatientContent = new PatientContent({
-              link,
-              userId,
-              surgeonId,
-             date: currentDate,
-              time: currentTime,
-            
-            });
-        
-            // Save the newPatientContent to the database
-            const savedPatientContent = await newPatientContent.save();
-            res.status(201).json(savedPatientContent);
-        } catch (error) {
-            console.error('Error creating patient content:', error);
-            res.status(500).json({ error: 'Internal server error' });
-        }
-    },
-
-    // Get all patient contents
-    getAllPatientContents: async (req, res) => {
-        try {
-            const patientContents = await PatientContent.find();
-            return res.status(200).json(patientContents);
-        } catch (error) {
-            console.error('Error getting patient contents:', error);
-            res.status(500).json({ error: 'Internal server error' });
-        }
-    },
-
-    // Get a single patient content by ID
-    getPatientContentById: async (req, res) => {
-        try {
-            // Find patient content by user ID
-            const patientContent = await PatientContent.find({ userId: req.params.userId }).populate("surgeonId");
-            
-            // Check if patient content exists
-            if (!patientContent || patientContent.length === 0) {
-                return res.status(404).json({ error: 'Patient content not found' });
+            const {
+                userId,
+                link, // Array of URLs
+                surgeonId,
+            } = req.body;
+    
+            // Check if required fields are provided
+            if (!userId || !link || !Array.isArray(link) || link.length === 0 || !surgeonId) {
+                return res.status(400).json({ message: 'All required fields must be provided' });
             }
     
-            // Create an array to store promises for generating pre-signed URLs
-            const promises = [];
-     
-            // Iterate over each patient content
-            patientContent.forEach(patient => {
-                // Iterate over each item in the link array
-                console.log(patient);
-                patient.link.forEach(item => {
-                    // Generate a pre-signed URL for each item and add the promise to the array
-                    const url=generatePresignedUrl(item);
-                    promises.push(url);
-                    console.log(url)
-                });
+            // Extract bucketName and objectKey from each link
+            const linkObjects = link.map(url => {
+                const { bucketName, objectKey } = extractBucketAndKey(url);
+                return { url, bucketName, objectKey };
             });
     
-            // Wait for all promises to resolve
-            const urls = await Promise.all(promises);
-            const dataWithUrls = patientContent.map((patient, index) => {
-                return {
-                  surgeonName:patient.surgeonId.firstname,
-                  url: urls[index]
-                };
-              });
-          
-              // Respond to the client with both patient data and URLs
-              res.status(200).json(dataWithUrls); 
-            // Send the array of URLs in the response
-           
+            const date = new Date();
+            const time = date.toLocaleTimeString();
+    
+            // Find the patient by userId
+            const patient = await Patient.findById(userId);
+    
+            if (!patient) {
+                return res.status(404).json({ message: 'Patient not found' });
+            }
+    
+            // Create patient content
+            const patientContent = new PatientContent({
+                userId,
+                link: linkObjects,
+                surgeonId,
+                date,
+                time,
+            });
+     
+            patient.patientcontentId = patientContent._id; // Assuming this is how you associate patient content with patient
+            await patient.save(); // Save the patient after updating patient content ID
+           console.log(patientContent._id,patient);
+            await patientContent.save(); // Save the patient content
+    
+            res.status(201).json({ message: 'Patient content created successfully', data: patientContent });
         } catch (error) {
-            console.error('Error getting patient content by ID:', error);
-            res.status(500).json({ error: 'Internal server error' });
+            // Check if the error is a validation error for the compound index
+            // Check if the error is a validation error for the compound index
+if (error.name === 'MongoServerError' && error.code === 11000) {
+    // Log the error for debugging
+    console.error('Duplicate key error:', error);
+
+    // Extract relevant information from the error
+    const { keyValue } = error;
+
+    // Check if the keyValue object exists and has the expected properties
+    // Construct a custom error message
+const errorMessage = `Below media  ${keyValue['link.objectKey']}  with userId ${keyValue.userId}  already Shared.`;
+return res.status(400).json({ message: errorMessage });
+}
+
+    
+            // For other types of errors, handle them appropriately
+            console.error('Error:', error);
+            res.status(500).json({ message: 'Internal server error' });
         }
     }
     
-,    
+    
+,getPatientContentByUserId: async (req, res) => {
+    try {
+        // Extract userId from the request parameters
+        const { userId } = req.params;
 
+        // Find all patient contents based on the userId
+        const patientContents = await PatientContent.find({ userId });
+
+        // If no patient content is found, return a 404 error
+        if (!patientContents || patientContents.length === 0) {
+            return res.status(404).json({ message: 'Patient content not found' });
+        }
+
+        // Array to store all presigned URLs with surgeon names for each patient content
+        const allPresignedUrls = [];
+
+        // Iterate through each patient content
+        for (const patientContent of patientContents) {
+            // Fetch the surgeon details based on the surgeonId in the patient content
+            const surgeon = await User.findById(patientContent.surgeonId);
+
+            // If no surgeon is found, return a 404 error
+            if (!surgeon) {
+                return res.status(404).json({ message: 'Surgeon not found' });
+            }
+
+            // Generate presigned URLs for each link in the patient content
+            const presignedUrls = await Promise.all(patientContent.link.map(async (linkObj) => {
+                try {
+                    const { url, bucketName, objectKey } = linkObj;
+
+                    // Generate the pre-signed URL for the link
+                    const presignedUrl = await generatePresignedUrl(bucketName, objectKey);
+
+                    return { presignedUrl ,objectKey, surgeonName: surgeon.firstname };
+                } catch (error) {
+                    console.error('Error generating pre-signed URL:', error);
+                    return null;
+                }
+            }));
+
+            // Push presigned URLs for the current patient content to the array
+            allPresignedUrls.push( presignedUrls );
+        }
+        console.log(allPresignedUrls);
+
+        // Return the array of presigned URLs with surgeon names for all patient contents
+        res.status(200).json(allPresignedUrls);
+    } catch (error) {
+        console.error('Error retrieving patient content:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+,
+        
+
+getAllPatientContent:async (req, res) => {
+    try {
+        // Retrieve all patient content from the database
+        const allPatientContent = await PatientContent.find();
+
+        res.status(200).json({ data: allPatientContent });
+    } catch (error) {
+        console.error('Error retrieving patient content:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+},
     // Update a patient content by ID
     updatePatientContent: async (req, res) => {
         try {

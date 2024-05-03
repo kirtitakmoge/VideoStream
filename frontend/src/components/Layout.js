@@ -22,7 +22,7 @@ navigate("/superAdminDashboard" );
 
    }
     // Check if the current pathname starts with '/login' or '/registration'
-    const isRestrictedRoute = location.pathname.startsWith('/login') || location.pathname.startsWith("/registration");
+    const isRestrictedRoute = location.pathname.startsWith('/login') || location.pathname.startsWith("/registration")||location.pathname.endsWith("/");
   
     return (
       <div className="container">

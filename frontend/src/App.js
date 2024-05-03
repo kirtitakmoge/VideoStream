@@ -3,7 +3,7 @@ import { AuthProvider } from './components/AuthContext';
 import { DepartmentProvider } from './components/DepartmentContext';
 import HospitalAccessProvider from './components/HospitalAccessProvider';
 import NewApp from './components/NewApp';
-
+import 'tailwindcss/tailwind.css'
 import { Toaster } from 'react-hot-toast';
 
 function App() {

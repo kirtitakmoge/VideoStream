@@ -25,7 +25,7 @@ const LeftNavBar = () => {
             <li><Link to="/patientvideos">Shared Surgery Videos by Surgeon</Link></li>
           </ul>
         );
-      } else if (user.role === "Surgeon" && user.activeBucket && user.activeCamera) {
+      } else if (user.role === "Surgeon" && user.bucketActive && user.cameraActive) {
         return (
           <ul>
             <li><Link to={`/surgeonDashboard/${user.departmentId}`}>Surgeon Dashboard</Link></li>

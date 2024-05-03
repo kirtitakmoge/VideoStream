@@ -10,8 +10,8 @@ router.post('/login', patientController.loginPatient);
 
 //this is for Hospital Admin
 router.get('/getAllPatient/:adminId',verifyToken,isAdmin1,patientController.getAllPatients);
-
-
+router.get("/getAllPatientByDepartmentId/:departmentId",verifyToken,patientController.getAllPatientsByDepartmentId);
+router.get("getAllPatientByHospitalId/:hospitalId/:adminId",verifyToken,isAdmin1,patientController.getAllPatientsByHospitalId);
 router.get('/getPatientById/:id',verifyToken, patientController.getPatientById);
 router.put('/updatePatientById/:id',verifyToken, patientController.updatePatientById);
 router.delete('/deletePatient/:id',verifyToken,patientController.deletePatientById);

@@ -7,8 +7,8 @@ const router = express.Router();
 
 // Routes for patient content
 router.post('/createPatientContents',verifyToken, patientContentController.createPatientContent);
-router.get('/patientContents', patientContentController.getAllPatientContents);
-router.get('/patientContents/:userId', patientContentController.getPatientContentById);
+router.get('/patientContents', patientContentController.getAllPatientContent);
+router.get('/patientContents/:userId', patientContentController.getPatientContentByUserId);
 router.put('/patientContents/:id', patientContentController.updatePatientContent);
 router.delete('/patientContents/:id', patientContentController.deletePatientContent);
 

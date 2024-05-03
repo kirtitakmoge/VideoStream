@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-
+const Hospital = require("../models/Hospital");
 const { Schema } = mongoose;
 
 const patientSchema = new Schema({
@@ -20,6 +20,23 @@ const patientSchema = new Schema({
         type: String,
         default:"Patient"
     },
+    hospitalId: { 
+        type: Schema.Types.ObjectId, 
+        ref: 'Hospital',
+        // Custom validation to check if hospitalId references a valid hospital
+        validate: {
+            validator: async function (value) {
+                if(value!=null){
+                const hospital = await Hospital.findById(value);
+                return !!hospital;}
+            },
+            message: props => `Hospital with ID ${props.value} does not exist`
+        }
+    },
+    departmentId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Department'
+      },
     gender: {
         type: String,
         enum: {
@@ -40,7 +57,10 @@ const patientSchema = new Schema({
         type: String,
         required: [true, 'Address is required']
     },
-  
+  patientcontentId:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'PatientContent'
+  },
 
 });
 

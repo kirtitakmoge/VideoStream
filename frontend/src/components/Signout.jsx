@@ -24,7 +24,7 @@ const SignOut = () => {
                     position: 'top-center', 
                 });
             }
-            navigate("/login");
+            navigate("/");
         };
 
         signOut();

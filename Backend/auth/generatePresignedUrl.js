@@ -16,13 +16,13 @@ const s3 = new AWS.S3({
 
 
 // Function to generate a pre-signed URL for an object
-const generatePresignedUrl = async (url) => {
+const generatePresignedUrl = async (bucketName, objectKey ) => {
   try {
     // Extract the URL from the request body
-  console.log(url);
+ 
 
     // Extract bucket name and object key from the URL
-    const { bucketName, objectKey } = extractBucketAndKey(url);
+    
     
     // Generate the pre-signed URL
     const params = {
@@ -33,9 +33,9 @@ const generatePresignedUrl = async (url) => {
 
     const signedUrl = await s3.getSignedUrlPromise('getObject', params);
     const d={objectKey,signedUrl};
-console.log("new",signedUrl);
+
     // Return the pre-signed URL in the response
-   return d;
+   return signedUrl;
   } catch (error) {
     console.error('Error generating pre-signed URL:', error);
     return null;
@@ -56,4 +56,4 @@ const extractBucketAndKey = (url) => {
   }
 };
 
-module.exports = generatePresignedUrl ;
+module.exports = {generatePresignedUrl,extractBucketAndKey} ;

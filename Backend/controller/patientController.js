@@ -1,11 +1,12 @@
 const Patient = require('../models/Patient');
+const PatientContent=require("../models/PatientContent");
 const bcrypt = require('bcrypt');
 const generateToken = require('../auth/generateToken');
 const createPatient = async (req, res, next) => {
-    const { firstname, password, age, gender, email, address } = req.body;
+    const { firstname, password, age, gender, email, address,hospitalId,departmentId } = req.body;
 
     try {
-        const patient = new Patient({ firstname, password, age, gender, email, address });
+        const patient = new Patient(req.body);
         const hashedPassword = await bcrypt.hash(patient.password, 10);
         patient.password=hashedPassword;
         console.log(req.body);
@@ -65,6 +66,32 @@ const deletePatientById = async (req, res, next) => {
         next(error);
     }
 };
+
+const getAllPatientsByHospitalId = async (req, res, next) => {
+    const { hospitalId } = req.params;
+
+    try {
+        const patients = await Patient.find({ hospitalId });
+        res.status(200).json(patients);
+    } catch (error) {
+        next(error);
+    }
+};
+
+const getAllPatientsByDepartmentId = async (req, res, next) => {
+    const { departmentId } = req.params;
+
+    try {
+        const patients = await Patient.find({ departmentId }).populate("patientcontentId");
+        
+        console.log(patients);
+      
+        res.status(200).json(patients);
+    } catch (error) {
+        next(error);
+    }
+};
+
 const loginPatient= async (req, res, next) => {
     const { email, password } = req.body;
 
@@ -96,5 +123,7 @@ module.exports = {
     ,loginPatient,
     getPatientById,
     updatePatientById,
-    deletePatientById
+    deletePatientById,
+    getAllPatientsByHospitalId,
+    getAllPatientsByDepartmentId
 };

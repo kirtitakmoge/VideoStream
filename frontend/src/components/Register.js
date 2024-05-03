@@ -14,9 +14,9 @@ const RegistrationForm = () => {
     role: 'Surgeon', // Default role for surgeons
   };
   const navigate = useNavigate();
-  const [departments, setDepartments] = useState([]);
+  
   const [formData, setFormData] = useState(reset);
-
+  const [departments, setDepartments] = useState([]);
   const handleChange = async (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });

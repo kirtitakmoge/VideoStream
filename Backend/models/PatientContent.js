@@ -2,38 +2,31 @@ const mongoose = require('mongoose');
 
 // Define schema
 const patientContentSchema = new mongoose.Schema({
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
     link: [{
-        type: String,
-        required: true,
-        unique: true,
-        validate: {
-            validator: value => {
-                // Check if the value is a valid URL
-                try {
-                    new URL(value);
-                    return true;
-                } catch (error) {
-                    return false;
-                }
-            },
-            message: props => `${props.value} is not a valid URL`
+        url: {
+            type: String,
+            required: true
+        },
+        bucketName: {
+            type: String,
+            required: true
+        },
+        objectKey: {
+            type: String,
+            required: true
         }
     }],
-    userId: {
-        type:  mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-    },
     surgeonId: {
-      type:  mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
-    hospitalId: {
-        type:  mongoose.Schema.Types.ObjectId,
-    ref: 'Hospital',
-   
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     },
+   
     date: {
         type: Date,
         required: true
@@ -49,6 +42,9 @@ const patientContentSchema = new mongoose.Schema({
         type: String
     }
 });
+
+// Create a compound index for userId, bucketName, and objectKey to enforce uniqueness
+patientContentSchema.index({ userId: 1, 'link.bucketName': 1, 'link.objectKey': 1 }, { unique: true });
 
 // Create model
 const PatientContent = mongoose.model('PatientContent', patientContentSchema);
