@@ -45,7 +45,13 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(cors());
+
+app.use(cors({
+    origin: 'https://www.surgi-cloud.com', // Allow this domain to access resources
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true // if you need to handle cookies
+}));
+
 app.use(express.json());
 
 createRole();
