@@ -32,7 +32,7 @@ const token=localStorage.getItem("token");
         toast.error("Failed to update user active status", {
           duration: 2000,
           position: 'top-center', 
-      });
+      });  
         throw new Error('Failed to update user active status');
       }
       const data = await response.json();
