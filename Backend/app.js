@@ -28,7 +28,7 @@ const result = dotenv.config();
 }*/
 const serverOptions = {
     key: fs.readFileSync('/etc/letsencrypt/live/surgi-cloud.com/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/surgi-cloud.com/cert.pem')
+    cert: fs.readFileSync('/etc/letsencrypt/live/surgi-cloud.com/fullchain.pem')
 };
 
 const server = https.createServer(serverOptions, app);
