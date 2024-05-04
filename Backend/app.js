@@ -26,7 +26,12 @@ const result = dotenv.config();
 } else {
     console.log('Environment variables loaded successfully:', result.parsed);
 }*/
+const serverOptions = {
+    key: fs.readFileSync('/etc/letsencrypt/live/surgi-cloud.com/privkey.pem'),
+    cert: fs.readFileSync('/etc/letsencrypt/live/surgi-cloud.com/cert.pem')
+};
 
+const server = https.createServer(serverOptions, app);
 
 // Initialize logger
 const logger = winston.createLogger({
@@ -84,8 +89,7 @@ app.use((err, req, res, next) => {
     // Send an error response
     res.status(500).json({ error: 'Internal Server Error' });
 });
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+server.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
 });
 // Main file To run
