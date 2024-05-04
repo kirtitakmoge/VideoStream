@@ -21,6 +21,7 @@ const patientRoutes=require("./routes/patientRoutes");
 const dotenv = require('dotenv');
 const result = dotenv.config();
 const fs = require('fs');
+const https = require('https');
 /*if (result.error) {
     console.error('Error loading .env file:', result.error);
 } else {
