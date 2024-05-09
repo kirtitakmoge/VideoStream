@@ -20,7 +20,7 @@ const hospitalSchema = new Schema(
         validator: function(value) {
             // Regular expression to validate landline phone numbers
             // This regex allows for phone numbers in the format xxx-xxxxxxx or (xxx) xxx-xxxx
-            return /^(\d{3}-\d{7}|\(\d{3}\) \d{3}-\d{4})$/.test(value);
+            return /^(?:\+\d{1,3}\s?)?\d{10,12}$/.test(value);
         },
         message: props => `${props.value} is not a valid landline phone number. Please enter a valid landline phone number in the format xxx-xxxxxxx or (xxx) xxx-xxxx.`
     },

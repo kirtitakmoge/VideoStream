@@ -7,7 +7,7 @@ exports.createCamera = async (req, res) => {
         console.log(camera);
         // Attempt to save the camera document
         const savedCamera = await camera.save();
-        console.log(savedCamera);
+        console.log(savedCamera,"jr");
         // Return the saved camera in the response
         return res.status(201).json({ savedCamera });
     } catch (error) {
@@ -16,11 +16,17 @@ exports.createCamera = async (req, res) => {
             // Validation error occurred, return a 400 Bad Request response
             return res.status(400).json({ error: error.message });
         }
+        // Check if the error is a duplicate key error (code 11000)
+        if (error.code === 11000 && error.keyPattern && error.keyPattern.deviceId) {
+            // Duplicate device ID error occurred, return a 409 Conflict response
+            return res.status(409).json({ error: `${error.keyValue.deviceId} Device ID already exists.` });
+        }
         // For other types of errors, return a 500 Internal Server Error response
         console.error('Error creating Camera:', error);
         return res.status(500).json({ error: 'Internal server error' });
     }
 }
+
 
 exports.getAllCameras = async (req, res) => 
 {

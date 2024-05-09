@@ -44,7 +44,7 @@ const CameraForm = () => {
         // Handle non-successful responses (status codes other than 2xx)
         const errorMessage = await response.text();
         console.error(errorMessage);
-        toast.error(`Failed to Register Camera`, {
+        toast.error(`${errorMessage}`, {
           duration: 2000,
           position: "top-center",
         });
