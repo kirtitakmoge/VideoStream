@@ -24,6 +24,11 @@ const SuperAdminDashboard = () => {
         <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
           <Link to={`/allHospitals`}>Hospitals</Link>
         </div>
+
+        
+        <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
+          <Link to={`/hospitalRegistration`}>Register Hospital</Link>
+        </div>
         
       </div>
     </div>

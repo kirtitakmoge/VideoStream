@@ -4,7 +4,7 @@ exports.createCamera = async (req, res) => {
     try {
         // Create a new camera instance with the request body
         const camera = new Camera(req.body);
-        
+        console.log(camera);
         // Attempt to save the camera document
         const savedCamera = await camera.save();
         console.log(savedCamera);

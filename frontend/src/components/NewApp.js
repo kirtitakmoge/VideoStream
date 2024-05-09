@@ -31,7 +31,6 @@ import PatientRegistration from "./PatientRegistration";
 import PatientDashboard from "./PatientDashboard";
 import PatientVideos from "./PatientVideos";
 import DeviceList from "./DeviceList";
-import HospitalAdmin from "./Admin2";
 import PatientUpdate from "./PatientUpdate";
 import CreateSubScriptionPlan from "./CreateSubScriptionPlan";
 import SuperAdminDashboard from "./SuperAdminDashboard";
@@ -43,6 +42,11 @@ import DeleteDepartment from "./DeleteDepartment";
 
 import PatientData from "./PatientData";
 import Layout from "./Layout";
+import DepartmentGallerySuper from "./DepartmentGallerySuper";
+import DepartmentDetailsSuper from "./DepartmentDetailsSuper";
+import SurgeonListOnly from "./SurgeonListOnly";
+import CameraBucket from "./CameraBucket";
+import HospitalAdmin from "./HospitalAdmin";
 const NewApp = () => {
   const { user } = useAuth(); // Get the user object from the AuthContext
  
@@ -81,12 +85,12 @@ const NewApp = () => {
             <Route path="/hospitalRegistration" element={<HospitalRegistrationForm />} />
             <Route path="/surgeonDashboard/:departmentId" element={<SurgeonDashBoard />} />
             <Route path="/surgeonList/:departmentId" element={<SurgeonList />} />
-            <Route path="/cameralist" element={<CameraList />} />{/*  for surgeon  */}
-            <Route path="/deviceList" element={<DeviceList />} />{/*  for surgeon device list  */}
+            <Route path="/cameralist/:departmentId" element={<CameraList />} />{/*  for surgeon  */}
+            <Route path="/deviceList/:departmentId" element={<DeviceList />} />{/*  for surgeon device list  */}
             <Route path="/deviceListadmin/:departmentId" element={<DeviceListAdmin />} />
             <Route path="/department-details/:departmentId/:department_name" element={<DepartmentDetails />} />
             <Route path="/showvideo/:departmentId" element={<ShowVideo />} />
-            <Route path="/createCamera/:departmentId" element={<CameraForm />} />
+            <Route path="/createCamera/:departmentId/:department_name" element={<CameraForm />} />
             <Route path="/notactive/:name" element={<MessageComponent />} />
             <Route path="/hospitalAdmin" element={<HospitalAdmin />} />
             <Route path="/device/:cameraId" element={<CameraMediaPage />} />
@@ -102,10 +106,14 @@ const NewApp = () => {
             <Route path="/superAdminDashboard" element={<SuperAdminDashboard />} />
             <Route path="/surgeonBucket/:cameraId" element={<SurgeonBucket />} />
             <Route path="/patientprofileupdate" element={<PatientUpdate />} />
-            <Route path="/patientData" element={<PatientData/>}/>
+            <Route path="/patientData/:departmentId" element={<PatientData/>}/>
             <Route path="/allHospitals" element={<AllHospitals />} />
             <Route path="/hospitalAdminData/:hospitalId" element={<HospitalAdminData/>}/>
-         
+            <Route path="/departmentGallerySuper/:hospitalId/:hospital_name" element={<DepartmentGallerySuper/>}/>
+            <Route path="/departmentDetailSuper/:departmentId/:department_name" element={<DepartmentDetailsSuper/>}/>
+            <Route path="/surgeonListOnly/:departmentId"element={<SurgeonListOnly/>}/>
+            <Route path="/cameraBucket/:cameraId" element={<CameraBucket/>}/>
+            <Route path="/activateHospitalAdmin/:hospitalId" element={<HospitalAdminData/>}/>
           </Routes>
           </Layout>
         </div>

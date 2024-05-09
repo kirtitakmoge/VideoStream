@@ -19,6 +19,7 @@ const DepartmentGallery = ({ departments}) => {
           </div>
         ))}
       </div>
+      
       <div className="grid m-6 ml-6 grid-cols-3 gap-4 ">
         <div className=" col-span-1 shadow-md">
           <Link

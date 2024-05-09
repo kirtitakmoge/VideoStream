@@ -22,8 +22,8 @@ const AllHospitals = () => {
           {hospitals.map((hospital) => (
             <div className="col-span-1 shadow-md" key={hospital._id}>
               <Link
-                to={`/hospitalAdminData/${hospital._id}`}
-                className="bg-gray-100 block p-4 rounded-md hover:bg-gray-200"
+                to={`/departmentGallerySuper/${hospital._id}/${hospital.Hospital_Name}`}
+                className="bg-gray-100 h-full block p-4 rounded-md hover:bg-gray-200"
               >
                 <h2 className="text-2xl font-bold mb-4">{hospital.Hospital_Name}</h2>
               </Link>

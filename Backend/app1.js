@@ -22,14 +22,20 @@ const dotenv = require('dotenv');
 const result = dotenv.config();
 const fs = require('fs');
 const https = require('https');
-
+/*if (result.error) {
+    console.error('Error loading .env file:', result.error);
+} else {
+    console.log('Environment variables loaded successfully:', result.parsed);
+}*/
+/*
 const serverOptions = {
     key: fs.readFileSync('/etc/letsencrypt/live/surgi-cloud.com/privkey.pem'),
     cert: fs.readFileSync('/etc/letsencrypt/live/surgi-cloud.com/fullchain.pem')
 };
 
-const server = https.createServer(serverOptions, app);
+const server = https.createServer(serverOptions, app);*/
 
+// Initialize logger
 const logger = winston.createLogger({
     level: 'info',
     format: winston.format.json(),
@@ -40,16 +46,19 @@ const logger = winston.createLogger({
     ]
 });
 
+// Logging middleware
 app.use((req, res, next) => {
     logger.info(`${new Date().toISOString()} - ${req.method} ${req.url}`);
     next();
 });
+/*
 
 app.use(cors({
-    origin: ['https://www.surgi-cloud.com','https://surgi-cloud.com'], // Allow these domains to access resources
+    origin: 'https://www.surgi-cloud.com', // Allow this domain to access resources
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true // if you need to handle cookies
-}));
+}));*/
+app.use(cors());
 
 app.use(express.json());
 
@@ -58,10 +67,12 @@ app.get("/public",(req,res)=>
 {
     res.status(200).json("Welcome to streaming app");
 })
+// Protected route that requires authentication
 app.get('/protected', verifyToken, (req, res) => {
     res.json({ message: 'Protected route accessed successfully', user: req.user });
 });
 
+// Routes
 app.use('/api/users', userRoutes);
 app.use("/api/video", videoRoutes);   
 app.use("/api/public", publicRoutes);
@@ -73,13 +84,15 @@ app.use("/api/department", departmentRoutes);
 app.use("/api/bucket", bucketRoutes);
 app.use("/api/PatientContent",patientContentRoutes);
 app.use("/api/patient",patientRoutes);
-
+// Error handling middleware
 app.use((err, req, res, next) => {
+    // Log the error
     console.log(err);
     logger.error(`${new Date().toISOString()} - ${err.message}`, { error: err.stack });
+    // Send an error response
     res.status(500).json({ error: 'Internal Server Error' });
 });
-
-server.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+// Main file To run

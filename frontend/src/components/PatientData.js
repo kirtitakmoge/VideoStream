@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "./AuthContext";
-
+import {useParams} from "react-router-dom";
 const PatientData = () => {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user } = useAuth();
   const token = localStorage.getItem("token");
+  const {departmentId}=useParams();
   useEffect(() => {
-    if(user.role==="Surgeon"){
+    if(user.role==="Surgeon"  || user.role==="Super Admin"){
+      alert("Super Admin");
     const fetchPatientsByDepartmentId = async () => {
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/patient/getAllPatientByDepartmentId/${user.departmentId}`,
+          `${process.env.REACT_APP_API_URL}/api/patient/getAllPatientByDepartmentId/${departmentId}`,
           {
             method: "GET",
             headers: {
@@ -68,6 +70,8 @@ const PatientData = () => {
       ) : error || !patients ? (
         <p>{error}</p>
       ) : (
+        <>
+        <h1 className="text-2xl text-center font-bold mb-5"> Patients</h1>
         <table className="table-auto">
           <thead>
             <tr>
@@ -106,6 +110,7 @@ const PatientData = () => {
             ))}
           </tbody>
         </table>
+        </>
       )}
     </div>
   );

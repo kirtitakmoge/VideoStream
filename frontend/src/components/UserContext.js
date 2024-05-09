@@ -111,6 +111,29 @@ export const UserProvider = ({ children }) => {
     }
   };
 
+  //this will call by SurgeonList component of Hospital Admin dashboard
+  // only admin of that hospital will access surgeons
+  const fetchSurgeonsByDepartmentId= async (departmentId,token,adminid) => {
+ 
+    try {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/getUsersByDepartmentId/${departmentId}/${adminId}`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+             "Authorization": `Bearer ${token}` // Include the token in the Authorization header
+        },
+    });
+      if (!response.ok) {
+        throw new Error('Failed to fetch surgeons');
+      }
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error(error);
+      return error;
+    }
+  };
+
   // Context value
   const value = {
     users,
@@ -119,6 +142,7 @@ export const UserProvider = ({ children }) => {
     createUser,
     updateUser,
     deleteUserById,
+    fetchSurgeonsByDepartmentId
   };
 
   // Fetch users when component mounts

@@ -3,16 +3,17 @@ import React ,{useState,useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import{useAuth} from "./AuthContext"
 const DeviceList = () => {
+ 
 const {user}=useAuth();
 const [show,setShow]=useState(true);
 const navigate=useNavigate();
   const [cameras, setCameras] = useState([]);
-
+const{departmentId}=useParams();
   useEffect(() => {
     async function fetchCameras() {
       try {
         const token=localStorage.getItem("token");
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/camera/getCamerasByDepartmentId/${user.departmentId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/camera/getCamerasByDepartmentId/${departmentId}`, {
           method: "GET",
           headers: {
               "Content-Type": "application/json",
@@ -33,7 +34,13 @@ const navigate=useNavigate();
   }, [user.departmentId]);
 
   const handleDeviceClick = (camera) => {
+    if(user.role=="Super Admin")
+      navigate(`/CameraBucket/${camera._id}`)
+    else
+
     navigate(`/surgeonbucket/${camera._id}`);
+    
+
   };
 
   return (

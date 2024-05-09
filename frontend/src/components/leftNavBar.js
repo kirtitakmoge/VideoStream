@@ -48,7 +48,8 @@ const LeftNavBar = () => {
             <li><Link to="/superAdminDashboard">Super Admin Dashboard</Link></li>
             <li><Link to="/profileupdate">Profile Update</Link></li>
             <li><Link to="/allHospitals">Hospitals</Link></li>
-            <li><Link to="/activateHospitalAdmin">Activate Hospital Admin</Link></li>
+            <li><Link to="/hospitalRegistration">Register Hospital</Link>
+            </li>
           </ul>
         );
       }

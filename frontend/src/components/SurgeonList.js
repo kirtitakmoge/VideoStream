@@ -9,7 +9,7 @@ const SurgeonList = () => {
   const [selectedsurgeon, setSelectedSurgeon] = useState([]);
   const [show,setShow]=useState(true);
   useEffect(() => {
-    alert("HospitalAdmin");
+   
     // Fetch surgeons when component mounts
     fetchSurgeons();
   }, []);
@@ -50,6 +50,7 @@ const SurgeonList = () => {
       <h1 className="text-2xl text-center font-bold mb-4">Surgeons</h1>
       <div className="grid grid-cols-3 gap-4">
         {surgeons.map(surgeon => (
+          (surgeon.role!=="Hospital Admin" && surgeon.role!=="Super Admin") &&
           <div key={surgeon._id} onClick={()=>handleSurgeon(surgeon)} className="bg-white p-4 rounded shadow">
             <h2 className="text-xl font-bold mb-2">{surgeon.firstname} {surgeon.lastname}</h2>
             <p className="text-gray-600">{surgeon.email}</p>

@@ -19,7 +19,7 @@ export const DepartmentProvider = ({ children }) => {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-             "Authorization": `Bearer ${token}` // Include the token in the Authorization header
+             Authorization: `Bearer ${token}` // Include the token in the Authorization header
         },
       });
       if (response.ok) {

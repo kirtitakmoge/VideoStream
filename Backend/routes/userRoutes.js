@@ -14,11 +14,13 @@ const checkSurgeonOwnershipdata=require("../auth/checkSurgeonOwnershipdata");
 router.post('/signup', userController.signupUser);
 router.post('/login', userController.loginUser);
 
-//routes for admin
+//routes for HospitalAdmin
 router.post("/admin/getAllUsers/:adminId",verifyToken,isAdmin,adminController.getAllUsers);
 router.get("/admin/all-User",isAdmin,userController.getAllUser);
 router.get('/getSurgeonsByHospitalId/:hospitalId', userController.getSurgeonsByHospitalId);
 router.get("/getCamerasForUser/:surgeonId",userController.getCamerasForUser);
+
+
 
 //routes for Suregeon
 //router.get("/getUserbyId/:surgeonId",verifyToken,checkSurgeonOwnershipdata,userController.getUserByID);
@@ -27,6 +29,10 @@ router.delete("/deleteUserById/:surgeonId",verifyToken,userController.deleteUser
 router.put("/updateUserById/:surgeonId",userController.updateUserById);
 router.get("/getUserById/:surgeonId",verifyToken,userController.getUserByID);
 router.get("/getCameraUrlByUserId/:surgeonId",userController.getCameraUrlByUserId);
+
+
+
+
 //routes for super Admin
 router.put("/super/updateRoleById/:superAdminId/:surgeonId",verifyToken,requireSuperAdmin,userController.updateRole);
 router.get("/super/all-User",requireSuperAdmin,userController.getAllUser);

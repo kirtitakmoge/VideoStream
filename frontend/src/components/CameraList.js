@@ -3,6 +3,7 @@ import Hls from "hls.js";
 import { useParams,useNavigate} from "react-router-dom";
 import CameraData from "./CameraData";
 import { useAuth } from "./AuthContext";
+
 const CameraList = ({  }) => {
   
 
@@ -10,12 +11,13 @@ const CameraList = ({  }) => {
   const [selectedCamera, setSelectedCamera] = useState(null);
   const [show, setShow] = useState(true);
   const navigate = useNavigate();
+  const {departmentId}=useParams();
 const {user}=useAuth();
   useEffect(() => {
     async function fetchCameras() {
       try {
         const token=localStorage.getItem("token");
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/camera/getCamerasByDepartmentId/${user.departmentId}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/camera/getCamerasByDepartmentId/${departmentId}`, {
           method: "GET",
           headers: {
               "Content-Type": "application/json",

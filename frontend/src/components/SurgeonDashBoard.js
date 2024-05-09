@@ -18,13 +18,13 @@ const SurgeonDashboard = () => {
           <Link to="/profileupdate">SurgenProfile Update</Link>
         </div>
         <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
-          <Link to={`/cameralist`}>Live Streaming Camera</Link>
+          <Link to={`/cameralist/${user.departmentId}`}>Live Streaming Camera</Link>
         </div>
         <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
-          <Link to={`/deviceList`}> Recorded videos from camera</Link>
+          <Link to={`/deviceList/${user.departmentId}`}> Recorded videos from camera</Link>
         </div>
         <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
-          <Link to={`/patientData`}> Patients</Link>
+          <Link to={`/patientData/${user.departmentId}`}> Patients</Link>
         </div>
       </div>
     </div>

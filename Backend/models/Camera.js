@@ -9,7 +9,7 @@ const cameraSchema = new Schema(
     ipAddress:
      {
         type: String,
-        required: [true,"Please Enter IP Address"],
+      
     
         validate: {
             validator: function(value) {
@@ -42,6 +42,12 @@ const cameraSchema = new Schema(
     bucketName:
     {
         type: String
+    },
+    accessbucket:
+    {
+        type:Boolean,
+        default:false
+
     }
 },
  {

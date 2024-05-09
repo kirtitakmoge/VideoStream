@@ -70,7 +70,7 @@ const navigate=useNavigate();
         </div>
         <div className="col-span-1 shadow-md">
           {/* Style the link to resemble a button */}
-          <Link to={`/showvideo/${departmentId}`} className="button bg-gray-100 p-4 rounded-md block hover:bg-gray-200 w-full">
+          <Link to={`/cameralist/${departmentId}`} className="button bg-gray-100 p-4 rounded-md block hover:bg-gray-200 w-full">
             <h2 className="text-2xl text-center font-bold mb-4">Live stream from camera</h2>
           </Link>
         </div>

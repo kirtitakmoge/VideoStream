@@ -50,8 +50,11 @@ const token=localStorage.getItem("token");
     onDelete(user.id);
   };
 
-  return (
+  return (<>
+  
+    
     <div className="max-w-md mx-auto mt-2 pt-0 p-4 bg-white shadow-lg rounded-lg">
+
       <h2 className="text-lg font-bold mb-4 text-center">Surgeon Details</h2>
       <div className="mb-4">
         <label className="block text-gray-700 font-bold mb-2">First Name:</label>
@@ -110,6 +113,7 @@ const token=localStorage.getItem("token");
         </button>
       </div>
     </div>
+    </>
   );
 };
 
