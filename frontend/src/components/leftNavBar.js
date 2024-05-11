@@ -57,7 +57,16 @@ const LeftNavBar = () => {
   }, [user, isLoggedIn]);
 
   return (
-    <nav>
+    <nav className="fixed left-nav px-4 bg-gray-800 overflow-y-auto h-screen w-48 flex flex-col">
+      {/* Logo and Name */}
+      <div className="flex justify-center p-4">
+        <img
+          src="https://th.bing.com/th?id=OIP.jLXDXo17XAjxbpkevv2kBAHaGV&w=270&h=231&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2"
+          alt="Taurean Surgical Logo"
+          className="w-12 h-12 mr-2"
+        />
+        <p className="text-white text-lg font-semibold">Taurean Surgical</p>
+      </div>
       {navLinks}
       <ul>
         <li><Link to="/signout">Signout</Link></li>

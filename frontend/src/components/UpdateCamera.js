@@ -42,13 +42,14 @@ const token=localStorage.getItem("token");
     fetchCameraData();
 }, [cameraId]);
 
-  const handleChange = e => {
-   
-    setFormData(prevState => ({
-      ...prevState,
-      [e.target.name]: e.target.value 
-    }));
-  };
+const handleChange = e => {
+  const value = e.target.type === 'checkbox' ? e.target.checked : e.target.value;
+
+  setFormData(prevState => ({
+    ...prevState,
+    [e.target.name]: value
+  }));
+};
 
   const handleSubmit =async (e) => {
     e.preventDefault();
@@ -115,9 +116,18 @@ const token=localStorage.getItem("token");
         <input type="text" id="bucketName" name="bucketName" value={formData.bucketName} onChange={handleChange} className="border border-gray-300 rounded px-3 py-2" />
       </div>
       <div className="flex flex-col">
-        <label htmlFor="accessbucket" className="text-lg mb-1">Allowed to Access Bucket:</label>
-        <input type="text" id="accessbucket" name="accessbucket" value={formData.accessbucket} onChange={handleChange} className="border border-gray-300 rounded px-3 py-2" />
-      </div>
+          <label htmlFor="accessbucket" className="text-lg mb-1">Allowed to Access Bucket:</label>
+          <select
+            id="accessbucket"
+            name="accessbucket"
+            value={formData.accessbucket ? "true" : "false"}
+            onChange={handleChange}
+            className="border border-gray-300 rounded px-3 py-2"
+          >
+            <option value="true">True</option>
+            <option value="false">False</option>
+          </select>
+        </div>
       <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Update</button>
     </form>
   </div>

@@ -30,6 +30,10 @@ const SuperAdminDashboard = () => {
           <Link to={`/hospitalRegistration`}>Register Hospital</Link>
         </div>
         
+        <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
+          <Link to={`/superAllCameras`}>All Registered Cameras</Link>
+        </div>
+        
       </div>
     </div>
   );

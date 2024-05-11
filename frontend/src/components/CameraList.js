@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { useParams, useNavigate } from "react-router-dom";
 import { FaEdit, FaTrash, FaInfoCircle ,FaToggleOn} from 'react-icons/fa';
-
+import {toast} from "react-hot-toast"
 import { useAuth } from "./AuthContext";
 
 import CameraListItem from "./CameraListItem";
@@ -65,8 +65,21 @@ const CameraList = () => {
         }
       );
       if (!response.ok) {
+        toast.error(`Error in Camera Deletion`, {
+          duration: 2000,
+          position: "top-center",
+        });
+        
         throw new Error("Failed to delete camera");
       }
+      if(response.ok)
+        {
+          toast.success(`Camera Deleted SuccessFully`, {
+            duration: 2000,
+            position: "top-center",
+          });
+          
+        }
       setCameras((prevCameras) =>
         prevCameras.filter((camera) => camera._id !== cameraId)
       );

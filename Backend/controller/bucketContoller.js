@@ -51,6 +51,7 @@ exports.getBucketData = async (req, res) => {
       const photoUrls = [];
       const videoUrls = [];
   
+      console.log(bucketData);
       // Generate pre-signed URLs for all objects and categorize them as photo or video
       for (const obj of bucketData) {
         const signedParams = {
@@ -62,7 +63,7 @@ exports.getBucketData = async (req, res) => {
         // Check if the object is a photo or video (you may need to adjust this condition based on your file naming conventions)
         if (obj.Key.endsWith(".jpg") || obj.Key.endsWith(".jpeg") || obj.Key.endsWith(".png")) {
           photoUrls.push({ key: obj.Key, url });
-        } else if (obj.Key.endsWith(".mp4") || obj.Key.endsWith(".avi") || obj.Key.endsWith(".mov")) {
+        } else if (obj.Key.endsWith(".mp4") || obj.Key.endsWith(".avi") || obj.Key.endsWith(".mov")||obj.Key.endsWith(".ts")) {
           videoUrls.push({ key: obj.Key, url });
         }
       }

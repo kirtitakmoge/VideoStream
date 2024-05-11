@@ -36,30 +36,30 @@ const token=localStorage.getItem("token");
   }, [hospitalId]);
   return (
     <>
-    <div>
-      <h1 className="text-2xl font-bold text-center mb-5">{hospital_name}</h1>
-      <h1 className="text-2xl font-bold text-center mb-5"> Department Gallery</h1>
-      <div className="grid mx-6 ml-6 grid-cols-3 gap-4 ">
-        {departments.map((department) => (
-          <div key={department.departmentId} className="col-span-1 shadow-md">
-            <Link
-              to={{
-                pathname: `/departmentDetailSuper/${department.departmentId}/${department.department_name}`,
-               // Pass updateDepartments function as state
-              }}
-              className="bg-gray-100 block p-4 rounded-md hover:bg-gray-200"
-            >
-              <h2 className="text-2xl font-bold mb-4">{department.department_name}</h2>
-            </Link>
-          </div>
-
-          
-        ))}
-        <div>
-          <Link to={`/activateHospitalAdmin/${hospitalId}`} className="bg-gray-100 block p-4 rounded-md hover:bg-gray-200"> <h2 className="text-2xl font-bold mb-4">Activate Hospital Admin</h2></Link>
+     <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <h1 className="text-2xl font-bold text-center mb-5">{hospital_name}</h1>
+            <h1 className="text-2xl font-bold text-center mb-5"> Department Gallery</h1>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mx-6 ml-6">
+                {departments.map((department) => (
+                    <div key={department.departmentId} className="shadow-md">
+                        <Link
+                            to={{
+                                pathname: `/departmentDetailSuper/${department.departmentId}/${department.department_name}`,
+                                // Pass updateDepartments function as state
+                            }}
+                            className="block bg-gray-100 w-full p-4 rounded-md hover:bg-gray-200"
+                        >
+                            <h2 className="text-xl  font-bold mb-2">{department.department_name}</h2>
+                        </Link>
+                    </div>
+                ))}
+                <div className="shadow-md">
+                    <Link to={`/activateHospitalAdmin/${hospitalId}`} className="block bg-gray-100 p-4 rounded-md hover:bg-gray-200">
+                        <h2 className="text-xl font-bold mb-2">Activate Hospital Admin</h2>
+                    </Link>
+                </div>
+            </div>
         </div>
-      </div>
-      </div>
     </>
   );
 };

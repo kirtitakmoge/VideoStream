@@ -50,6 +50,7 @@ import HospitalAdmin from "./HospitalAdmin";
 import UpdateCamera from "./UpdateCamera";
 import CameraData from "./CameraData";
 import SurgeonData from "./SurgeonData";
+import SuperAllCamera from "./SuperAllCamera";
 const NewApp = () => {
   const { user } = useAuth(); // Get the user object from the AuthContext
  
@@ -57,16 +58,9 @@ const NewApp = () => {
     <Router>
       <div className="flex">
         {/* Left Navigation */}
-        <div className="left-nav px-4 bg-gray-800 overflow-y-auto h-screen w-48 flex flex-col">
+        <div className="left-nav  overflow-y-auto h-screen w-48 flex flex-col">
           {/* Logo and Name */}
-          <div className="flex justify-center p-4">
-            <img
-              src="https://th.bing.com/th?id=OIP.jLXDXo17XAjxbpkevv2kBAHaGV&w=270&h=231&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2"
-              alt="Taurean Surgical Logo"
-              className="w-12 h-12 mr-2"
-            />
-            <p className="text-white text-lg font-semibold">Taurean Surgical</p>
-          </div>
+         
           {/* Navigation Links */}
         <LeftNavBar userType={user}/>
         </div>
@@ -120,6 +114,7 @@ const NewApp = () => {
             <Route path="/updateCamera/:cameraId" element={<UpdateCamera/>}/>
             <Route path="/cameraData/:cameraId" element={<CameraData/>}/>
             <Route path="/surgeonData/:surgeonId" element={<SurgeonData/>}/>
+            <Route path="/superAllCameras" element={<SuperAllCamera/>}/>
             
           </Routes>
           </Layout>

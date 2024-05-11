@@ -21,7 +21,7 @@ const SurgeonData = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        alert("im useeffect");
+      
         if (!token) {
           // Handle case where token is not available
           return;
@@ -83,8 +83,9 @@ const SurgeonData = () => {
     }
   };
   return (
-    <>
-      <div className="max-w-md mx-auto mt-2 pt-0 p-4 bg-white shadow-lg rounded-lg">
+    
+     <>
+      <div className="max-w-md self-center mt-2 pt-0 p-4 bg-white shadow-lg rounded-lg">
         <h2 className="text-lg font-bold mb-4 text-center">Surgeon Details</h2>
         <div className="mb-4">
           <label className="block text-gray-700 font-bold mb-2">
@@ -111,46 +112,50 @@ const SurgeonData = () => {
           <p> {isCameraActive ? "Yes" : "No"}</p>
         </div>
 
-        {user.role ==="Hospital Admin" &&<>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2">
-            Activate Bucket:
-          </label>
-          <input
-            type="checkbox"
-            checked={isBucketActive}
-            onChange={() => setIsBucketActive(!isBucketActive)}
-            className="mr-2"
-          />
-          {isBucketActive ? "Yes" : "No"}
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2">
-            Activate Camera:
-          </label>
-          <input
-            type="checkbox"
-            checked={isCameraActive}
-            onChange={() => setIsCameraActive(!isCameraActive)}
-            className="mr-2"
-          />
-          {isCameraActive ? "Yes" : "No"}
-        </div>
-        <div className="flex items-center  justify-between">
-          <button
-            type="button"
-            className="bg-blue-500 hover:bg-blue-700 mx-2 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-           onClick={handleUpdate}>
-            Update
-          </button>
-          
-          <button
-            type="button"
-            className="bg-red-500 hover:bg-red-700 mx-2 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-          >
-            Delete
-          </button>
-        </div></>}
+        {user.role === "Hospital Admin" && (
+          <>
+            <div className="mb-4">
+              <label className="block text-gray-700 font-bold mb-2">
+                Activate Bucket:
+              </label>
+              <input
+                type="checkbox"
+                checked={isBucketActive}
+                onChange={() => setIsBucketActive(!isBucketActive)}
+                className="mr-2"
+              />
+              {isBucketActive ? "Yes" : "No"}
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 font-bold mb-2">
+                Activate Camera:
+              </label>
+              <input
+                type="checkbox"
+                checked={isCameraActive}
+                onChange={() => setIsCameraActive(!isCameraActive)}
+                className="mr-2"
+              />
+              {isCameraActive ? "Yes" : "No"}
+            </div>
+            <div className="flex items-center justify-center sm:justify-end">
+              <button
+                type="button"
+                className="bg-blue-500 hover:bg-blue-700 mx-2 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                onClick={handleUpdate}
+              >
+                Update
+              </button>
+
+              <button
+                type="button"
+                className="bg-red-500 hover:bg-red-700 mx-2 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              >
+                Delete
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </>
   );

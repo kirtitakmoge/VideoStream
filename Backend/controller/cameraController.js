@@ -31,7 +31,7 @@ exports.createCamera = async (req, res) => {
 exports.getAllCameras = async (req, res) => 
 {
     try {
-        const cameras = await Camera.find();
+        const cameras = await Camera.find().populate("departmentId");
         if (cameras && cameras.length > 0) {
             return res.status(200).json(cameras);
         } else {
