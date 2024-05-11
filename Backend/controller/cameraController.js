@@ -113,8 +113,8 @@ exports.updateCameraById = async (req, res) => {
 
 
 exports.deleteCameraById = async (req, res) => {
-    const cameraId = req.params.Id;
-
+    const cameraId = req.params.cameraId;
+ 
     // Check if the provided ID is a valid ObjectId
     if (!isValidObjectId(cameraId)) {
         return res.status(400).json({ error: "Invalid Id" });
@@ -122,7 +122,7 @@ exports.deleteCameraById = async (req, res) => {
 
     try {
         const camera = await Camera.findByIdAndDelete(cameraId);
-
+console.log(camera);
         // Check if camera is found and deleted
         if (camera) {
             return res.status(200).json({ message: "Camera Deleted Successfully" });

@@ -1,85 +1,122 @@
 import React, { useEffect, useState } from "react";
-import Hls from "hls.js";
-import { useParams,useNavigate} from "react-router-dom";
-import CameraData from "./CameraData";
+
+import { useParams, useNavigate } from "react-router-dom";
+import { FaEdit, FaTrash, FaInfoCircle ,FaToggleOn} from 'react-icons/fa';
+
 import { useAuth } from "./AuthContext";
 
-const CameraList = ({  }) => {
-  
+import CameraListItem from "./CameraListItem";
 
+const CameraList = () => {
   const [cameras, setCameras] = useState([]);
-  const [selectedCamera, setSelectedCamera] = useState(null);
-  const [show, setShow] = useState(true);
+  
   const navigate = useNavigate();
-  const {departmentId}=useParams();
-const {user}=useAuth();
+  const { departmentId } = useParams();
+  const { user } = useAuth();
+
   useEffect(() => {
     async function fetchCameras() {
       try {
-        const token=localStorage.getItem("token");
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/camera/getCamerasByDepartmentId/${departmentId}`, {
-          method: "GET",
-          headers: {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/camera/getCamerasByDepartmentId/${departmentId}`,
+          {
+            method: "GET",
+            headers: {
               "Content-Type": "application/json",
-               "Authorization": `Bearer ${token}` // Include the token in the Authorization header
-          },
-      });
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         if (!response.ok) {
-          throw new Error('Network response was not ok');
+          throw new Error("Network response was not ok");
         }
         const cameraData = await response.json();
         setCameras(cameraData);
       } catch (error) {
-        console.error('Error fetching cameras:', error);
+        console.error("Error fetching cameras:", error);
       }
     }
 
     fetchCameras();
-  }, [user.departmentId]);
+  }, [departmentId]);
 
-  const handleCameraData = (camera) => {
-    setShow(false);
-    setSelectedCamera(camera);
-    
-  }
-  const handleChangeFlag=()=>
-  {
-    setShow((prev)=>!prev);
+ 
+
+  const handleUpdate = (cameraId) => {
+   navigate(`/updateCamera/${cameraId}`);
+  };
+  const handleInfo=(cameraId)=>{
+    navigate(`/cameraData/${cameraId}`);
   }
 
-  useEffect(() => {
-    cameras.forEach((camera, index) => {
-      const video = document.getElementById(`video-${index}`);
-      if (video && camera.link) {
-        if (Hls.isSupported()) {
-          const hls = new Hls();
-          hls.loadSource(camera.link);
-          hls.attachMedia(video);
-        } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-          video.src = camera.link;
+  const handleDelete = async (cameraId) => {
+    try {
+      alert(cameraId)
+      const token = localStorage.getItem("token");
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/camera/deleteCameraById/${cameraId}`,
+        {
+          method:"DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
         }
+      );
+      if (!response.ok) {
+        throw new Error("Failed to delete camera");
       }
-    });
-  }, [cameras]);
+      setCameras((prevCameras) =>
+        prevCameras.filter((camera) => camera._id !== cameraId)
+      );
+    } catch (error) {
+      console.error("Error deleting camera:", error);
+    }
+  };
 
   return (
     <>
-      {show && (
-        <div className="col-span-3 mt-5">
-          <h2 className="text-2xl text-center font-bold mb-4">Cameras</h2>
-          <div className="flex">
-            {cameras.map((camera, index) => (
-              <div key={camera.id} onClick={() => handleCameraData(camera)}
-                className="bg-gray-100 h-23 mr-5 p-4 rounded-md cursor-pointer hover:bg-gray-200">
-                <video id={`video-${index}`} className="max-w-2xl mr-5 h-auto rounded-lg" controls autoPlay />
-                <div className="text-white text-center"> {camera.streamKey}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <div className="col-span-3 mt-5">
+        <h2 className="text-2xl text-center font-bold mb-4">Cameras</h2>
+        <div className="flex">
+          {cameras.map((camera, index) => (
+            <div
+              key={camera._id}
+              className="bg-gray-100 h-23 mr-5 p-4 rounded-md hover:bg-gray-200"
+            >
+             <CameraListItem camera={camera}/>
+              { (user.role==="Super Admin") ?
+              <div className="flex justify-center">
+                <div className=" mr-5" onClick={() => handleUpdate(camera._id)}>
+                  <FaEdit className="text-blue-500 cursor-pointer" size={20} />
+                  <span className="hover-text">Edit</span>
+                </div>
+                <div className=" mr-5" onClick={() => handleDelete(camera._id)}>
+                  <FaTrash className="text-red-500 cursor-pointer " size={20} />
+                  <span className="hover-text">Delete</span>
+                </div>
+                <div className="mr-5" onClick={() => handleInfo(camera._id)}>
+                  <FaInfoCircle className="text-gray-500 cursor-pointer" size={20} />
+                  <span className="hover-text">Info</span>
+                </div>
+                <div className="mr-5" onClick={() => handleInfo(camera._id)}>
+                <FaToggleOn
+                    className="text-red-500 cursor-pointer"
+                    size={20}
 
-      {!show && <CameraData selectedCamera={selectedCamera} handleChangeFlag={handleChangeFlag}/>}
+                  /><span className="hover-text">Enable</span></div>
+              </div> :
+              <div className=" self-center" onClick={() => handleInfo(camera._id)}>
+                  <FaInfoCircle className="text-gray-500 cursor-pointer" size={20} />
+                  <span className="hover-text">Info</span>
+                </div>}
+            </div>
+          ))}
+        </div>
+      </div>
+
+     
     </>
   );
 };

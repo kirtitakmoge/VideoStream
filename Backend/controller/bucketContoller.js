@@ -10,9 +10,9 @@ const SECRET_ACCESS_KEY = 'CK5beQ9OzoCMFMenVH5q7NVLDSp7hdVsbQHDVyRo';*/
 // Configure AWS SDK with your credentials
 const s3 = new AWS.S3({
     endpoint: ENDPOINT,
-  accessKeyId:process.env.ACCESS_KEY,
-  secretAccessKey:process.env.SECRET_ACCESS_KEY,
-  region: process.env.REGION
+  accessKeyId:"",
+  secretAccessKey:"",
+  region: ""
   
 });
 // Controller function
@@ -37,6 +37,7 @@ exports.getBucketData = async (req, res) => {
       const params = {
         Bucket: camera.bucketName
       };
+      console.log(camera.bucketName);
       const data = await s3.listObjects(params).promise();
       
       // Extract relevant data from the response

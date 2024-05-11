@@ -1,13 +1,13 @@
 // SurgeonList.js
 
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams ,useNavigate} from 'react-router-dom';
 import SurgeonData from './SurgeonData';
 const SurgeonList = () => {
+  const navigate=useNavigate();
   const { departmentId } = useParams();
   const [surgeons, setSurgeons] = useState([]);
-  const [selectedsurgeon, setSelectedSurgeon] = useState([]);
-  const [show,setShow]=useState(true);
+ 
   useEffect(() => {
    
     // Fetch surgeons when component mounts
@@ -36,15 +36,11 @@ const SurgeonList = () => {
 
   const handleSurgeon=(surgeon)=>
   {
-      setShow(false);
-      setSelectedSurgeon(surgeon);
+    navigate(`/surgeonData/${surgeon._id}`);
   }
-  const handleChangeFlag=()=>
-  {
-    setShow((prev)=>!prev);
-  }
+ 
   return (<>
-{show && (
+{(
     <div className="container m-5">
       
       <h1 className="text-2xl text-center font-bold mb-4">Surgeons</h1>
@@ -60,7 +56,7 @@ const SurgeonList = () => {
       </div>
     </div>)}
 
-    {!show && <SurgeonData selectedUser={selectedsurgeon} handleChangeFlag={handleChangeFlag}/>}
+   
     </>
   );
 };

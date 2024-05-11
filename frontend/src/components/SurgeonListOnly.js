@@ -1,7 +1,7 @@
 // SurgeonList.js
 
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState, useEffect, } from 'react';
+import { useParams,useNavigate } from 'react-router-dom';
 import SurgeonData from './SurgeonData';
 import UserComponent from './UserComponent';
 const SurgeonListOnly = () => {
@@ -9,6 +9,7 @@ const SurgeonListOnly = () => {
     const [surgeons, setSurgeons] = useState([]);
     const [selectedsurgeon, setSelectedSurgeon] = useState([]);
     const [show,setShow]=useState(true);
+    const navigate=useNavigate();
     useEffect(() => {
      
       // Fetch surgeons when component mounts
@@ -37,8 +38,7 @@ const SurgeonListOnly = () => {
   
     const handleSurgeon=(surgeon)=>
     {
-        setShow(false);
-        setSelectedSurgeon(surgeon);
+        navigate(`/surgeonData/${surgeon._id}`)
     }
     const handleChangeFlag=()=>
     {
@@ -50,7 +50,7 @@ const SurgeonListOnly = () => {
         
         <h1 className="text-2xl text-center font-bold mb-4">Surgeons</h1>
         <div className="grid grid-cols-3 gap-4">
-          {surgeons.map(surgeon => (
+          {surgeons.map(surgeon => ( (surgeon.role!=="Super Admin") &&
             <div key={surgeon._id} onClick={()=>handleSurgeon(surgeon)} className="bg-white p-4 rounded shadow">
               <h2 className="text-xl font-bold mb-2">{surgeon.firstname} {surgeon.lastname}</h2>
               <p className="text-gray-600">{surgeon.email}</p>
@@ -60,7 +60,7 @@ const SurgeonListOnly = () => {
         </div>
       </div>)}
   
-      {!show && <UserComponent user={selectedsurgeon} handleChangeFlag={handleChangeFlag}/>}
+     
       </>
     );
   };

@@ -14,7 +14,7 @@ const {user}=useAuth();
   useEffect(() => {
     async function fetchData() {
       try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/bucket/device/getObjectFromBucket/${cameraId}/`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/bucket/device/getObjectFromBucket/${cameraId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -27,6 +27,7 @@ const {user}=useAuth();
         }
 
         const data = await response.json();
+        console.log(data);
         setDevicePhotos(data.photoUrls);
         setDeviceVideos(data.videoUrls);
 

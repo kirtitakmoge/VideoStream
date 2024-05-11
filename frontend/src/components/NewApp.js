@@ -47,6 +47,9 @@ import DepartmentDetailsSuper from "./DepartmentDetailsSuper";
 import SurgeonListOnly from "./SurgeonListOnly";
 import CameraBucket from "./CameraBucket";
 import HospitalAdmin from "./HospitalAdmin";
+import UpdateCamera from "./UpdateCamera";
+import CameraData from "./CameraData";
+import SurgeonData from "./SurgeonData";
 const NewApp = () => {
   const { user } = useAuth(); // Get the user object from the AuthContext
  
@@ -114,6 +117,10 @@ const NewApp = () => {
             <Route path="/surgeonListOnly/:departmentId"element={<SurgeonListOnly/>}/>
             <Route path="/cameraBucket/:cameraId" element={<CameraBucket/>}/>
             <Route path="/activateHospitalAdmin/:hospitalId" element={<HospitalAdminData/>}/>
+            <Route path="/updateCamera/:cameraId" element={<UpdateCamera/>}/>
+            <Route path="/cameraData/:cameraId" element={<CameraData/>}/>
+            <Route path="/surgeonData/:surgeonId" element={<SurgeonData/>}/>
+            
           </Routes>
           </Layout>
         </div>
