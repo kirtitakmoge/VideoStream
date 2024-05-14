@@ -35,7 +35,7 @@ const navigate=useNavigate();
  
   const handleDeviceClick=(camera)=>
   {
-    navigate(`/device/${camera._id}`);
+    navigate(`/device/${camera._id}/${departmentId}`);
   }
 
   return (

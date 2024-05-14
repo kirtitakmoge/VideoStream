@@ -173,7 +173,7 @@ const {user}=useAuth();
               className={`object-cover w-full h-48 ${selectedMedia.includes(video) ? 'border border-green-500' : ''}`}
               onClick={() => toggleSelectMedia(video)}
             >
-              <source src={video.url} type="video/mp4" />
+              <source src={video.url.replace(".ts", ".mp4")} type="video/mp4" /> 
               Your browser does not support the video tag.
             </video>
             {(user.role === "Hospital Admin" || user.role==="Surgeon" ) && (

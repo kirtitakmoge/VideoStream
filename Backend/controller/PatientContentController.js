@@ -11,7 +11,7 @@ const patientContentController = {
                 link, // Array of URLs
                 surgeonId,
             } = req.body;
-    
+    console.log(req.body)
             // Check if required fields are provided
             if (!userId || !link || !Array.isArray(link) || link.length === 0 || !surgeonId) {
                 return res.status(400).json({ message: 'All required fields must be provided' });

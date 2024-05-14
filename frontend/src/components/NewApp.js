@@ -51,6 +51,7 @@ import UpdateCamera from "./UpdateCamera";
 import CameraData from "./CameraData";
 import SurgeonData from "./SurgeonData";
 import SuperAllCamera from "./SuperAllCamera";
+import ViewBucketFiles from "./ViewBucketFiles";
 const NewApp = () => {
   const { user } = useAuth(); // Get the user object from the AuthContext
  
@@ -90,7 +91,7 @@ const NewApp = () => {
             <Route path="/createCamera/:departmentId/:department_name" element={<CameraForm />} />
             <Route path="/notactive/:name" element={<MessageComponent />} />
             <Route path="/hospitalAdmin" element={<HospitalAdmin />} />
-            <Route path="/device/:cameraId" element={<CameraMediaPage />} />
+            <Route path="/device/:cameraId/:departmentId" element={<ViewBucketFiles />} />
             <Route path="/signupPatient" element={<PatientRegistration />} />
             <Route path="/patient" element={<PatientDashboard />} />
             <Route path="/renameDepartment/:departmentId" element={<RenameDepartment />} />

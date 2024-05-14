@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-hot-toast";
-import { FaShare, FaTrash, FaCheckCircle, FaCircle } from "react-icons/fa"; // Import the share, trash, and icon for selection from react-icons/fa
+import { FaShare, FaTrash, FaCheckCircle, FaCircle , FaDownload} from "react-icons/fa"; // Import the share, trash, and icon for selection from react-icons/fa
 
 const CameraMediaPage = () => {
   const [devicePhotos, setDevicePhotos] = useState([]);
   const [deviceVideos, setDeviceVideos] = useState([]);
-  const { cameraId } = useParams();
+  const { cameraId ,departmentId} = useParams();
   const [userId, setUserId] = useState("");
   const [selectedMedia, setSelectedMedia] = useState([]);
   const token = localStorage.getItem("token");
   const surgeonId = localStorage.getItem("id");
-
+  const [selectedPatient, setSelectedPatient] = useState("");
+  const [patients, setPatients] = useState([]);
   useEffect(() => {
     async function fetchData() {
       try {
@@ -43,11 +44,11 @@ const CameraMediaPage = () => {
 
  // Function to handle sharing of media
 const handleShareMedia = async () => {
-  if (selectedMedia.length === 0 || !userId.trim()) {
+  if (selectedMedia.length === 0) {
       toast.error("Please select media and enter user ID.");
       return;
   }
-  console.log(selectedMedia);
+  alert(selectedPatient._id);
   const a = selectedMedia.map(media => media.url);
  alert(a.length);
   try {
@@ -58,7 +59,7 @@ const handleShareMedia = async () => {
               "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify({
-              userId,
+              userId:selectedPatient,
               surgeonId,
               link: a
           }),
@@ -152,21 +153,78 @@ const toggleSelectMedia = (media) => {
   });
 };
 
+const handleDownloadMedia = async (media) => {
+  if (!media) {
+    return;
+  }
+  try {
+    
+    const response = await fetch(media.url); // Fetch the media URL directly
+    const blob = await response.blob(); // Convert the response to a blob
 
+    // Create a temporary anchor element to trigger the download
+    const url = window.URL.createObjectURL(new Blob([blob]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', media.key); // Set the filename for download
+    document.body.appendChild(link);
+    link.click();
+    link.parentNode.removeChild(link);
 
+    toast.success(`Downloaded ${media.key} successfully`, {
+      duration: 2000,
+      position: "top-center",
+    });
+  } catch (error) {
+    console.error('Error downloading media:', error);
+    toast.error(`Failed to download ${media.key}`, {
+      duration: 2000,
+      position: "top-center",
+    });
+  }
+};
 
+useEffect(() => {
+  async function fetchData() {
+    try {
+      // Fetch list of patients
+      const patientsResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/patient/getAllPatientByDepartmentId/${departmentId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` // Include the token in the Authorization header
+        },
+      });
+
+      if (!patientsResponse.ok) {
+        throw new Error('Failed to fetch patients');
+      }
+
+      const patientsData = await patientsResponse.json();
+      console.log(patientsData);
+      setPatients(patientsData);
+    } catch (error) {
+      console.error('Error fetching patients:', error);
+    }
+  }
+
+  fetchData();
+}, []); 
 
   return (
     <div className="container mx-auto px-4 py-8">
       <h2 className="text-2xl text-center font-bold mb-4">Camera Media</h2>
       <div className="flex justify-between mb-4">
-        <input
-          type="text"
-          placeholder="Enter User ID"
-          value={userId}
-          onChange={(e) => setUserId(e.target.value)}
+      <select
+          value={selectedPatient}
+          onChange={(e) => setSelectedPatient(e.target.value)}
           className="border border-gray-300 px-4 py-2 rounded-md"
-        />
+        >
+          <option value="">Select Patient</option>
+          {patients.map(patient => (
+            <option key={patient._id} value={patient._id}>{patient._id}</option>
+          ))}
+        </select>
         <button
           onClick={handleShareMedia}
           className="bg-blue-500 text-white px-4 py-2 rounded-md"
@@ -182,7 +240,10 @@ const toggleSelectMedia = (media) => {
       alt="Photo"
       className={`object-cover w-full h-48 ${selectedMedia.includes(photo) ? 'border border-green-500' : ''}`}
       onClick={() => toggleSelectMedia(photo)}
-    />
+    /> <FaDownload
+    className="text-blue-500 cursor-pointer absolute top-2 right-2"
+    onClick={() => handleDownloadMedia(photo)} // Attach download handler to the download button
+  />
     <div className="absolute bottom-2 right-2 flex items-center">
       <FaTrash
         className="text-red-500 cursor-pointer mr-2"
@@ -202,6 +263,10 @@ const toggleSelectMedia = (media) => {
       <source src={video.url} type="video/mp4" />
       Your browser does not support the video tag.
     </video>
+    <FaDownload
+              className="text-blue-500 cursor-pointer absolute top-2 right-2"
+              onClick={() => handleDownloadMedia(video)} // Attach download handler to the download button
+            />
     <div className="absolute bottom-2 right-2 flex items-center">
       <FaTrash
         className="text-red-500 cursor-pointer mr-2"

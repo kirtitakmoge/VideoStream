@@ -8,7 +8,9 @@ const isAdmin1 = require('../auth/isAdmin1');
 const a=require("../models/UserSubscription");
 // Define routes surgeon and Hospital Admin
 router.get('/device/getObjectFromBucket/:cameraId',verifyToken, bucketController.getBucketData);
-
+router.put("/device/renameObjectInBucket/:adminId",verifyToken,isAdmin1,bucketController.renameObjectInBucket);
+router.post("/device/downloadObjectFromBucket/:adminId",verifyToken,isAdmin1,bucketController.downloadObjectFromBucket);
 //For Only Hospital Admin
 router.delete("/device/deleteObjectFromBucket/:adminId",verifyToken,isAdmin1,bucketController.deleteObjectFromBucket);
+router.post("/device/generateUploadUrl/:adminId",verifyToken,isAdmin1,bucketController.generateUploadUrl)
 module.exports = router;
