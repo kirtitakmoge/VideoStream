@@ -18,6 +18,7 @@ const SurgeonData = () => {
     specialization: "",
     mobile_no: "",
   });
+  
   useEffect(() => {
     const fetchUserData = async () => {
       try {
@@ -82,6 +83,7 @@ const SurgeonData = () => {
       console.error('Error updating user active status:', error);
     }
   };
+  if(user)
   return (
     
      <>

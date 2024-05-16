@@ -99,7 +99,7 @@ const NewApp = () => {
             <Route path="/device" element={<DeviceList />} />
             <Route path="/createDepartment" element={<DepartmentForm />} />
             <Route path="/deleteDepartment/:departmentId" element={<DeleteDepartment/>}/>
-            <Route path="/createCamera" element={<CameraForm />} />
+            <Route path="/createCamera/:cameraId/:department_name" element={<CameraForm />} />
             <Route path="/createSubscriptionPlan" element={<CreateSubScriptionPlan />} />
             <Route path="/superAdminDashboard" element={<SuperAdminDashboard />} />
             <Route path="/surgeonBucket/:cameraId" element={<SurgeonBucket />} />
