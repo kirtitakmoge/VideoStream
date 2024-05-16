@@ -86,6 +86,11 @@ const navigate=useNavigate();
           </Link>
         </div>
         <div className="col-span-1 shadow-md">
+          <Link to={`/patientData/${departmentId}`} className="bg-gray-100 block p-4 rounded-md hover:bg-gray-200">
+            <h2 className="text-2xl font-bold mb-4">Patients</h2>
+          </Link>
+        </div>
+        <div className="col-span-1 shadow-md">
           {/* Button to show delete modal */}
           <button onClick={() => setShowDeleteModal(true)} className="button bg-gray-100 p-4 rounded-md block hover:bg-gray-200 w-full">
             <h2 className="text-2xl font-bold mb-4">Remove Department</h2>

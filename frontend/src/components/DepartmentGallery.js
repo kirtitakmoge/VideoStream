@@ -6,7 +6,7 @@ const DepartmentGallery = ({ departments}) => {
     <>
       <div className="grid mx-6 ml-6 grid-cols-3 gap-4 ">
         {departments.map((department) => (
-          <div key={department.departmentId} className="col-span-1 shadow-md">
+          <div key={department._id} className="col-span-1 shadow-md">
             <Link
               to={{
                 pathname: `/department-details/${department.departmentId}/${department.department_name}`,

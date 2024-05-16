@@ -1,17 +1,38 @@
-// DownloadBucketFile.js
 import React from "react";
 import { FaDownload } from "react-icons/fa";
 import { toast } from "react-hot-toast";
-
+import {useAuth} from "./AuthContext";
 const DownloadBucketFile = ({ media, surgeonId, token, cameraId }) => {
+  const {user}=useAuth();
   const handleDownloadMedia = async () => {
     if (!media) {
+      toast.error("No media selected for download", {
+        duration: 2000,
+        position: "top-center",
+      });
       return;
     }
-
+    if (!user) {
+      toast.error("User not authenticated. Please log in.", {
+        duration: 2000,
+        position: "top-center",
+      });
+      return;
+    } let apiUrl;
+    if(user.role==="Hospital Admin")
+      {
+        
+    apiUrl = `${process.env.REACT_APP_API_URL}/api/bucket/device/downloadObjectFromBucket/${surgeonId}`;}
+    if (user.role === "Super Admin") {
+      apiUrl = `${process.env.REACT_APP_API_URL}/api/bucket/device/superadmin/downloadObjectFromBucket/${surgeonId}`;
+    }
+    const toastId = toast.loading("Preparing download...", {
+      position: "top-center",
+    });
+      
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/bucket/device/downloadObjectFromBucket/${surgeonId}`,
+        `${apiUrl}`,
         {
           method: "POST",
           headers: {
@@ -26,62 +47,73 @@ const DownloadBucketFile = ({ media, surgeonId, token, cameraId }) => {
       );
 
       if (!response.ok) {
+        toast.dismiss(toastId);
         toast.error(`Failed to download ${media.key}`, {
           duration: 2000,
           position: "top-center",
         });
         throw new Error("Failed to download media.");
       }
-      if (response.ok) {
-        const { downloadUrl } = await response.json();
-        downloadFile(downloadUrl);
-      } else {
-        console.error('Error fetching download URL:', response.statusText);
-      }
-      // Convert response to blob
+
+      const { downloadUrl } = await response.json();
+      toast.dismiss(toastId);
+      const downloadingToastId = toast.loading("Downloading...", {
+        position: "top-center",
+      });
+      await downloadFile(downloadUrl, downloadingToastId);
     } catch (error) {
       console.error("Error downloading media:", error);
-    }
-  };
-// Function to initiate the download using the pre-signed URL
-const downloadFile = async (downloadUrl) => {
-    try {
-      // Use the pre-signed URL to initiate the download
-      const response = await fetch(downloadUrl);
-      toast.success('Downloading started!', {
+      toast.dismiss(toastId);
+      toast.error(`Error downloading ${media.key}`, {
         duration: 2000,
-        position: 'top-center'
+        position: "top-center",
       });
-      // Check if the response is successful
-      if (response.ok) {
-        // Convert the response to a blob and create a temporary URL for downloading
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        
-        // Create a temporary link and trigger the download
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', media.key); // Set desired file name
-        document.body.appendChild(link);
-        link.click();
-  
-        // Clean up after the download
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-        toast.success(`${media.key} Downloading finished !`, {
-            duration: 2000,
-            position: 'top-center'
-          });
-      } else {
-        // Handle error response
-        console.error('Error downloading file:', response.statusText);
-      }
-    } catch (error) {
-      console.error('Error downloading file:', error);
     }
   };
+
+  const downloadFile = async (downloadUrl, downloadingToastId) => {
+    try {
+      const response = await fetch(downloadUrl);
+
+      if (!response.ok) {
+        toast.dismiss(downloadingToastId);
+        toast.error(`Failed to download ${media.key}`, {
+          duration: 2000,
+          position: "top-center",
+        });
+        throw new Error("Failed to download file.");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", media.key);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.dismiss(downloadingToastId);
+      toast.success(`${media.key} Download finished!`, {
+        duration: 2000,
+        position: "top-center",
+      });
+    } catch (error) {
+      console.error("Error downloading file:", error);
+      toast.dismiss(downloadingToastId);
+      toast.error(`Error downloading ${media.key}`, {
+        duration: 2000,
+        position: "top-center",
+      });
+    }
+  };
+
   return (
-    <button onClick={handleDownloadMedia} className="text-blue-400 pr-6 pl-6 bg-gray-100 hover:bg-gray-300 ">
+    <button
+      onClick={handleDownloadMedia}
+      className="text-blue-400  bg-gray-100 hover:bg-gray-300"
+    >
       <FaDownload />
     </button>
   );

@@ -43,7 +43,7 @@ const navigate=useNavigate();
       <h2 className="text-2xl text-center font-bold mb-4">Devices</h2>
       <div className="grid grid-cols-3 gap-4">
         {cameras.map((camera) => (
-          <div key={camera.id} className="bg-gray-200 h-23 p-4 rounded-md cursor-pointer hover:bg-gray-200" onClick={() => handleDeviceClick(camera)}>
+          <div key={camera._id} className="bg-gray-200 h-23 p-4 rounded-md cursor-pointer hover:bg-gray-200" onClick={() => handleDeviceClick(camera)}>
             <div className="text-black text-center"> {camera.deviceId}</div>
           </div>
         ))}

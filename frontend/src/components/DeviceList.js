@@ -31,18 +31,18 @@ const{departmentId}=useParams();
     }
 
     fetchCameras();
-  }, [user.departmentId]);
+  }, [departmentId]);
 
   const handleDeviceClick = (camera) => {
     if(user.role=="Super Admin")
-      navigate(`/CameraBucket/${camera._id}`)
+      navigate(`/device/${camera._id}/${departmentId}`)
     else
 
     navigate(`/surgeonbucket/${camera._id}`);
     
 
   };
-
+if(user)
   return (
     <div className=" m-5">
       <h2 className="text-2xl text-center font-bold mb-4">Devices</h2>

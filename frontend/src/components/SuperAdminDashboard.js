@@ -6,6 +6,7 @@ import { useAuth } from "./AuthContext";
 
 const SuperAdminDashboard = () => {
  const {user} =useAuth();
+if(user)
 
   return (
     <div className="container mx-auto p-6">

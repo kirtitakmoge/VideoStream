@@ -103,7 +103,7 @@ const RenameDepartment = () => {
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="department_name" className="block mb-4 font-medium">
-              New Department Name
+             Rename File
             </label>
             <input
               type="text"
