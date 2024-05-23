@@ -67,7 +67,14 @@ const userSchema = new Schema({
         required:true,
         default:false
     },
-    
+    otp: {
+        type: String,
+        required: false
+    },
+    otpExpires: {
+        type: Date,
+        required: false
+    },
     cameraActive:{
         type:Boolean,
         required:true,

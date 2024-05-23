@@ -5,8 +5,8 @@ const Notification=require("../models/Notification");
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
 const { isValidObjectId } = require('mongoose');
-
-
+const sendWelcomeEmail = require('../auth/mailer');
+const { generateOTP, sendOTPSMS } = require('../auth/generateOtp');
 exports.signupUser = async (req, res) => {
     try {
         const newUser = new User(req.body);
@@ -35,8 +35,8 @@ exports.signupUser = async (req, res) => {
             .catch(error => {
               console.error("Error saving notification:", error);
             });
-          
-        res.status(201).json({ user: newUser, message: 'User created successfully' });
+            sendWelcomeEmail(newUser.email);
+        res.status(201).json({ user: newUser, message: 'User created successfully' ,success:true});
     } catch (error) {
         if (error.name === 'ValidationError') {
             // Extracting validation error messages
@@ -208,36 +208,93 @@ console.log(updateUser);
     }
 }
 
-
-exports.loginUser=async(req,res)=>
-{
-    console.log("request for login");
+exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        // Check if user exists
         const user = await User.findOne({ email });
-       
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Verify password
         const passwordMatch = await bcrypt.compare(password, user.password);
         if (!passwordMatch) {
             return res.status(401).json({ message: 'Invalid password' });
         }
 
-        // Generate JWT token
-        const token =generateToken(user);
+        // Generate OTP
+        const otp = generateOTP();
+        user.otp = otp;
+        user.otpExpires = Date.now() + 2 * 60 * 1000;// OTP valid for 5 minutes
+        await user.save();
+        console.log(user);
+        // Send OTP to user's phone using Twilio
+        sendOTPSMS(user.mobile_no, otp);
+        console.log("otp sent");
 
-        // Send token in response
-        res.status(200).json({ user,token });
+        res.status(200).json({ message: 'OTP sent to your phone', userId: user._id });
     } catch (error) {
         console.error('Login error:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
-}
+};
+exports.resendOTP = async (req, res) => {
+    const { email } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Generate a new OTP
+        const otp = generateOTP();
+        user.otp = otp;
+        user.otpExpires = Date.now() + 2 * 60 * 1000;; // OTP valid for 5 minutes
+
+        // Save the updated user document
+        await user.save();
+
+        // Send OTP to user's phone using Twilio
+        sendOTPSMS(user.mobile_no, otp);
+        console.log("OTP resent:", otp);
+
+        res.status(200).json({ message: 'OTP resent to your phone' });
+    } catch (error) {
+        console.error('Error resending OTP:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+// In your controller file
+exports.verifyOtp = async (req, res) => {
+    const { email, otp } = req.body;
+
+    try {
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Check if OTP has expired
+        if (Date.now() > user.otpExpires) {
+            return res.status(400).json({ message: 'OTP has expired' });
+        }
+
+        // Check if OTP matches
+        if (user.otp !== otp) {
+            return res.status(400).json({ message: 'Invalid OTP' });
+        }
+
+        // OTP is correct and not expired
+        // Proceed with the rest of the login or registration process
+        // Generate token and send response
+        const token = generateToken(user);
+        res.status(200).json({ message: 'OTP verified successfully', token });
+    } catch (error) {
+        console.error('Error verifying OTP:', error);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
 
 
 // Controller method to fetch all surgeons by hospitalId

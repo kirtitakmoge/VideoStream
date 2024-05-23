@@ -13,6 +13,8 @@ const checkSurgeonOwnershipdata=require("../auth/checkSurgeonOwnershipdata");
 //public routes
 router.post('/signup', userController.signupUser);
 router.post('/login', userController.loginUser);
+router.post('/verifyOtp',userController.verifyOtp);
+router.post("/resendOtp",userController.resendOTP);
 
 //routes for HospitalAdmin
 router.post("/admin/getAllUsers/:adminId",verifyToken,isAdmin,adminController.getAllUsers);

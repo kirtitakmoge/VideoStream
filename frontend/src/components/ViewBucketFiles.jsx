@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import DeleteBucketFile from "./DeleteBucketFile";
-//import RenameComponent from './RenameComponent';
-//import ShareComponent from './ShareComponent';
 import { useParams } from "react-router-dom";
 import RenameBucketFile from "./RenameBucketFile";
 import DownloadBucketFile from "./DownloadBucketFile";

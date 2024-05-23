@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams,useNavigate } from 'react-router-dom';
 
 const SuperAllCamera= () => {
   const [cameras, setCameras] = useState([]);
-  
+  const navigate=useNavigate();
 const superAdminId=localStorage.getItem("id");
   useEffect(() => {
     const fetchCameraData = async () => {
@@ -29,6 +29,9 @@ const superAdminId=localStorage.getItem("id");
     fetchCameraData();
   }, [superAdminId]);
 
+  const handleUpdate = (cameraId) => {
+    navigate(`/updateCamera/${cameraId}`);
+   };
   return (
     <div className="container mx-auto px-4 mt-5">
       <h2 className="text-2xl font-bold mb-4 text-center">Camera Details</h2>
@@ -38,21 +41,23 @@ const superAdminId=localStorage.getItem("id");
             <tr>
               <th className="px-4 py-2">IP Address</th>
               <th className="px-4 py-2">Device ID</th>
-              <th className="px-4 py-2">Stream Key</th>
+              
               <th className="px-4 py-2">Department Name</th>
               <th className="px-4 py-2">Link</th>
               <th className="px-4 py-2">BucketName</th>
-            </tr>
+              <th className="px-4 py-2">Update</th>
+                          </tr>
           </thead>
           <tbody>
             {cameras.map(camera => (
               <tr key={camera._id}>
                 <td className="border px-4 py-2">{camera.ipAddress}</td>
                 <td className="border px-4 py-2">{camera.deviceId}</td>
-                <td className="border px-4 py-2">{camera.streamKey}</td>
+              
                 <td className="border px-4 py-2">{camera.departmentId ? camera.departmentId.department_name : 'N/A'}</td>
                 <td className="border px-4 py-2">{camera.link}</td>
                 <td className="border px-4 py-2">{camera.bucketName}</td>
+                <td className="border px-4 py-2"><button  className="text-l p-2 rounded-md shadow-sm bg-red-500" onClick={()=>{handleUpdate(camera._id)}}> Update</button></td>
               </tr>
             ))}
           </tbody>

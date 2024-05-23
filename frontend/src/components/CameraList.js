@@ -87,7 +87,7 @@ const CameraList = () => {
       console.error("Error deleting camera:", error);
     }
   };
-
+if(user)
   return (
     <>
       <div className="col-span-3 mt-5">
@@ -99,7 +99,7 @@ const CameraList = () => {
               className="bg-gray-100 h-23 mr-5 p-4 rounded-md hover:bg-gray-200"
             >
              <CameraListItem camera={camera}/>
-              { (user.role==="Super Admin") ?
+              { (user.role==="Super Admin") &&
               <div className="flex justify-center">
                 <div className=" mr-5" onClick={() => handleUpdate(camera._id)}>
                   <FaEdit className="text-blue-500 cursor-pointer" size={20} />
@@ -109,6 +109,7 @@ const CameraList = () => {
                   <FaTrash className="text-red-500 cursor-pointer " size={20} />
                   <span className="hover-text">Delete</span>
                 </div>
+                
                 <div className="mr-5" onClick={() => handleInfo(camera._id)}>
                   <FaInfoCircle className="text-gray-500 cursor-pointer" size={20} />
                   <span className="hover-text">Info</span>
@@ -119,11 +120,7 @@ const CameraList = () => {
                     size={20}
 
                   /><span className="hover-text">Enable</span></div>
-              </div> :
-              <div className=" self-center" onClick={() => handleInfo(camera._id)}>
-                  <FaInfoCircle className="text-gray-500 cursor-pointer" size={20} />
-                  <span className="hover-text">Info</span>
-                </div>}
+              </div>}
             </div>
           ))}
         </div>

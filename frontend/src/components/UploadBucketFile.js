@@ -6,9 +6,45 @@ const UploadBucketFile = ({ surgeonId, cameraId,  onMediaUpload }) => {
   const {user} =useAuth();
   const [selectedFile, setSelectedFile] = useState(null);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
+  const [isFileValid, setIsFileValid] = useState(true);
   const token=localStorage.getItem("token");
+  
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
+    const file = event.target.files[0];
+    const maxSize = 10 * 1024 * 1024; // 10 MB
+    const allowedTypes = [
+      "image/jpeg", "image/png", "image/gif", "image/bmp", "image/tiff", "image/webp",
+      "video/mp4", "video/mpeg", "video/quicktime", "video/x-msvideo", "video/x-ms-wmv",
+      "video/3gpp", "video/ogg", "video/webm", "video/x-flv", "video/avi",
+      "application/pdf"
+    ];
+
+    if (!file) {
+      setIsFileValid(false);
+      return;
+    }
+
+    if (!allowedTypes.includes(file.type)) {
+      toast.error("Invalid file type. Only images, videos, and PDFs are allowed.", {
+        duration: 2000,
+        position: "top-center",
+      });
+      setIsFileValid(false);
+      return;
+    }
+
+    if (file.size > maxSize) {
+      toast.error("File size exceeds the 10 MB limit.", {
+        duration: 2000,
+        position: "top-center",
+      });
+      setSelectedFile(null);
+      setIsFileValid(false);
+      return;
+    }
+
+    setSelectedFile(file);
+    setIsFileValid(true);
   };
   const handleUploadFile = async () => {
     if (!selectedFile) {
@@ -125,9 +161,12 @@ const UploadBucketFile = ({ surgeonId, cameraId,  onMediaUpload }) => {
               className="block w-full text-sm text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
             <div className="flex justify-end mt-4 ">
-              <button
+            <button
                 onClick={handleUploadFile}
-                className="mr-2 px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                disabled={!isFileValid}
+                className={`mr-2 px-4 py-2 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+                  isFileValid ? "bg-green-500 hover:bg-green-600 focus:ring-green-500" : "bg-gray-300 cursor-not-allowed"
+                }`}
               >
                 Upload
               </button>

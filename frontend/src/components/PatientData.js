@@ -59,6 +59,7 @@ const PatientData = () => {
                 <th className="px-4 py-2">Email</th>
                 <th className="px-4 py-2">Address</th>
                 <th className="px-4 py-2">File</th>
+                
               </tr>
             </thead>
             <tbody>
