@@ -11,6 +11,7 @@ exports.generateOTP=()=> {
 
 exports.sendOTPSMS=(phone, otp)=>{
 const ph="+91"+phone;
+console.log(ph);
     return client.messages.create({
         body: `Your OTP code is ${otp}`,
         from: process.env.TWILIO_PHONE_NUMBER,
