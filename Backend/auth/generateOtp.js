@@ -13,6 +13,6 @@ exports.sendOTPSMS=(phone, otp)=>{
     return client.messages.create({
         body: `Your OTP code is ${otp}`,
         from: process.env.TWILIO_PHONE_NUMBER,
-        to:ph
+        to:phone
     });
 }
