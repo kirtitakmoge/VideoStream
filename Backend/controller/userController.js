@@ -292,7 +292,7 @@ console.log(email);
         // Proceed with the rest of the login or registration process
         // Generate token and send response
         const token = generateToken(user);
-        res.status(200).json({ message: 'OTP verified successfully',user, token });
+        res.status(200).json({ message: 'OTP verified successfully',succces:true,user, token });
     } catch (error) {
         console.error('Error verifying OTP:', error);
         res.status(500).json({ message: 'Internal server error' });
