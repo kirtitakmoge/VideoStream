@@ -10,7 +10,7 @@ export const useUser = () => useContext(UserContext);
 export const UserProvider = ({ children }) => {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
-
+// this for push
   // Function to fetch users by hospital Admin
   const fetchUsersByAdmin = async (adminId,token) => {
     try {
