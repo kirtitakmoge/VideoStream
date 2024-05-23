@@ -13,14 +13,16 @@ const OTPVerification = ({ email, userId, onSuccess }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId, otp }),
+        body: JSON.stringify({ userId,email, otp }),
       });
 
       if (otpResponse.ok) {
         const userData = await otpResponse.json();
+        toast.success("Otp Verified");
         onSuccess(userData);
       }else {
-        const errorData = await response.json();
+        const errorData = await otpResponse.json();
+        toast.error(errorData.message)
         toast.error(errorData.message || 'Failed to verify OTP');
     }
     } catch (error) {

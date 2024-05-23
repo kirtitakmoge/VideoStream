@@ -2,7 +2,10 @@ const generateToken = require('../auth/generateToken');
 const Camera = require('../models/Camera');
 const Department = require('../models/Department');
 const Notification=require("../models/Notification");
-const User = require('../models/User');
+const User = require('../models/User');const dotenv = require('dotenv');
+const result = dotenv.config();
+const accountSid = process.env.TWILIO_ACCOUNT_SID;
+const authToken = process.env.TWILIO_AUTH_TOKEN;
 const bcrypt = require('bcrypt');
 const { isValidObjectId } = require('mongoose');
 const sendWelcomeEmail = require('../auth/mailer');
@@ -227,7 +230,7 @@ exports.loginUser = async (req, res) => {
         user.otp = otp;
         user.otpExpires = Date.now() + 2 * 60 * 1000;// OTP valid for 5 minutes
         await user.save();
-        console.log(user);
+        console.log(accountSid);
         // Send OTP to user's phone using Twilio
         sendOTPSMS(user.mobile_no, otp);
         console.log("otp sent");
@@ -268,7 +271,7 @@ exports.resendOTP = async (req, res) => {
 // In your controller file
 exports.verifyOtp = async (req, res) => {
     const { email, otp } = req.body;
-
+console.log(email);
     try {
         const user = await User.findOne({ email });
         if (!user) {
@@ -289,7 +292,7 @@ exports.verifyOtp = async (req, res) => {
         // Proceed with the rest of the login or registration process
         // Generate token and send response
         const token = generateToken(user);
-        res.status(200).json({ message: 'OTP verified successfully', token });
+        res.status(200).json({ message: 'OTP verified successfully',user, token });
     } catch (error) {
         console.error('Error verifying OTP:', error);
         res.status(500).json({ message: 'Internal server error' });

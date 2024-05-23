@@ -18,7 +18,7 @@ const sendWelcomeEmail = (to) => {
     to: to,
     subject: 'Welcome to Surgi-Com',
     text: 'Welcome to SurgiCom!',
-    html: '<h1>Welcome to SurgiCom!</h1><p>We are excited to have you on board.</p>'
+    html: '<h1>Welcome to SurgiCom!</h1>'
   };
 
   transporter.sendMail(mailOptions, (error, info) => {
