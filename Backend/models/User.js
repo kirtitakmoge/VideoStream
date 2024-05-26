@@ -52,7 +52,7 @@ const userSchema = new Schema({
     mobile_no: { 
         type: String, 
         required: [true, "Enter Mobile Number"],
-        unique: true,
+    
         // Simple mobile number format validation
         match: [/^\d{10}$/, "Please enter a valid 10-digit mobile number"]
     },
@@ -79,8 +79,9 @@ const userSchema = new Schema({
         type:Boolean,
         required:true,
         default:false
-    }
-    
+    },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date }
 });
 
 const User = mongoose.model('User', userSchema);

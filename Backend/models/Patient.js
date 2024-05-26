@@ -61,7 +61,23 @@ const patientSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'PatientContent'
   },
-
+  otp: {
+    type: String,
+    required: false
+},
+otpExpires: {
+    type: Date,
+    required: false
+},
+mobile_no: { 
+    type: String, 
+    required: [true, "Enter Mobile Number"],
+    
+    // Simple mobile number format validation
+    match: [/^\d{10}$/, "Please enter a valid 10-digit mobile number"]
+},
+resetPasswordToken: { type: String },
+resetPasswordExpires: { type: Date }
 });
 
 // Create unique index on email field

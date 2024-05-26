@@ -10,11 +10,31 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [showOtpForm, setShowOtpForm] = useState(false);
   const [userId, setUserId] = useState(null);
-
+ 
   const navigate = useNavigate();
   const { login } = useAuth();
   const { userType } = useParams();
-
+  let apiUrl = userType === "Patient"
+  ? `${process.env.REACT_APP_API_URL}/api/patient/request-password-reset`
+  : `${process.env.REACT_APP_API_URL}/api/users/request-password-reset`;
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch(`${apiUrl}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+if(response.ok){
+      const data = await response.json();
+             toast.success(data.message);
+      }
+    } catch (error) {
+      toast.error("Error in request for reset password");
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -55,7 +75,7 @@ const Login = () => {
     localStorage.setItem("id", userData.user._id);
     localStorage.setItem("token", userData.token);
     localStorage.setItem("isLoggedIn", true);
-
+    console.log(userData);
     if (userData.user.role === "Super Admin") navigate(`/superAdminDashboard`);
     else if (userData.user.role === "Patient") navigate("/patient");
     else if (userData.user.role === "Hospital Admin" && userData.user.active === true)
@@ -75,7 +95,7 @@ const Login = () => {
   return (
     <div className="container mt-6 mx-auto">
       {showOtpForm ? (
-        <OTPVerification email={email} userId={userId} onSuccess={handleOTPVerificationSuccess} />
+        <OTPVerification userType={userType} email={email} userId={userId} onSuccess={handleOTPVerificationSuccess} />
       ) : (
         <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg">
           <h2 className="text-xl font-bold mb-4 text-center">{userType} LOGIN</h2>
@@ -115,6 +135,14 @@ const Login = () => {
               >
                 Sign In
               </button>
+              
+            <button
+              className="text-blue-500 hover:underline"
+              onClick={handleForgotPassword}
+            >
+              Forgot Password? Please Enter EmailId
+            </button>
+          
               <Link
                 className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
                 to={`/registration/${userType}`}

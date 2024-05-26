@@ -1,4 +1,3 @@
-// mailer.js
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
@@ -29,4 +28,30 @@ const sendWelcomeEmail = (to) => {
   });
 };
 
-module.exports = sendWelcomeEmail;
+// Function to send password reset email
+const sendPasswordResetEmail = async (email, token,role) => {
+  const resetLink = `${process.env.FRONTEND_URL}/${role}/reset-password/${token}`;
+console.log(resetLink,"link");
+  const mailOptions = {
+    to: email,
+    from: process.env.EMAIL_USER,
+    subject: 'Password Reset',
+    html: `<p>From <strong>Surgi-cloud</strong>,</p>
+    <p>You are receiving this because you (or someone else) have requested the reset of the password for your account.</p>
+    <p>Please click on the following link, or paste this into your browser to complete the process:</p>
+    <p><a href="${resetLink}">${resetLink}</a></p>
+    <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>`
+  };
+
+  try {
+    await transporter.sendMail(mailOptions);
+    console.log('Password reset email sent: ' + email);
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+  }
+};
+
+module.exports = {
+  sendWelcomeEmail,
+  sendPasswordResetEmail
+};

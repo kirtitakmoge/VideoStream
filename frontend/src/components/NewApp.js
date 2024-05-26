@@ -52,6 +52,7 @@ import CameraData from "./CameraData";
 import SurgeonData from "./SurgeonData";
 import SuperAllCamera from "./SuperAllCamera";
 import ViewBucketFiles from "./ViewBucketFiles";
+import ResetPassword from "./ResetPassword";
 const NewApp = () => {
   const { user } = useAuth(); // Get the user object from the AuthContext
  
@@ -116,7 +117,8 @@ const NewApp = () => {
             <Route path="/cameraData/:cameraId" element={<CameraData/>}/>
             <Route path="/surgeonData/:surgeonId" element={<SurgeonData/>}/>
             <Route path="/superAllCameras" element={<SuperAllCamera/>}/>
-            
+            <Route path="/:role/reset-password/:token" element={<ResetPassword />} />
+
           </Routes>
           </Layout>
         </div>

@@ -22,6 +22,6 @@ router.post('/createHospital', hospitalController.createHospital);
 router.get('/getHospitalById/:superAdminId/:hospitalId',verifyToken,requireSuperAdmin, hospitalController.getHospitalById);
 router.post('/createHospital/:superAdminId',verifyToken,requireSuperAdmin, hospitalController.createHospital);
 router.get("/getAllHospitals/:superAdminId",verifyToken,requireSuperAdmin,hospitalController.getAllHospitals)//this for super admin to get sll hospital
-router.delete("/deleteHospital/:superAdminId/:hospitalId",requireSuperAdmin,hospitalController.deleteHospitalById)//this for super admin to delete hospital
+router.delete("/deleteHospital/:superAdminId/:hospitalId",verifyToken,requireSuperAdmin,hospitalController.deleteHospitalById)//this for super admin to delete hospital
 router.put('/updateHospitalById/:superAdminId/:hospitalId',verifyToken,requireSuperAdmin,hospitalController.updateHospitalById);//super admin update hospital detail
 module.exports = router;

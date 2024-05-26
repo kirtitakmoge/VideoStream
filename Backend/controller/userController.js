@@ -10,6 +10,10 @@ const bcrypt = require('bcrypt');
 const { isValidObjectId } = require('mongoose');
 const sendWelcomeEmail = require('../auth/mailer');
 const { generateOTP, sendOTPSMS } = require('../auth/generateOtp');
+const jwt = require('jsonwebtoken');
+
+// Secret key for JWT
+const secretKey = 'KirtiTakmogeSuhasShelke';
 exports.signupUser = async (req, res) => {
     try {
         const newUser = new User(req.body);
@@ -126,6 +130,7 @@ exports.getAllUser = async (req, res) => {
 exports.getUserByID=async (req,res)=>
 {
     const surgeonId=req.params.surgeonId;
+    console.log("in getuserbyid:",surgeonId);
     if(!isValidObjectId(surgeonId))
     {
       
@@ -182,17 +187,21 @@ exports.deleteUserById=async(req,res)=>
     } 
 
 }
-
 exports.updateUserById = async (req, res) => {
     const surgeonId = req.params.surgeonId;
     const updateUser = req.body;
-console.log(updateUser);
-    try {
-        // Validate user object against schema
-        await User.validate(updateUser);
 
-        // Update the user
-        const updatedUser = await User.findByIdAndUpdate(surgeonId, updateUser, { new: true });
+    try {
+        
+
+        // Construct update object with only the provided fields
+        const updateFields = {};
+        for (const key in updateUser) {
+            updateFields[key] = updateUser[key];
+        }
+
+        // Update the user with only the provided fields
+        const updatedUser = await User.findByIdAndUpdate(surgeonId, { $set: updateFields }, { new: true });
 
         if (!updatedUser) {
             throw new Error("User not found");
@@ -292,11 +301,41 @@ console.log(email);
         // Proceed with the rest of the login or registration process
         // Generate token and send response
         const token = generateToken(user);
+        user.otp=undefined;
+        user.otpExpires=undefined;
         res.status(200).json({ message: 'OTP verified successfully',succces:true,user, token });
     } catch (error) {
         console.error('Error verifying OTP:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
+};
+
+
+const { sendPasswordResetEmail } = require('../auth/mailer');
+
+exports.requestPasswordReset = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Generate a reset token
+    const resetToken =  generateToken(user);
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = Date.now() + 3600000; // Set expiration time to 1 hour from now
+    await user.save();
+ role="surgeon"
+    // Send password reset emailc:\Users\Kirti\AppData\Local\Packages\Microsoft.ScreenSketch_8wekyb3d8bbwe\TempState\Recordings\20240524-1052-10.7537932.mp4
+    await sendPasswordResetEmail(user.email, resetToken,role);
+
+    res.status(200).json({ message: 'Password reset email sent',success:true });
+  } catch (error) {
+    console.error('Error requesting password reset:', error);
+    res.status(500).json({ message: 'Internal server error',succces:false});
+  }
 };
 
 
@@ -412,3 +451,38 @@ exports.updateUserActiveStatus = async (req, res) => {
     }
   };
   
+exports.resetPassword = async (req, res) => {
+    const { token, newPassword } = req.body;
+  console.log(token);
+    try {
+      // Verify the token
+      const decoded =jwt.verify(token,secretKey);
+   console.log(decoded);
+      // Find the user by the reset token and ensure it's not expired
+      const user = await User.findOne({
+        email: decoded.email,
+        resetPasswordToken: token,
+        
+      });
+  
+      if (!user) {
+        return res.status(400).json({ message: 'Invalid or expired token' });
+      }
+      console.log(user);
+  
+      // Hash the new password
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(newPassword, salt);
+  
+      // Clear the reset token and expiration
+      user.resetPasswordToken = undefined;
+      user.resetPasswordExpires = undefined;
+  
+      await user.save();
+  
+      res.status(200).json({ message: 'Password has been reset' });
+    } catch (error) {
+      console.error('Error resetting password:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };

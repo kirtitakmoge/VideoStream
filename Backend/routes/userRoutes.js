@@ -1,20 +1,23 @@
 const express = require('express');
 const router = express.Router();
 const userController = require('../controller/userController');
-const generateToken = require('../auth/generateToken');
-const checkSurgeonOwnership=require("../auth/checkSurgeonOwnership");
 const adminController = require('../controller/adminController');
-//const role =require("../auth/checkHospitalAdminAuthorization");
+
 const verifyToken = require('../auth/verifyToken');
 const requireSuperAdmin = require('../auth/requireSuperAdmin');
 const isAdmin = require('../auth/adminAuthforvideo');
-const checkSurgeonOwnershipdata=require("../auth/checkSurgeonOwnershipdata");
+
 
 //public routes
 router.post('/signup', userController.signupUser);
 router.post('/login', userController.loginUser);
 router.post('/verifyOtp',userController.verifyOtp);
 router.post("/resendOtp",userController.resendOTP);
+router.post('/request-password-reset',userController.requestPasswordReset);
+router.post('/reset-password', userController.resetPassword);
+
+//for all role
+router.get("/getUserById/:surgeonId",verifyToken,userController.getUserByID);
 
 //routes for HospitalAdmin
 router.post("/admin/getAllUsers/:adminId",verifyToken,isAdmin,adminController.getAllUsers);
@@ -23,13 +26,12 @@ router.get('/getSurgeonsByHospitalId/:hospitalId', userController.getSurgeonsByH
 router.get("/getCamerasForUser/:surgeonId",userController.getCamerasForUser);
 
 
-
 //routes for Suregeon
 //router.get("/getUserbyId/:surgeonId",verifyToken,checkSurgeonOwnershipdata,userController.getUserByID);
 router.delete("/deleteUserById/:surgeonId",verifyToken,userController.deleteUserById);
 //router.put("/updateUserById/:surgeonId",verifyToken,checkSurgeonOwnershipdata,userController.updateUserById);
-router.put("/updateUserById/:surgeonId",userController.updateUserById);
-router.get("/getUserById/:surgeonId",verifyToken,userController.getUserByID);
+router.put("/updateUserById/:surgeonId",verifyToken,userController.updateUserById);
+
 router.get("/getCameraUrlByUserId/:surgeonId",userController.getCameraUrlByUserId);
 
 

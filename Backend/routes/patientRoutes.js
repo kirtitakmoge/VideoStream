@@ -7,6 +7,11 @@ const isAdmin1=require("../auth/isAdmin1");
 // Routes for patient CRUD operations
 router.post('/', patientController.createPatient);
 router.post('/login', patientController.loginPatient);
+router.post('/verifyOtp',patientController.verifyOtp);
+router.post("/resendOtp",patientController.resendOTP);
+
+router.post('/request-password-reset',patientController.requestPasswordReset);
+router.post('/reset-password', patientController.resetPassword);
 
 //this is for Hospital Admin
 router.get('/getAllPatient/:adminId',verifyToken,isAdmin1,patientController.getAllPatients);

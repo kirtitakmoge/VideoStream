@@ -1,72 +1,83 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 
-const OTPVerification = ({ email, userId, onSuccess }) => {
+const OTPVerification = ({ email, userId, userType, onSuccess }) => {
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(30);
 
   const handleOTPSubmit = async (e) => {
     e.preventDefault();
+
+    const apiUrl = userType === "Patient"
+      ? `${process.env.REACT_APP_API_URL}/api/patient/verifyOtp`
+      : `${process.env.REACT_APP_API_URL}/api/users/verifyOtp`;
+
     try {
-      const otpResponse = await fetch(`${process.env.REACT_APP_API_URL}/api/users/verifyOtp`, {
+      const otpResponse = await fetch(`${apiUrl}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ userId,email, otp }),
+        body: JSON.stringify({ userId, email, otp }),
       });
 
       if (otpResponse.ok) {
         const userData = await otpResponse.json();
-        toast.success("Otp Verified");
+        toast.success("OTP Verified");
         onSuccess(userData);
-      }else {
+      } else {
         const errorData = await otpResponse.json();
-        toast.error(errorData.message)
         toast.error(errorData.message || 'Failed to verify OTP');
-    }
+      }
     } catch (error) {
       console.error("An error occurred during OTP verification:", error.message);
+      toast.error("An error occurred during OTP verification");
     }
   };
-  const handleResendOTP = async () => {
+
+  const handleResendOTP = async (e) => {
+    e.preventDefault();
+
+    const apiUrl = userType === "Patient"
+      ? `${process.env.REACT_APP_API_URL}/api/patient/resendOtp`
+      : `${process.env.REACT_APP_API_URL}/api/users/resendOtp`;
+
     try {
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/resendOtp`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email }),
-        });
+      const response = await fetch(`${apiUrl}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
 
-        if (response.ok) {
-          setTimer(30); 
-            toast.success('OTP resent successfully');
-        } else {
-            toast.error('Failed to resend OTP');
-        }
-        
+      if (response.ok) {
+        setTimer(30);
+        toast.success('OTP resent successfully');
+      } else {
+        const errorData = await response.json();
+        toast.error(errorData.message || 'Failed to resend OTP');
+      }
     } catch (error) {
-        console.error('Error resending OTP:', error);
-        toast.error('Failed to resend OTP');
+      console.error('Error resending OTP:', error);
+      toast.error('Failed to resend OTP');
     }
-};// Effect to decrement the timer every second
-useEffect(() => {
-    const interval = setInterval(() => {
-        if (timer > 0) {
-            setTimer(timer - 1);
-        }
-    }, 1000);
+  };
 
-    return () => clearInterval(interval);
-}, [timer]);
+  useEffect(() => {
+    if (timer > 0) {
+      const interval = setInterval(() => {
+        setTimer((prevTimer) => prevTimer - 1);
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [timer]);
 
-// Function to format the timer in mm:ss format
-const formatTimer = () => {
+  const formatTimer = () => {
     const minutes = Math.floor(timer / 60);
     const seconds = timer % 60;
     return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-};
+  };
 
   return (
     <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg">
@@ -93,13 +104,16 @@ const formatTimer = () => {
           >
             Verify OTP
           </button>
-          {timer===0? (
-                <button  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                 onClick={handleResendOTP}>Resend OTP</button>
-            ) : (
-                <span>Resend OTP in {formatTimer()}</span>
-            )}
-        
+          {timer === 0 ? (
+            <button
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              onClick={handleResendOTP}
+            >
+              Resend OTP
+            </button>
+          ) : (
+            <span>Resend OTP in {formatTimer()}</span>
+          )}
         </div>
       </form>
     </div>
