@@ -2,8 +2,12 @@ import React, { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import {useAuth} from "./AuthContext";
+
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser, clearUser } from '../redux/slice/userSlice'; 
 const SignOut = () => {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
    const {logout}=useAuth();
     useEffect(() => {
         const signOut = () => {
@@ -18,6 +22,7 @@ const SignOut = () => {
                 localStorage.removeItem("token");
                 localStorage.removeItem("isLoggedIn", true);
                 localStorage.clear();
+                dispatch(clearUser());
             } else {
                 toast.success(`Already Logged Out`, {
                     duration: 2000,

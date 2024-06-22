@@ -1,6 +1,6 @@
 const Patient = require('../models/Patient');
 const PatientContent=require("../models/PatientContent");
-
+const twilio = require('twilio');
 const dotenv = require('dotenv').config();
 // Secret key for JWT
 const secretKey = process.env.JWT_SECRETE_KEY;
@@ -9,6 +9,7 @@ const generateToken = require('../auth/generateToken');
 const { generateOTP, sendOTPSMS } = require('../auth/generateOtp');
 const jwt = require('jsonwebtoken');
 const { sendPasswordResetEmail } = require('../auth/mailer');
+const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 const requestPasswordReset = async (req, res) => {
     const { email } = req.body;
  
@@ -171,23 +172,24 @@ console.log(email);
         }
 
         // Check if OTP has expired
-        if (Date.now() > user.otpExpires) {
-            return res.status(400).json({ message: 'OTP has expired' });
-        }
+        const ph = "+91" + user.mobile_no;
+        // Use Twilio Verify API to check OTP
+        const verificationCheck = await client.verify.services(process.env.TWILIO_MESSAGING_SERVICE_SID)
+            .verificationChecks
+            .create({
+                to: ph,
+                code: otp
+            });
 
-        // Check if OTP matches
-        if (user.otp !== otp) {
-            return res.status(400).json({ message: 'Invalid OTP' });
-        }
+        if (verificationCheck.status === 'approved') {
 
         // OTP is correct and not expired
         // Proceed with the rest of the login or registration process
         // Generate token and send response
         const token = generateToken(user);
-        user.otp=undefined;
-        user.otpExpires=undefined;
+     
         res.status(200).json({ message: 'OTP verified successfully',succces:true,user, token });
-    } catch (error) {
+    } }catch (error) {
         console.error('Error verifying OTP:', error);
         res.status(500).json({ message: 'Internal server error' });
     }

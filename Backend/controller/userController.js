@@ -242,7 +242,7 @@ exports.loginUser = async (req, res) => {
         console.log(accountSid);
         // Send OTP to user's phone using Twilio
         sendOTPSMS(user.mobile_no, otp);
-        console.log("otp sent");
+        console.log("otp sent:",otp);
 
         res.status(200).json({ message: 'OTP sent to your phone', userId: user._id });
     } catch (error) {
@@ -261,8 +261,7 @@ exports.resendOTP = async (req, res) => {
 
         // Generate a new OTP
         const otp = generateOTP();
-        user.otp = otp;
-        user.otpExpires = Date.now() + 2 * 60 * 1000;; // OTP valid for 5 minutes
+        
 
         // Save the updated user document
         await user.save();
@@ -276,39 +275,54 @@ exports.resendOTP = async (req, res) => {
         console.error('Error resending OTP:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
-};
-// In your controller file
+};const twilio = require('twilio');
+
+
+
+
+const client = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
 exports.verifyOtp = async (req, res) => {
     const { email, otp } = req.body;
-console.log(email);
+    console.log(email);
+
     try {
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
-        // Check if OTP has expired
-        if (Date.now() > user.otpExpires) {
-            return res.status(400).json({ message: 'OTP has expired' });
-        }
+        const ph = "+91" + user.mobile_no; // Assuming user object has a phone attribute
 
-        // Check if OTP matches
-        if (user.otp !== otp) {
+        // Use Twilio Verify API to check OTP
+        const verificationCheck = await client.verify.services(process.env.TWILIO_MESSAGING_SERVICE_SID)
+            .verificationChecks
+            .create({
+                to: ph,
+                code: otp
+            });
+
+        if (verificationCheck.status === 'approved') {
+            // OTP is correct and not expired
+            // Proceed with the rest of the login or registration process
+            // Generate token and send response
+            const token = generateToken(user);
+
+            // Optionally clear OTP-related fields if stored in the database
+            user.otp = undefined;
+            user.otpExpires = undefined;
+            await user.save();
+
+            return res.status(200).json({ message: 'OTP verified successfully', success: true, user, token });
+        } else {
             return res.status(400).json({ message: 'Invalid OTP' });
         }
-
-        // OTP is correct and not expired
-        // Proceed with the rest of the login or registration process
-        // Generate token and send response
-        const token = generateToken(user);
-        user.otp=undefined;
-        user.otpExpires=undefined;
-        res.status(200).json({ message: 'OTP verified successfully',succces:true,user, token });
     } catch (error) {
         console.error('Error verifying OTP:', error);
-        res.status(500).json({ message: 'Internal server error' });
+        return res.status(500).json({ message: 'Internal server error' });
     }
 };
+
 
 
 const { sendPasswordResetEmail } = require('../auth/mailer');

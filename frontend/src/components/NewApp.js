@@ -53,6 +53,7 @@ import SurgeonData from "./SurgeonData";
 import SuperAllCamera from "./SuperAllCamera";
 import ViewBucketFiles from "./ViewBucketFiles";
 import ResetPassword from "./ResetPassword";
+import VideoCall from "./VideoCall";
 const NewApp = () => {
   const { user } = useAuth(); // Get the user object from the AuthContext
  
@@ -118,7 +119,7 @@ const NewApp = () => {
             <Route path="/surgeonData/:surgeonId" element={<SurgeonData/>}/>
             <Route path="/superAllCameras" element={<SuperAllCamera/>}/>
             <Route path="/:role/reset-password/:token" element={<ResetPassword />} />
-
+            <Route path="/videocall" element={<VideoCall/>}/>
           </Routes>
           </Layout>
         </div>

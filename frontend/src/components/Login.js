@@ -5,12 +5,16 @@ import { useAuth } from "./AuthContext";
 import { useParams } from "react-router-dom";
 import OTPVerification from "./OTPVerification";
 
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser, clearUser } from '../redux/slice/userSlice'; 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showOtpForm, setShowOtpForm] = useState(false);
   const [userId, setUserId] = useState(null);
- 
+  const user = useSelector(state => state.user.user); // Access the user state using useSelector
+  const dispatch = useDispatch(); // Get the dispatch function
+
   const navigate = useNavigate();
   const { login } = useAuth();
   const { userType } = useParams();
@@ -76,6 +80,7 @@ if(response.ok){
     localStorage.setItem("token", userData.token);
     localStorage.setItem("isLoggedIn", true);
     console.log(userData);
+    dispatch(setUser(userData.user)); 
     if (userData.user.role === "Super Admin") navigate(`/superAdminDashboard`);
     else if (userData.user.role === "Patient") navigate("/patient");
     else if (userData.user.role === "Hospital Admin" && userData.user.active === true)

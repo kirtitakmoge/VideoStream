@@ -26,6 +26,9 @@ const SurgeonDashboard = () => {
       <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
         <Link to={`/patientData/${user.departmentId}`}>Patients</Link>
       </div>
+      <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
+        <Link to={`/videoCall`}>Video Call</Link>
+      </div>
     </div>
   </div>
   );
