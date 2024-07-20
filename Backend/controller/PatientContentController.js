@@ -2,8 +2,7 @@ const PatientContent = require('../models/PatientContent');
 const { generatePresignedUrl, extractBucketAndKey } = require('../auth/generatePresignedUrl');
 const User=require("../models/User");
 const Patient = require('../models/Patient');
-const patientContentController = {
-    // Create a new patient content
+const patientContentController = {// Create a new patient content
     createPatientContent: async (req, res) => {
         try {
             const {
@@ -11,7 +10,9 @@ const patientContentController = {
                 link, // Array of URLs
                 surgeonId,
             } = req.body;
-    console.log(req.body)
+    
+           
+    
             // Check if required fields are provided
             if (!userId || !link || !Array.isArray(link) || link.length === 0 || !surgeonId) {
                 return res.status(400).json({ message: 'All required fields must be provided' });
@@ -33,37 +34,53 @@ const patientContentController = {
                 return res.status(404).json({ message: 'Patient not found' });
             }
     
-            // Create patient content
-            const patientContent = new PatientContent({
-                userId,
-                link: linkObjects,
-                surgeonId,
-                date,
-                time,
-            });
-            await patientContent.save();
-            patient.patientcontentId = patientContent._id; // Assuming this is how you associate patient content with patient
-            await patient.save(); // Save the patient after updating patient content ID
-           console.log(patientContent._id,patient);
-            // Save the patient content
+            // Check if patient content already exists for this userId and surgeonId
+            let patientContent = await PatientContent.findOne({ userId, surgeonId });
+
+            if (patientContent) {
+                // Patient content exists, add new links to the existing links
+                const existingLinks = patientContent.link.map(item => item.objectKey);
+                linkObjects.forEach(linkObject => {
+                    if (!existingLinks.includes(linkObject.objectKey)) {
+                        patientContent.link.push(linkObject);
+                    }
+                });
     
+                patientContent.date = date;
+                patientContent.time = time;
+    
+               
+            } else {
+                // Create new patient content
+                patientContent = new PatientContent({
+                    userId,
+                    link: linkObjects,
+                    surgeonId,
+                    date,
+                    time,
+                });
+            
+                
+            }
+            await patientContent.save();
+            patient.patientcontentId = patientContent._id; 
+          
+            await patient.save(); // Save the patient after updating patient content ID
+            
             res.status(201).json({ message: 'Patient content created successfully', data: patientContent });
         } catch (error) {
             // Check if the error is a validation error for the compound index
-            // Check if the error is a validation error for the compound index
-if (error.name === 'MongoServerError' && error.code === 11000) {
-    // Log the error for debugging
-    console.error('Duplicate key error:', error);
-
-    // Extract relevant information from the error
-    const { keyValue } = error;
-
-    // Check if the keyValue object exists and has the expected properties
-    // Construct a custom error message
-const errorMessage = `Below media  ${keyValue['link.objectKey']}  with userId ${keyValue.userId}  already Shared.`;
-return res.status(400).json({ message: errorMessage });
-}
-
+            if (error.name === 'MongoServerError' && error.code === 11000) {
+                // Log the error for debugging
+                console.error('Duplicate key error:', error);
+    
+                // Extract relevant information from the error
+                const { keyValue } = error;
+    
+                // Construct a custom error message
+                const errorMessage = `Below media ${keyValue['link.objectKey']} with userId ${keyValue.userId} already shared.`;
+                return res.status(400).json({ message: errorMessage });
+            }
     
             // For other types of errors, handle them appropriately
             console.error('Error:', error);

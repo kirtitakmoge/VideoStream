@@ -77,7 +77,7 @@ const DeleteBucketFile = ({ media, surgeonId, token, cameraId, onDelete }) => {
   return (
     <button
       onClick={() => handleDeleteMedia(media)}
-      className="text-red-500  bg-gray-100 hover:bg-gray-300"
+      className="text-red-500  bg-gray-200 hover:bg-gray-300"
     >
       <FaTrash />
     </button>

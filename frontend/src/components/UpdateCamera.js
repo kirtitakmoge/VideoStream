@@ -191,7 +191,7 @@ const UpdateCamera = () => {
             <option value="false">False</option>
           </select>
         </div>
-        <button type="submit" className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600">Update</button>
+        <button type="submit" className="w-full text-white py-2 px-4 rounded hover:bg-red-600">Update</button>
       </form>
     </div>
   );

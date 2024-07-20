@@ -37,24 +37,24 @@ const token=localStorage.getItem("token");
   return (
     <>
      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-2xl font-bold text-center mb-5">{hospital_name}</h1>
+            <h1 className="text-2xl  font-bold text-center mb-10">{hospital_name}</h1>
             <h1 className="text-2xl font-bold text-center mb-5"> Department Gallery</h1>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mx-6 ml-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 m">
                 {departments.map((department) => (
-                    <div key={department.departmentId} className="shadow-md">
+                    <div key={department.departmentId}  className="block bg-gray-200  p-4 rounded-md hover:bg-gray-300">
                         <Link
                             to={{
                                 pathname: `/departmentDetailSuper/${department.departmentId}/${department.department_name}`,
                                 // Pass updateDepartments function as state
                             }}
-                            className="block bg-gray-100 w-full p-4 rounded-md hover:bg-gray-200"
+                            
                         >
                             <h2 className="text-xl  font-bold mb-2">{department.department_name}</h2>
                         </Link>
                     </div>
                 ))}
                 <div className="shadow-md">
-                    <Link to={`/activateHospitalAdmin/${hospitalId}`} className="block bg-gray-100 p-4 rounded-md hover:bg-gray-200">
+                    <Link to={`/activateHospitalAdmin/${hospitalId}`} className="block bg-gray-200 p-4 rounded-md hover:bg-gray-300">
                         <h2 className="text-xl font-bold mb-2">Activate Hospital Admin</h2>
                     </Link>
                 </div>

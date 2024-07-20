@@ -129,7 +129,7 @@ const CreateSubscriptionPlan = () => {
               required
             />
           </div>
-          <button type="submit" className="bg-blue-500 text-white px-3 py-2 rounded w-full mt-2 hover:bg-blue-600">Create Plan</button>
+          <button type="submit" className="bg-red-500 text-white px-3 py-2 rounded w-full mt-2 hover:bg-red-600">Create Plan</button>
         </form>
       </div>
     </div>

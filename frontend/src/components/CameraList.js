@@ -1,15 +1,11 @@
 import React, { useEffect, useState } from "react";
-
 import { useParams, useNavigate } from "react-router-dom";
-import { FaEdit, FaTrash, FaInfoCircle ,FaToggleOn} from 'react-icons/fa';
-import {toast} from "react-hot-toast"
+import { FaEdit, FaTrash, FaInfoCircle, FaToggleOn } from 'react-icons/fa';
+import { toast } from "react-hot-toast";
 import { useAuth } from "./AuthContext";
-
-import CameraListItem from "./CameraListItem";
 
 const CameraList = () => {
   const [cameras, setCameras] = useState([]);
-  
   const navigate = useNavigate();
   const { departmentId } = useParams();
   const { user } = useAuth();
@@ -37,30 +33,27 @@ const CameraList = () => {
         console.error("Error fetching cameras:", error);
       }
     }
-
     fetchCameras();
   }, [departmentId]);
 
- 
-
   const handleUpdate = (cameraId) => {
-   navigate(`/updateCamera/${cameraId}`);
+    navigate(`/updateCamera/${cameraId}`);
   };
-  const handleInfo=(cameraId)=>{
+
+  const handleInfo = (cameraId) => {
     navigate(`/cameraData/${cameraId}`);
-  }
+  };
 
   const handleDelete = async (cameraId) => {
     try {
-      alert(cameraId)
       const token = localStorage.getItem("token");
       const response = await fetch(
         `${process.env.REACT_APP_API_URL}/api/camera/deleteCameraById/${cameraId}`,
         {
-          method:"DELETE",
+          method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -69,17 +62,12 @@ const CameraList = () => {
           duration: 2000,
           position: "top-center",
         });
-        
         throw new Error("Failed to delete camera");
       }
-      if(response.ok)
-        {
-          toast.success(`Camera Deleted SuccessFully`, {
-            duration: 2000,
-            position: "top-center",
-          });
-          
-        }
+      toast.success(`Camera Deleted Successfully`, {
+        duration: 2000,
+        position: "top-center",
+      });
       setCameras((prevCameras) =>
         prevCameras.filter((camera) => camera._id !== cameraId)
       );
@@ -87,48 +75,49 @@ const CameraList = () => {
       console.error("Error deleting camera:", error);
     }
   };
-if(user)
-  return (
-    <>
-      <div className="col-span-3 mt-5">
+
+  if (user)
+    return (
+      <div className="container items-center mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-2xl text-center font-bold mb-4">Cameras</h2>
-        <div className="flex">
-          {cameras.map((camera, index) => (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {cameras.map((camera) => (
             <div
               key={camera._id}
-              className="bg-gray-100 h-23 mr-5 p-4 rounded-md hover:bg-gray-200"
+              className="bg-gray-200 shadow-md rounded-md overflow-hidden hover:shadow-lg transition-shadow duration-300"
             >
-             <CameraListItem camera={camera}/>
-              { (user.role==="Super Admin") &&
-              <div className="flex justify-center">
-                <div className=" mr-5" onClick={() => handleUpdate(camera._id)}>
-                  <FaEdit className="text-blue-500 cursor-pointer" size={20} />
-                  <span className="hover-text">Edit</span>
+              <div className="relative p-4 group">
+                <video
+                  src={camera.videoUrl}
+                  controls
+                  className="w-full h-auto rounded-md transform transition-transform duration-300 group-hover:scale-110"
+                />
+              </div>
+              {user.role === "Super Admin" && (
+                <div className="flex justify-around p-4 bg-gray-200">
+                  <div onClick={() => handleUpdate(camera._id)} className="cursor-pointer flex flex-col items-center text-blue-500">
+                    <FaEdit size={20} />
+                    <span className="text-sm">Edit</span>
+                  </div>
+                  <div onClick={() => handleDelete(camera._id)} className="cursor-pointer flex flex-col items-center text-red-500">
+                    <FaTrash size={20} />
+                    <span className="text-sm">Delete</span>
+                  </div>
+                  <div onClick={() => handleInfo(camera._id)} className="cursor-pointer flex flex-col items-center text-gray-500">
+                    <FaInfoCircle size={20} />
+                    <span className="text-sm">Info</span>
+                  </div>
+                  <div onClick={() => handleInfo(camera._id)} className="cursor-pointer flex flex-col items-center text-green-500">
+                    <FaToggleOn size={20} />
+                    <span className="text-sm">Enable</span>
+                  </div>
                 </div>
-                <div className=" mr-5" onClick={() => handleDelete(camera._id)}>
-                  <FaTrash className="text-red-500 cursor-pointer " size={20} />
-                  <span className="hover-text">Delete</span>
-                </div>
-                
-                <div className="mr-5" onClick={() => handleInfo(camera._id)}>
-                  <FaInfoCircle className="text-gray-500 cursor-pointer" size={20} />
-                  <span className="hover-text">Info</span>
-                </div>
-                <div className="mr-5" onClick={() => handleInfo(camera._id)}>
-                <FaToggleOn
-                    className="text-red-500 cursor-pointer"
-                    size={20}
-
-                  /><span className="hover-text">Enable</span></div>
-              </div>}
+              )}
             </div>
           ))}
         </div>
       </div>
-
-     
-    </>
-  );
+    );
 };
 
 export default CameraList;

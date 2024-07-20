@@ -45,7 +45,7 @@ const SurgeonList = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {surgeons.map(surgeon => (
           (surgeon.role !== "Hospital Admin" && surgeon.role !== "Super Admin") &&
-          <div key={surgeon._id} onClick={() => handleSurgeon(surgeon)} className="bg-white p-4 rounded shadow cursor-pointer">
+          <div key={surgeon._id} onClick={() => handleSurgeon(surgeon)} className="bg-gray-200  hover:bg-gray-300 p-4 rounded shadow cursor-pointer">
             <h2 className="text-lg font-bold mb-2">{surgeon.firstname} {surgeon.lastname}</h2>
             <p className="text-gray-600">{surgeon.email}</p>
             {/* Render other surgeon details here */}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 
-const OTPVerification = ({ email, userId, userType, onSuccess }) => {
+const OTPVerification = ({ email, userId, userType, onSuccess, handleShowLogin }) => {
   const [otp, setOtp] = useState("");
   const [timer, setTimer] = useState(30);
 
@@ -80,42 +80,50 @@ const OTPVerification = ({ email, userId, userType, onSuccess }) => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg">
-      <h2 className="text-xl font-bold mb-4 text-center">OTP Verification</h2>
-      <form onSubmit={handleOTPSubmit}>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="otp">
-            Enter OTP
-          </label>
-          <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-            id="otp"
-            type="text"
-            placeholder="OTP"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-            required
-          />
-        </div>
-        <div className="flex items-center gap-5">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            type="submit"
-          >
-            Verify OTP
-          </button>
-          {timer === 0 ? (
+    <div className=" flex items-center  ">
+      <div className="max-w-sm w-full mx-auto p-6  bg-white shadow-lg rounded-lg">
+        <h2 className="text-2xl font-bold mb-4 text-center">OTP Verification</h2>
+        <form onSubmit={handleOTPSubmit}>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="otp">
+              Enter OTP
+            </label>
+            <input
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              id="otp"
+              type="text"
+              placeholder="OTP"
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              required
+            />
+          </div>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
             <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              onClick={handleResendOTP}
+              className="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              type="submit"
             >
-              Resend OTP
+              Verify 
             </button>
-          ) : (
-            <span>Resend OTP in {formatTimer()}</span>
-          )}
-        </div>
-      </form>
+            {timer === 0 ? (
+              <button
+                className="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+                onClick={handleResendOTP}
+              >
+                Resend
+              </button>
+            ) : (
+              <span>Resend OTP in {formatTimer()}</span>
+            )}
+            <button
+              className="w-full sm:w-auto bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+              onClick={handleShowLogin}
+            >
+               Login
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

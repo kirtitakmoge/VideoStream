@@ -12,6 +12,7 @@ const transporter = nodemailer.createTransport({
 
 // Function to send welcome email
 const sendWelcomeEmail = (to) => {
+  
   const mailOptions = {
     from: process.env.EMAIL_USER, // replace with your email
     to: to,
@@ -25,7 +26,9 @@ const sendWelcomeEmail = (to) => {
       return console.log(error);
     }
     console.log('Email sent: ' + info.response);
+    return true;
   });
+  console.log(`Mail sent to ${to}`)
 };
 
 // Function to send password reset email

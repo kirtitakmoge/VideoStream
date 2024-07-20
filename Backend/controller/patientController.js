@@ -2,6 +2,7 @@ const Patient = require('../models/Patient');
 const PatientContent=require("../models/PatientContent");
 const twilio = require('twilio');
 const dotenv = require('dotenv').config();
+const {sendWelcomeEmail }= require('../auth/mailer');
 // Secret key for JWT
 const secretKey = process.env.JWT_SECRETE_KEY;
 const bcrypt = require('bcrypt');
@@ -37,15 +38,26 @@ const requestPasswordReset = async (req, res) => {
   };
   
 const createPatient = async (req, res, next) => {
-    const { firstname, password, age, gender, email, address,hospitalId,departmentId } = req.body;
+    const { firstname, password, age, gender, email, address,hospitalId,departmentId ,mobile_no} = req.body;
 
     try {
+        const {hospitalId}=req.body;
+       
+        console.log(req.body);
+        const hospital=await Hospital.findOne({
+            hospital_Id
+            :hospitalId});
+           
+        console.log(hospital);
+        
         const patient = new Patient(req.body);
+        patient.hospitalId=hospital._id;
         const hashedPassword = await bcrypt.hash(patient.password, 10);
         patient.password=hashedPassword;
         console.log(req.body);
-        await patient.save();
-        const token=generateToken(patient);
+       
+      
+        sendWelcomeEmail(patient.email); await patient.save();
         res.status(201).json(patient);
     } catch (error) {
         if (error.code === 11000) {
@@ -70,10 +82,11 @@ const resendOTP = async (req, res) => {
         user.otpExpires = Date.now() + 2 * 60 * 1000;; // OTP valid for 5 minutes
 
         // Save the updated user document
-        await user.save();
+      
 
         // Send OTP to user's phone using Twilio
         sendOTPSMS(user.mobile_no, otp);
+        await user.save();
         console.log("OTP resent:", otp);
 
         res.status(200).json({ message: 'OTP resent to your phone' });
@@ -174,7 +187,7 @@ console.log(email);
         // Check if OTP has expired
         const ph = "+91" + user.mobile_no;
         // Use Twilio Verify API to check OTP
-        const verificationCheck = await client.verify.services(process.env.TWILIO_MESSAGING_SERVICE_SID)
+        const verificationCheck = await client.verify.v2.services(process.env.TWILIO_MESSAGING_SERVICE_SID)
             .verificationChecks
             .create({
                 to: ph,

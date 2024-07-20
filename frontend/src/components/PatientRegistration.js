@@ -12,6 +12,8 @@ const PatientRegistration = () => {
     gender: "",
     email: "",
     address: "",
+    
+    mobile_no:""
   });
 
  
@@ -20,8 +22,9 @@ const PatientRegistration = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
-    if (name === 'hospitalId' && value.length === 24) {
+    if (name === 'hospitalId' && value.length === 6) {
       try {
+        alert(value)
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/department/getAllDepartmentsByHospitalId/${value}`, {
           method: "GET",
           headers: {
@@ -31,6 +34,7 @@ const PatientRegistration = () => {
         });
         if (response.ok) {
           const departmentsData = await response.json();
+          alert(departmentsData.departments);
           setDepartments(departmentsData.departments);
         }
       } catch (error) {
@@ -89,6 +93,18 @@ const PatientRegistration = () => {
             id="password"
             name="password"
             value={formData.password}
+            onChange={handleChange}
+            className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500"
+            required
+          />
+        </div>
+        <div className="mb-4">
+          <label htmlFor="mobile_no" className="block font-medium">Mobile Number</label>
+          <input
+            type="number"
+            id="mobile_no"
+            name="mobile_no"
+            value={formData.mobile_no}
             onChange={handleChange}
             className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500"
             required
@@ -159,7 +175,7 @@ const PatientRegistration = () => {
               ))}
             </select>
           </div>
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Register</button>
+        <button type="submit" className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Register</button>
       </form>
     </div>
   );

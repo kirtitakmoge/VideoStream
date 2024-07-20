@@ -13,23 +13,24 @@ const PatientData = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (user) { // Check if user is not null
+        if (user) {
           const response = await fetch(
             `${process.env.REACT_APP_API_URL}/api/patient/getAllPatientByDepartmentId/${departmentId}`,
             {
-              method: 'GET',
+              method: "GET",
               headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
               },
             }
           );
           const data = await response.json();
+          console.log(data);
           setPatients(data);
           setLoading(false);
         }
       } catch (error) {
-        setError('Error fetching patients');
+        setError("Error fetching patients");
         setLoading(false);
       }
     };
@@ -38,56 +39,78 @@ const PatientData = () => {
   }, [user, departmentId, token]);
 
   if (!user) {
-    return <p>Loading...</p>; // Render loading indicator if user is null
+    return <p>Loading...</p>;
   }
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto p-4">
       {loading ? (
-        <p>Loading...</p>
-      ) : error || !patients ? (
-        <p>{error}</p>
+        <div className="flex justify-center items-center h-full">
+          <p>Loading...</p>
+        </div>
+      ) : error || !patients.length ? (
+        <div className="flex justify-center items-center h-full">
+          <p>{error || "No patients found."}</p>
+        </div>
       ) : (
-        <>
-          <h1 className="text-2xl text-center font-bold mb-5">Patients</h1>
-          <table className="table-auto">
-            <thead>
-              <tr>
-                <th className="px-4 py-2">Firstname</th>
-                <th className="px-4 py-2">Age</th>
-                <th className="px-4 py-2">Gender</th>
-                <th className="px-4 py-2">Email</th>
-                <th className="px-4 py-2">Address</th>
-                <th className="px-4 py-2">File</th>
-                
-              </tr>
-            </thead>
-            <tbody>
-              {patients.map((patient) => (
-                <tr key={patient._id}>
-                  <td className="border px-4 py-2">{patient.firstname}</td>
-                  <td className="border px-4 py-2">{patient.age}</td>
-                  <td className="border px-4 py-2">{patient.gender}</td>
-                  <td className="border px-4 py-2">{patient.email}</td>
-                  <td className="border px-4 py-2">{patient.address}</td>
-                  <td className="border px-4 py-2">
-                    {patient.patientcontentId ? (
-                      <ul>
-                        {patient.patientcontentId.link.map((link, index) => (
-                          <li key={index}>
-                            <div>Object Key: {link.objectKey}</div>
-                          </li>
-                        ))}
-                      </ul>
-                    ) : (
-                      <div>File is not shared</div>
-                    )}
-                  </td>
+        <div className="container mx-auto px-4 mt-5">
+          <h2 className="text-2xl font-bold mb-4 text-center">Patients Details</h2>
+          <div className="overflow-x-auto">
+            <table className="min-w-full bg-white">
+              <thead>
+                <tr className="w-full bg-gray-800 text-white uppercase text-sm leading-normal">
+                  <th className="px-4 py-2 border-b-2 border-gray-500 text-left text-sm leading-4 tracking-wider">
+                    Firstname
+                  </th>
+                  <th className="px-4 py-2 border-b-2 border-gray-500 text-left text-sm leading-4 tracking-wider">
+                    Age
+                  </th>
+                  <th className="px-4 py-2 border-b-2 border-gray-500 text-left text-sm leading-4 tracking-wider">
+                    Gender
+                  </th>
+                  <th className="px-4 py-2 border-b-2 border-gray-500 text-left text-sm leading-4 tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-4 py-2 border-b-2 border-gray-500 text-left text-sm leading-4 tracking-wider">
+                    Address
+                  </th>
+                  <th className="px-4 py-2 border-b-2 border-gray-500 text-left text-sm leading-4 tracking-wider">
+                    File
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </>
+              </thead>
+              <tbody className="text-gray-600 text-sm ">
+                {patients.map((patient) => (
+                  <tr
+                    key={patient._id}
+                    className="border-b border-gray-200 hover:bg-gray-100"
+                  >
+                    <td className="py-3 px-4 text-left whitespace-nowrap">
+                      {patient.firstname}
+                    </td>
+                    <td className="py-3 px-4 text-left">{patient.age}</td>
+                    <td className="py-3 px-4 text-left">{patient.gender}</td>
+                    <td className="py-3 px-4 text-left">{patient.email}</td>
+                    <td className="py-3 px-4 text-left">{patient.address}</td>
+                    <td className="py-3 px-4 text-left">
+                      {patient.patientcontentId ? (
+                        <ul className="list-disc ml-4">
+                          {patient.patientcontentId.link.map((link, index) => (
+                            <li key={index} className="truncate">
+                              {link.objectKey}
+                            </li>
+                          ))}
+                        </ul>
+                      ) : (
+                        <div className="list-disc ml-4">File is not shared</div>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       )}
     </div>
   );

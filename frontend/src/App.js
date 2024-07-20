@@ -5,11 +5,11 @@ import HospitalAccessProvider from './components/HospitalAccessProvider';
 import NewApp from './components/NewApp';
 import 'tailwindcss/tailwind.css'
 import { Toaster } from 'react-hot-toast';
-
+import Dashboard from './components/Dashboard';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
 import store, { persistor } from '../src/redux/store/store';
-
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 function App() {
   return (
@@ -19,7 +19,8 @@ function App() {
       <DepartmentProvider>
       <Provider store={store}>
       <PersistGate loading={null} persistor={persistor}>
-      <NewApp/>
+       
+      <Dashboard/>
       </PersistGate>
     </Provider>
      

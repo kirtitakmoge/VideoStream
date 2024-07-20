@@ -129,7 +129,7 @@ const UpdateProfileForm = ({ userId }) => {
               type="text"
               id="hospitalId"
               name="hospitalId"
-              value={userData?.hospitalId}
+              value={userData?.hospitalId?.Hospital_Name}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded px-3 py-2"
             />
@@ -142,7 +142,7 @@ const UpdateProfileForm = ({ userId }) => {
               type="text"
               id="specialization"
               name="departmentId"
-              value={userData?.departmentId}
+              value={user?.departmentId?.department_name || ''}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded px-3 py-2"
             />
@@ -175,7 +175,7 @@ const UpdateProfileForm = ({ userId }) => {
           </div>
           <button
             type="submit"
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
           >
             Update Profile
           </button>

@@ -24,6 +24,7 @@ export const DepartmentProvider = ({ children }) => {
       });
       if (response.ok) {
         const data = await response.json();
+        console.log(data.departments)
         setDepartments(data.departments);
         return data;
       } else {

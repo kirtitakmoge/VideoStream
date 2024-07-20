@@ -80,7 +80,7 @@ const CameraForm = () => {
             <input type="text" id="departmentId" name="departmentId" value={department_name} onChange={handleChange} className="w-full border border-gray-300 rounded px-2 py-1" required />
           </div>
 
-          <button type="submit" className="bg-blue-500 text-white px-3 py-1 rounded w-full mt-2 hover:bg-blue-600">Create Camera</button>
+          <button type="submit" className="bg-red-500 text-white px-3 py-1 rounded w-full mt-2 hover:bg-red-600">Create Camera</button>
         </form>
       </div>
     </div>

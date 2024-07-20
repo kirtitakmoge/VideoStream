@@ -3,6 +3,10 @@ const { Schema } = mongoose;
 // Define schema for hospitals collection
 const hospitalSchema = new Schema(
   {
+    hospital_Id:{ 
+      type: String, 
+      required: [true, "Enter Hospital Id"], 
+      },
     Hospital_Name: { type: String, required: true },
     location: { type: String },
     email: { 

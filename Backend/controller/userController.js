@@ -8,15 +8,24 @@ const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const bcrypt = require('bcrypt');
 const { isValidObjectId } = require('mongoose');
-const sendWelcomeEmail = require('../auth/mailer');
+const {sendWelcomeEmail} = require('../auth/mailer');
 const { generateOTP, sendOTPSMS } = require('../auth/generateOtp');
 const jwt = require('jsonwebtoken');
+const Hospital=require("../models/Hospital");
 
 // Secret key for JWT
 const secretKey = 'KirtiTakmogeSuhasShelke';
 exports.signupUser = async (req, res) => {
     try {
-        const newUser = new User(req.body);
+        const {hospitalId}=req.body;
+       
+        console.log(req.body);
+        const hospital=await Hospital.findOne({
+            hospital_Id
+            :hospitalId});
+            const newUser=new User(req.body);
+        console.log(hospital);
+        newUser.hospitalId=hospital._id;
         const hashedPassword = await bcrypt.hash(newUser.password, 10);
         console.log(req.body);
         // Finding department by name
@@ -42,8 +51,17 @@ exports.signupUser = async (req, res) => {
             .catch(error => {
               console.error("Error saving notification:", error);
             });
-            sendWelcomeEmail(newUser.email);
-        res.status(201).json({ user: newUser, message: 'User created successfully' ,success:true});
+            
+            const mail=sendWelcomeEmail(newUser.email);
+            if(mail===true)
+            {
+                res.status(201).json({ user: newUser, message: 'User created successfully' ,success:true});
+            }
+            else
+            {
+                res.status(500).json({succces:false, error});
+            }
+      
     } catch (error) {
         if (error.name === 'ValidationError') {
             // Extracting validation error messages
@@ -224,7 +242,7 @@ exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email }).populate("hospitalId").populate("departmentId");
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -287,7 +305,7 @@ exports.verifyOtp = async (req, res) => {
     console.log(email);
 
     try {
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ email }).populate("departmentId").populate("hospitalId");
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }

@@ -5,7 +5,8 @@ const HospitalRegistrationForm = () => {
     Hospital_Name: '',
     email: '',
     phoneNumber: '',
-    location: ''
+    location: '',
+    hospital_Id:''
   });
  const id=localStorage.getItem("id");
   const handleChange = (e) => {
@@ -57,12 +58,16 @@ const HospitalRegistrationForm = () => {
 
   return (
     <div className="container mx-auto mt-2 p-6">
-      <div className="max-w-md mx-auto bg-white shadow-md rounded px-8 py-6">
+      <div className="max-w-md mx-auto bg-white shadow-lg rounded px-8 py-6">
         <h2 className="text-2xl font-bold mb-4 text-center">Hospital Registration</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="hospitalName" className="block font-medium mb-2">Hospital Name</label>
             <input type="text" id="hospitalName" name="Hospital_Name" value={formData.Hospital_Name} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2" />
+          </div>
+          <div className="mb-4">
+            <label htmlFor="hospital_Id" className="block font-medium mb-2">Hospital Id</label>
+            <input type="text" id="hospital_Id" name="hospital_Id" value={formData.hospital_Id} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2" />
           </div>
           <div className="mb-4">
             <label htmlFor="email" className="block font-medium mb-2">Email</label>
@@ -77,7 +82,7 @@ const HospitalRegistrationForm = () => {
             <label htmlFor="location" className="block font-medium mb-2">Location</label>
             <input type="text" id="location" name="location" value={formData.location} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2" />
           </div>
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">Register</button>
+          <button type="submit" className="bg-red-400 text-white px-4 py-2 rounded hover:bg-red-600 w-full">Register</button>
         </form>
       </div>
     </div>

@@ -9,29 +9,29 @@ const SuperAdminDashboard = () => {
 if(user)
 
   return (
-    <div className="container mx-auto p-6">
-      <h1 className="text-3xl text-center font-semibold mb-8">
+    <div className="container  mx-auto px-4 sm:px-6 lg:px-8">
+      <h1 className="text-2xl text-center font-semibold mb-8">
         Super Admin {user.firstname} Dashboard
       </h1>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md hover:bg-slate-300">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="bg-gray-200 text-xl font-bold p-6 rounded-lg shadow-md hover:bg-slate-300">
           <Link to="/profileupdate">Profile Update</Link>
         </div>
-        <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md hover:bg-slate-300">
+        <div className=" bg-gray-200 text-xl font-bold p-6 rounded-lg shadow-md hover:bg-slate-300">
           <Link to="/createsubscriptionPlan">Create New Subscription Plan</Link>
         </div>
        
-        <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
+        <div className="bg-gray-200 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
           <Link to={`/allHospitals`}>Hospitals</Link>
         </div>
 
         
-        <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
+        <div className="bg-gray-200 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
           <Link to={`/hospitalRegistration`}>Register Hospital</Link>
         </div>
         
-        <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
+        <div className="bg-gray-200 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
           <Link to={`/superAllCameras`}>All Registered Cameras</Link>
         </div>
         

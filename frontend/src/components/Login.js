@@ -72,6 +72,10 @@ if(response.ok){
       console.error("An error occurred during login:", error.message);
     }
   };
+  const handleShowLogin=()=>
+    {
+      setShowOtpForm(false);
+    }
 
   const handleOTPVerificationSuccess = (userData) => {
     login(userData.user);
@@ -98,15 +102,16 @@ if(response.ok){
   };
 
   return (
-    <div className="container mt-6 mx-auto">
+    <div className="flex mt-10 justify-center ">
       {showOtpForm ? (
-        <OTPVerification userType={userType} email={email} userId={userId} onSuccess={handleOTPVerificationSuccess} />
+        <OTPVerification userType={userType} email={email} userId={userId} onSuccess={handleOTPVerificationSuccess}  handleShowLogin={handleShowLogin}/>
       ) : (
-        <div className="max-w-md mx-auto p-6 bg-white shadow-lg rounded-lg">
-          <h2 className="text-xl font-bold mb-4 text-center">{userType} LOGIN</h2>
+        <div className="max-w-md w-full bg-white p-8 rounded shadow-lg">
+          
+          <h2 className="text-2xl font-bold text-center mb-8"> {userType} Login</h2>
           <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="email">
+          <div className="flex flex-col">
+              <label className="block text-gray-700 text-sm font-bold mb-2 mr-2" htmlFor="email">
                 Email
               </label>
               <input
@@ -133,28 +138,33 @@ if(response.ok){
                 required
               />
             </div>
-            <div className="flex items-center justify-between">
-              <button
-                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                type="submit"
-              >
-                Sign In
-              </button>
-              
             <button
-              className="text-blue-500 hover:underline"
+              className="text-blue-500 mb-2  text-right hover:underline"
               onClick={handleForgotPassword}
             >
-              Forgot Password? Please Enter EmailId
+              Forgot Password? Enter Email
             </button>
+          <button className="w-full bg-red-500 hover:bg-red-600  text-white font-bold py-2 px-4 rounded">
+            Login
+          </button>
+            
+            <div className="flex justify-center items-center mt-4">
           
-              <Link
+          <div className="flex ml-2">
+            <a href="#" className="login100-social-item bg-blue-500 hover:bg-blue-600"><i className="fa fa-facebook"></i></a>
+            <a href="#" className="login100-social-item bg-gray-400 hover:bg-gray-500"><i className="fa fa-twitter"></i></a>
+            <a href="#" className="login100-social-item bg-red-500 hover:bg-red-600"><i className="fa fa-google"></i></a>
+          </div>
+        </div>
+        <div className="flex justify-center items-center mt-4">
+          <span className="text-sm ml-2">Don't have an account?</span>
+          <span className="text-sm ml-2">  <Link
                 className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800"
                 to={`/registration/${userType}`}
               >
-                Create one
-              </Link>
-            </div>
+                Sign up
+              </Link></span>
+        </div>
           </form>
         </div>
       )}
@@ -162,4 +172,41 @@ if(response.ok){
   );
 };
 
-export default Login;
+export default Login;{/*
+const LoginForm = () => {
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <div className="max-w-md w-full bg-white p-8 rounded shadow-lg">
+        <h2 className="text-3xl font-bold text-center mb-8">Login</h2>
+        <form className="space-y-4">
+          <div className="flex flex-col">
+            <label htmlFor="username" className="mb-1">Username</label>
+            <input type="text" id="username" className="input100" placeholder="Type your username" />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="password" className="mb-1">Password</label>
+            <input type="password" id="password" className="input100" placeholder="Type your password" />
+          </div>
+          <div className="text-right">
+            <a href="#" className="text-sm">Forgot password?</a>
+          </div>
+          <button className="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded">
+            Login
+          </button>
+        </form>
+        <div className="flex justify-center items-center mt-4">
+          <span className="text-sm">Or Sign Up Using</span>
+          <div className="flex ml-2">
+            <a href="#" className="login100-social-item bg-blue-500 hover:bg-blue-600"><i className="fa fa-facebook"></i></a>
+            <a href="#" className="login100-social-item bg-gray-400 hover:bg-gray-500"><i className="fa fa-twitter"></i></a>
+            <a href="#" className="login100-social-item bg-red-500 hover:bg-red-600"><i className="fa fa-google"></i></a>
+          </div>
+        </div>
+        <div className="flex justify-center items-center mt-4">
+          <span className="text-sm">Don't have an account?</span>
+          <a href="#" className="ml-2 text-blue-500">Sign Up</a>
+        </div>
+      </div>
+    </div>
+  );
+};*/}

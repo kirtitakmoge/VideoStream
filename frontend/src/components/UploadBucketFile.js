@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { FaUpload } from "react-icons/fa";
 import { toast } from "react-hot-toast";
-import {useAuth} from "./AuthContext";
-const UploadBucketFile = ({ surgeonId, cameraId,  onMediaUpload }) => {
-  const {user} =useAuth();
+import { useAuth } from "./AuthContext";
+
+const UploadBucketFile = ({ surgeonId, cameraId, onMediaUpload }) => {
+  const { user } = useAuth();
   const [selectedFile, setSelectedFile] = useState(null);
   const [isOverlayVisible, setIsOverlayVisible] = useState(false);
   const [isFileValid, setIsFileValid] = useState(true);
-  const token=localStorage.getItem("token");
-  
+  const token = localStorage.getItem("token");
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     const maxSize = 10 * 1024 * 1024; // 10 MB
@@ -46,6 +47,7 @@ const UploadBucketFile = ({ surgeonId, cameraId,  onMediaUpload }) => {
     setSelectedFile(file);
     setIsFileValid(true);
   };
+
   const handleUploadFile = async () => {
     if (!selectedFile) {
       toast.error("Please select a file to upload", {
@@ -60,16 +62,16 @@ const UploadBucketFile = ({ surgeonId, cameraId,  onMediaUpload }) => {
         position: "top-center",
       });
       return;
-    } let apiUrl;
-    if(user.role==="Hospital Admin")
-      {
-        
-    apiUrl = `${process.env.REACT_APP_API_URL}/api/bucket/device/generateUploadUrl/${surgeonId}`;}
+    }
+
+    let apiUrl;
+    if (user.role === "Hospital Admin") {
+      apiUrl = `${process.env.REACT_APP_API_URL}/api/bucket/device/generateUploadUrl/${surgeonId}`;
+    }
     if (user.role === "Super Admin") {
       apiUrl = `${process.env.REACT_APP_API_URL}/api/bucket/device/superadmin/generateUploadUrl/${surgeonId}`;
     }
-    
-      
+
     const toastId = toast.loading("Uploading...", {
       position: "top-center",
     });
@@ -119,7 +121,6 @@ const UploadBucketFile = ({ surgeonId, cameraId,  onMediaUpload }) => {
         return;
       }
 
-    
       toast.dismiss(toastId);
       toast.success("File uploaded successfully", {
         duration: 2000,
@@ -142,13 +143,14 @@ const UploadBucketFile = ({ surgeonId, cameraId,  onMediaUpload }) => {
   };
 
   return (
-    <div>
+    <>
       <button
         onClick={toggleOverlay}
-        className="flex items-center px-4 py-3   bg-red-500 text-white text-sm font-medium rounded-md hover:bg-red-600 "
+        className="flex flex-col gap-4 items-center justify-center p-4 w-full h-full font-bold text-gray-800 focus:outline-none"
       >
-        <FaUpload className="mr-2" />
-        Upload
+        <span>Upload</span>
+        <FaUpload className="" />
+        
       </button>
 
       {isOverlayVisible && (
@@ -160,8 +162,8 @@ const UploadBucketFile = ({ surgeonId, cameraId,  onMediaUpload }) => {
               onChange={handleFileChange}
               className="block w-full text-sm text-gray-500 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
             />
-            <div className="flex justify-end mt-4 ">
-            <button
+            <div className="flex justify-end mt-4">
+              <button
                 onClick={handleUploadFile}
                 disabled={!isFileValid}
                 className={`mr-2 px-4 py-2 text-white text-sm font-medium rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 ${
@@ -180,7 +182,7 @@ const UploadBucketFile = ({ surgeonId, cameraId,  onMediaUpload }) => {
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

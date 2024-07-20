@@ -19,7 +19,7 @@ const verifyToken = (req, res, next) => {
     }
 
     const token = authHeader.split(' ')[1];
-
+ console.log(token);
     try {
         // Verify the token using the secret key
         const decoded =jwt.verify(token,secretKey);

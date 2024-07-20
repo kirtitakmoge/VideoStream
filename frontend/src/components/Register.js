@@ -21,8 +21,9 @@ const RegistrationForm = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
-    if (name === 'hospitalId' && value.length === 24) {
+    if (name === 'hospitalId' && value.length === 6) {
       try {
+        alert(name)
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/department/getAllDepartmentsByHospitalId/${value}`, {
           method: "GET",
           headers: {
@@ -74,6 +75,7 @@ const RegistrationForm = () => {
           position: "top-center",
         });
         setFormData(reset);
+        setDepartments(null);
       }
     } catch (error) {
       console.error('Error signing up:', error.message);
@@ -86,7 +88,7 @@ const RegistrationForm = () => {
 
   return (
     <div className="container">
-      <div className="max-w-md mx-auto  p-6 bg-white shadow-lg rounded-lg">
+      <div className="max-w-md mx-auto bg-white p-6 shadow-lg rounded-lg">
         <h2 className="text-xl font-bold  text-center">User Registration</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -114,7 +116,7 @@ const RegistrationForm = () => {
             <label htmlFor="departmentId" className="block font-medium">Department</label>
             <select id="departmentId" name="departmentId" value={formData.departmentId} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500">
               <option value="">Select Department</option>
-              {departments.map(department => (
+              {departments?.map(department => (
                 <option key={department._id} value={department._id}>{department.department_name}</option>
               ))}
             </select>
@@ -123,7 +125,7 @@ const RegistrationForm = () => {
             <label htmlFor="mobile_no" className="block font-medium">Mobile Number</label>
             <input type="text" id="mobile_no" name="mobile_no" value={formData.mobile_no} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:border-blue-500" />
           </div>
-          <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 w-full">Register</button>
+          <button type="submit" className="bg-red-500 text-white px-4 py-2 rounded hover:bg-bred-600 w-full">Register</button>
         </form>
       </div>
     </div>

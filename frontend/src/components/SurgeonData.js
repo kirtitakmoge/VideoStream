@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "./AuthContext";
-import {toast} from "react-hot-toast"
+import { toast } from "react-hot-toast";
+
 const SurgeonData = () => {
-  const {user}=useAuth();
+  const { user } = useAuth();
   const { surgeonId } = useParams();
   const [isBucketActive, setIsBucketActive] = useState();
   const [isCameraActive, setIsCameraActive] = useState();
@@ -18,11 +19,10 @@ const SurgeonData = () => {
     specialization: "",
     mobile_no: "",
   });
-  
+
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-      
         if (!token) {
           // Handle case where token is not available
           return;
@@ -41,7 +41,7 @@ const SurgeonData = () => {
 
         if (response.ok) {
           const userData = await response.json();
-
+          console.log(userData);
           setUserData(userData);
           setIsBucketActive(userData.bucketActive);
           setIsCameraActive(userData.cameraActive);
@@ -53,113 +53,114 @@ const SurgeonData = () => {
 
     fetchUserData();
   }, [surgeonId]);
+
   const handleUpdate = async () => {
     try {
-      const response = await fetch( `${process.env.REACT_APP_API_URL}/api/users/updateUserActiveStatus/${surgeonId}/activate`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({  bucketActive: isBucketActive, cameraActive: isCameraActive })
-      });
-      
+      const response = await fetch(
+        `${process.env.REACT_APP_API_URL}/api/users/updateUserActiveStatus/${surgeonId}/activate`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            bucketActive: isBucketActive,
+            cameraActive: isCameraActive,
+          }),
+        }
+      );
+
       if (!response.ok) {
         toast.error("Failed to update user active status", {
           duration: 2000,
-          position: 'top-center', 
-      });  
-        throw new Error('Failed to update user active status');
+          position: "top-center",
+        });
+        throw new Error("Failed to update user active status");
       }
       const data = await response.json();
       setIsBucketActive(data.user.bucketActive);
       setIsCameraActive(data.user.cameraActive);
       toast.success("User active status updated successfully:", {
         duration: 2000,
-        position: 'top-center', 
-    });
-      console.log('User active status updated successfully:', data.user);
+        position: "top-center",
+      });
+      console.log("User active status updated successfully:", data.user);
     } catch (error) {
-      console.error('Error updating user active status:', error);
+      console.error("Error updating user active status:", error);
     }
   };
-  if(user)
-  return (
-    
-     <>
-      <div className="max-w-md self-center mt-2 pt-0 p-4 bg-white shadow-lg rounded-lg">
-        <h2 className="text-lg font-bold mb-4 text-center">Surgeon Details</h2>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2">
-            First Name:
-          </label>
-          <p>{userData.firstname}</p>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2">
-            Last Name:
-          </label>
-          <p>{userData.lastname}</p>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2">Email:</label>
-          <p>{userData.email}</p>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2">Allowed to access Bucket</label>
-          <p> {isBucketActive ? "Yes" : "No"}</p>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2">Allowed to access Camera</label>
-          <p> {isCameraActive ? "Yes" : "No"}</p>
-        </div>
 
-        {user.role === "Hospital Admin" && (
-          <>
+  if (user)
+    return (
+      <>
+        <div className="flex justify-center ">
+          <div className="max-w-md w-full mt-5 pt-0 p-6 bg-gray-100 shadow-lg rounded-lg">
+            <h2 className="text-lg font-bold m-4 text-center">Surgeon Details</h2>
             <div className="mb-4">
-              <label className="block text-gray-700 font-bold mb-2">
-                Activate Bucket:
-              </label>
-              <input
-                type="checkbox"
-                checked={isBucketActive}
-                onChange={() => setIsBucketActive(!isBucketActive)}
-                className="mr-2"
-              />
-              {isBucketActive ? "Yes" : "No"}
+              <label className="block text-gray-700 font-bold mb-2">First Name:</label>
+              <p>{userData.firstname}</p>
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700 font-bold mb-2">
-                Activate Camera:
-              </label>
-              <input
-                type="checkbox"
-                checked={isCameraActive}
-                onChange={() => setIsCameraActive(!isCameraActive)}
-                className="mr-2"
-              />
-              {isCameraActive ? "Yes" : "No"}
+              <label className="block text-gray-700 font-bold mb-2">Last Name:</label>
+              <p>{userData.lastname}</p>
             </div>
-            <div className="flex items-center justify-center sm:justify-end">
-              <button
-                type="button"
-                className="bg-blue-500 hover:bg-blue-700 mx-2 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                onClick={handleUpdate}
-              >
-                Update
-              </button>
+            <div className="mb-4">
+              <label className="block text-gray-700 font-bold mb-2">Email:</label>
+              <p>{userData.email}</p>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 font-bold mb-2">Allowed to access Bucket</label>
+              <p>{isBucketActive ? "Yes" : "No"}</p>
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700 font-bold mb-2">Allowed to access Camera</label>
+              <p>{isCameraActive ? "Yes" : "No"}</p>
+            </div>
 
-              <button
-                type="button"
-                className="bg-red-500 hover:bg-red-700 mx-2 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              >
-                Delete
-              </button>
-            </div>
-          </>
-        )}
-      </div>
-    </>
-  );
+            {user.role === "Hospital Admin" && (
+              <>
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-bold mb-2">Activate Bucket:</label>
+                  <input
+                    type="checkbox"
+                    checked={isBucketActive}
+                    onChange={() => setIsBucketActive(!isBucketActive)}
+                    className="mr-2"
+                  />
+                  {isBucketActive ? "Yes" : "No"}
+                </div>
+                <div className="mb-4">
+                  <label className="block text-gray-700 font-bold mb-2">Activate Camera:</label>
+                  <input
+                    type="checkbox"
+                    checked={isCameraActive}
+                    onChange={() => setIsCameraActive(!isCameraActive)}
+                    className="mr-2"
+                  />
+                  {isCameraActive ? "Yes" : "No"}
+                </div>
+                <div className="flex justify-center sm:justify-end">
+                  <button
+                    type="button"
+                    className="bg-blue-500 hover:bg-blue-700 mx-2 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    onClick={handleUpdate}
+                  >
+                    Update
+                  </button>
+                  <button
+                    type="button"
+                    className="bg-red-500 hover:bg-red-700 mx-2 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                  >
+                    Delete
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </>
+    );
 };
+
 export default SurgeonData;

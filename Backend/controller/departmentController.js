@@ -1,6 +1,7 @@
 const Department = require('../models/Department');
 const { isValidObjectId } = require('mongoose');
 const Camera=require("../models/Camera");
+const Hospital = require('../models/Hospital');
 // GET all departments
 exports.getAllDepartments = async (req, res) => {
     try {
@@ -101,10 +102,13 @@ exports.deleteDepartmentById = async (req, res) => {
 //By HospitalId
 exports.getAllDepartmentsByHospitalId = async (req, res) => {
     try {
-        console.log("indepartment");
+        
         const hospitalId = req.params.hospitalId;
         console.log(hospitalId);
-        const departments = await Department.find({ hospitalId });
+        const hospital=await Hospital.findOne({
+            hospital_Id
+            :hospitalId});
+        const departments = await Department.find({hospitalId:hospital._id});
         console.log(departments);
         if (!departments || departments.length === 0) {
             return res.status(404).json({ message: 'No departments found for the provided Hospital ID' });

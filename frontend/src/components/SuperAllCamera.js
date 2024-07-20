@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { useParams,useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
-const SuperAllCamera= () => {
+const SuperAllCamera = () => {
   const [cameras, setCameras] = useState([]);
-  const navigate=useNavigate();
-const superAdminId=localStorage.getItem("id");
+  const navigate = useNavigate();
+  const superAdminId = localStorage.getItem("id");
+
   useEffect(() => {
     const fetchCameraData = async () => {
       try {
@@ -31,33 +32,34 @@ const superAdminId=localStorage.getItem("id");
 
   const handleUpdate = (cameraId) => {
     navigate(`/updateCamera/${cameraId}`);
-   };
+  };
+
   return (
     <div className="container mx-auto px-4 mt-5">
-      <h2 className="text-2xl font-bold mb-4 text-center">Camera Details</h2>
-      <div className="overflow-x-auto">
-        <table className="table-auto w-full">
+      <h2 className="text-2xl font-bold mb-4 text-center">Camera Details</h2> 
+      <div className="overflow-x-auto rounded-lg shadow-lg">
+        <table className="min-w-full bg-white ">``
           <thead>
-            <tr>
-              <th className="px-4 py-2">IP Address</th>
-              <th className="px-4 py-2">Device ID</th>
-              
-              <th className="px-4 py-2">Department Name</th>
-              <th className="px-4 py-2">Link</th>
-              <th className="px-4 py-2">BucketName</th>
-              <th className="px-4 py-2">Update</th>
-                          </tr>
+            <tr className='bg-gray-600 text-white '>
+              <th className="px-6 py-3 border-b-2 border-gray-500 text-left text-sm uppercase leading-4 tracking-wider">IP Address</th>
+              <th className="px-6 py-3 border-b-2 border-gray-500 text-left text-sm uppercase leading-4 tracking-wider">Device ID</th>
+              <th className="px-6 py-3 border-b-2 border-gray-500 text-left text-sm uppercase leading-4 tracking-wider">Department Name</th>
+              <th className="px-6 py-3 border-b-2 border-gray-500 text-left text-sm uppercase leading-4 tracking-wider">Link</th>
+              <th className="px-6 py-3 border-b-2 border-gray-500 text-left text-sm uppercase leading-4 tracking-wider">BucketName</th>
+              <th className="px-6 py-3 border-b-2 border-gray-500 text-left text-sm uppercase leading-4 tracking-wider">Update</th>
+            </tr>
           </thead>
-          <tbody>
+          <tbody className="bg-white">
             {cameras.map(camera => (
               <tr key={camera._id}>
-                <td className="border px-4 py-2">{camera.ipAddress}</td>
-                <td className="border px-4 py-2">{camera.deviceId}</td>
-              
-                <td className="border px-4 py-2">{camera.departmentId ? camera.departmentId.department_name : 'N/A'}</td>
-                <td className="border px-4 py-2">{camera.link}</td>
-                <td className="border px-4 py-2">{camera.bucketName}</td>
-                <td className="border px-4 py-2"><button  className="text-l p-2 rounded-md shadow-sm bg-red-500" onClick={()=>{handleUpdate(camera._id)}}> Update</button></td>
+                <td className="px-6 py-4 border-b border-gray-200 text-sm">{camera.ipAddress}</td>
+                <td className="px-6 py-4 border-b border-gray-200 text-sm">{camera.deviceId}</td>
+                <td className="px-6 py-4 border-b border-gray-200 text-sm">{camera.departmentId ? camera.departmentId.department_name : 'N/A'}</td>
+                <td className="px-6 py-4 border-b border-gray-200 text-sm"><a href={camera.link} className="text-blue-500 hover:underline">{camera.link}</a></td>
+                <td className="px-6 py-4 border-b border-gray-200 text-sm">{camera.bucketName}</td>
+                <td className="px-6 py-4 border-b border-gray-200 text-sm">
+                  <button className="text-sm px-4 py-2 rounded-md shadow-sm bg-red-500 text-white hover:bg-red-600" onClick={() => { handleUpdate(camera._id) }}>Update</button>
+                </td>
               </tr>
             ))}
           </tbody>

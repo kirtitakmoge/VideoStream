@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
       navigate(-1);
     };
    const handleGoHome=()=>
-   { alert(user.role);
+   { 
      if(user.role=="Patient")
     navigate("/patient");
     else if(user.role=="Surgeon")
@@ -25,7 +25,7 @@ navigate("/superAdminDashboard" );
     const isRestrictedRoute = location.pathname.startsWith('/login') || location.pathname.startsWith("/registration")||location.pathname.endsWith("/");
   
     return (
-      <div className="container">
+      <div className="">
         {!isRestrictedRoute && (
           <div className="relative mt-0 ml-0 flex flex-row justify-between items-center">
             <button onClick={handleGoBack} className="text-black px-4 rounded">

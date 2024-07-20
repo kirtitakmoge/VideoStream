@@ -1,11 +1,8 @@
-import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  Link,
-} from "react-router-dom";
-import { useAuth } from "./AuthContext"; // Import the useAuth hook
+import React, { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { useAuth } from "./AuthContext";
+import { FaBars, FaTimes } from "react-icons/fa";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Navbar from "./Navbar";
 import Home from "./Home";
 import Login from "./Login";
@@ -36,12 +33,9 @@ import CreateSubScriptionPlan from "./CreateSubScriptionPlan";
 import SuperAdminDashboard from "./SuperAdminDashboard";
 import AllHospitals from "./AllHospital";
 import HospitalAdminData from "./HospitalAdminData";
-import LeftNavBar from "./leftNavBar";
 import RenameDepartment from "./RenameDepartment";
 import DeleteDepartment from "./DeleteDepartment";
-
 import PatientData from "./PatientData";
-import Layout from "./Layout";
 import DepartmentGallerySuper from "./DepartmentGallerySuper";
 import DepartmentDetailsSuper from "./DepartmentDetailsSuper";
 import SurgeonListOnly from "./SurgeonListOnly";
@@ -54,76 +48,136 @@ import SuperAllCamera from "./SuperAllCamera";
 import ViewBucketFiles from "./ViewBucketFiles";
 import ResetPassword from "./ResetPassword";
 import VideoCall from "./VideoCall";
+import Layout from "./Layout";
+
 const NewApp = () => {
-  const { user } = useAuth(); // Get the user object from the AuthContext
- 
+  const { user } = useAuth(); // Assuming useAuth provides user information
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const navLinks = useMemo(() => {
+    if (!user) {
+      return (
+        <ul>
+          <li><Link to="/login/Patient">Patient Login</Link></li>
+          <li><Link to="/patientRegistration">Patient Registration</Link></li>
+          <li><Link to="/registration/Surgeon">Surgeon Registration</Link></li>
+          <li><Link to="/login/Surgeon">Surgeon Login</Link></li>
+        </ul>
+      );
+    } else {
+      if (user.role === "Patient") {
+        return (
+          <ul>
+            <li><Link to="/patient">Patient Dashboard</Link></li>
+            <li><Link to="/patientvideos">Shared Surgery Videos by Surgeon</Link></li>
+            <li><Link to="/profileupdate">Profile Update</Link></li>
+          </ul>
+        );
+      } else if (user.role === "Surgeon" && user.bucketActive && user.cameraActive) {
+        return (
+          <ul>
+            <li><Link to={`/surgeonDashboard/${user.departmentId}`}>Surgeon Dashboard</Link></li>
+            <li><Link to="/cameralist">Camera</Link></li>
+            <li><Link to="/devicelist">Devices</Link></li>
+            <li><Link to="/profileupdate">Profile Update</Link></li>
+          </ul>
+        );
+      } else if (user.role === "Hospital Admin" && user.active) {
+        return (
+          <ul>
+            <li><Link to="/hospitalAdmin">Hospital Admin Dashboard</Link></li>
+            <li><Link to="/createDepartment">Add New Department</Link></li>
+            <li><Link to="/profileupdate">Profile Update</Link></li>
+          </ul>
+        );
+      } else if (user.role === "Super Admin") {
+        return (
+          <ul>
+            <li><Link to="/superAdminDashboard">Super Admin Dashboard</Link></li>
+            <li><Link to="/allHospitals">Hospitals</Link></li>
+            <li><Link to="/hospitalRegistration">Register Hospital</Link></li>
+            <li><Link to="/profileupdate">Profile Update</Link></li>
+          </ul>
+        );
+      }
+    }
+  }, [user]);
+
   return (
     <Router>
-      <div className="flex">
-        {/* Left Navigation */}
-        <div className="left-nav  overflow-y-auto h-screen w-48 flex flex-col">
-          {/* Logo and Name */}
-         
-          {/* Navigation Links */}
-        <LeftNavBar userType={user}/>
+      <div className="flex flex-col lg:flex-row">
+        {/* Mobile sidebar toggle button */}
+        <div className="lg:hidden"> {/* Only visible on mobile */}
+          <button
+            className="text-white p-4"
+            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+          >
+            {isSidebarOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
+          </button>
         </div>
-        {/* Content */}
-        <div className="w-full content flex flex-col">
-          <Navbar/> <Layout>
+
+        {/* Sidebar navigation */}
+        <nav className={`bg-gray-800 text-white w-48 min-h-screen fixed left-0 top-0 overflow-y-auto transition-transform duration-300 ease-in-out transform ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"} lg:translate-x-0 lg:relative lg:flex lg:flex-col lg:justify-start lg:shadow-lg`}>
+          {/* Branding/logo */}
+          <div className="p-4 flex items-center justify-between">
+            <img
+              src="https://th.bing.com/th?id=OIP.jLXDXo17XAjxbpkevv2kBAHaGV&w=270&h=231&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2"
+              alt="Taurean Surgical Logo"
+              className="w-12 h-12 mr-2"
+            />
+            <p className="text-lg font-semibold">Taurean Surgical</p>
+          </div>
+
+          {/* Navigation links */}
+          <div className="mt-4">
+            {navLinks}
+          </div>
+        </nav>
+
+        {/* Main content */}
+        <main className="flex-grow p-4 lg:ml-48">
+          <Navbar /> {/* Assuming Navbar contains navigation links for the main content */}
+          <Layout>
           <Routes>
-           
-            <Route path="/" element={<Home />} />
+          <Route path="/" element={<Login />} />
             <Route path="/login/:userType" element={<Login />} />
             <Route path="/signup" element={<Register />} />
             <Route path="/home" element={<Home />} />
             <Route path="/profileupdate" element={<ProfileUpdate />} />
             <Route path="/signout" element={<SignOut />} />
             <Route path="/registration/:userType" element={<RegistrationPage />} />
-          
+            <Route path="/showvideo" element={<ShowVideo />} />
             <Route path="/subscriptionPlan" element={<SubscriptionPlanPage />} />
             <Route path="/subscription/:id" element={<SubscriptionDetailsPage />} />
             <Route path="/hospitalRegistration" element={<HospitalRegistrationForm />} />
             <Route path="/surgeonDashboard/:departmentId" element={<SurgeonDashBoard />} />
             <Route path="/surgeonList/:departmentId" element={<SurgeonList />} />
-            <Route path="/cameralist/:departmentId" element={<CameraList />} />{/*  for surgeon  */}
-            <Route path="/deviceList/:departmentId" element={<DeviceList />} />{/*  for surgeon device list  */}
+            <Route path="/cameralist" element={<CameraList />} />{/*  for surgeon  */}
+            <Route path="/deviceList" element={<DeviceList />} />{/*  for surgeon device list  */}
             <Route path="/deviceListadmin/:departmentId" element={<DeviceListAdmin />} />
-            <Route path="/department-details/:departmentId/:department_name" element={<DepartmentDetails />} />
+            <Route path="/department-details/:departmentId" element={<DepartmentDetails />} />
             <Route path="/showvideo/:departmentId" element={<ShowVideo />} />
-            <Route path="/createCamera/:departmentId/:department_name" element={<CameraForm />} />
+            <Route path="/createCamera/:departmentId" element={<CameraForm />} />
             <Route path="/notactive/:name" element={<MessageComponent />} />
-            <Route path="/hospitalAdmin" element={<HospitalAdmin />} />
-            <Route path="/device/:cameraId/:departmentId" element={<ViewBucketFiles />} />
+            <Route path="/hospitalAdmin/:hospitalId" element={<HospitalAdmin />} />
+            <Route path="/device/:cameraId" element={<CameraMediaPage />} />
             <Route path="/signupPatient" element={<PatientRegistration />} />
             <Route path="/patient" element={<PatientDashboard />} />
-            <Route path="/renameDepartment/:departmentId" element={<RenameDepartment />} />
             <Route path="/patientvideos" element={<PatientVideos />} />
             <Route path="/device" element={<DeviceList />} />
             <Route path="/createDepartment" element={<DepartmentForm />} />
-            <Route path="/deleteDepartment/:departmentId" element={<DeleteDepartment/>}/>
-            <Route path="/createCamera/:cameraId/:department_name" element={<CameraForm />} />
+            <Route path="/createCamera" element={<CameraForm />} />
             <Route path="/createSubscriptionPlan" element={<CreateSubScriptionPlan />} />
             <Route path="/superAdminDashboard" element={<SuperAdminDashboard />} />
             <Route path="/surgeonBucket/:cameraId" element={<SurgeonBucket />} />
             <Route path="/patientprofileupdate" element={<PatientUpdate />} />
-            <Route path="/patientData/:departmentId" element={<PatientData/>}/>
             <Route path="/allHospitals" element={<AllHospitals />} />
             <Route path="/hospitalAdminData/:hospitalId" element={<HospitalAdminData/>}/>
-            <Route path="/departmentGallerySuper/:hospitalId/:hospital_name" element={<DepartmentGallerySuper/>}/>
-            <Route path="/departmentDetailSuper/:departmentId/:department_name" element={<DepartmentDetailsSuper/>}/>
-            <Route path="/surgeonListOnly/:departmentId"element={<SurgeonListOnly/>}/>
-            <Route path="/cameraBucket/:cameraId" element={<CameraBucket/>}/>
-            <Route path="/activateHospitalAdmin/:hospitalId" element={<HospitalAdminData/>}/>
-            <Route path="/updateCamera/:cameraId" element={<UpdateCamera/>}/>
-            <Route path="/cameraData/:cameraId" element={<CameraData/>}/>
-            <Route path="/surgeonData/:surgeonId" element={<SurgeonData/>}/>
-            <Route path="/superAllCameras" element={<SuperAllCamera/>}/>
-            <Route path="/:role/reset-password/:token" element={<ResetPassword />} />
-            <Route path="/videocall" element={<VideoCall/>}/>
           </Routes>
           </Layout>
-        </div>
+        </main>
       </div>
+      
     </Router>
   );
 };

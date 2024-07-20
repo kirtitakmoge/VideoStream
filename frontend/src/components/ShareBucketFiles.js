@@ -70,7 +70,7 @@ const ShareBucketFile = ({ mediaFiles, departmentId ,isShare,onShare}) => {
       if (!response.ok) {
         throw new Error(responseData.message || "Failed to assign media.");
       }
-
+      console.log(responseData);
       toast.success(`Shared ${selectedFiles.length} media items to patient ${patient}`, {
         duration: 2000,
         position: "top-center",
@@ -92,7 +92,7 @@ const ShareBucketFile = ({ mediaFiles, departmentId ,isShare,onShare}) => {
       
       {/* Overlay */}
       {showOverlay && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-8 rounded-md m-3">
             <h3 className="text-lg font-semibold m-2">Select a Patient</h3>
             <select

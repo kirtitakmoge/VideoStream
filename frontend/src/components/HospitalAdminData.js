@@ -9,6 +9,7 @@ const token=localStorage.getItem("token");
 const superAdminId=localStorage.getItem("id");
 useEffect(() => {
     const fetchData = async () => {
+     
       try {
         const response = await fetch(`${process.env.REACT_APP_API_URL}/api/users/getHospitalAdminByHospitalId/${hospitalId}/${superAdminId}`, {
           method: 'GET',
@@ -17,6 +18,7 @@ useEffect(() => {
             "Authorization": `Bearer ${token}`
           },
         });
+      
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
@@ -107,7 +109,7 @@ if(user!=null)
         <button
           type="button"
           onClick={handleUpdate}
-          className="bg-blue-500 hover:bg-blue-700 mx-2 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+          className="bg-red-400 hover:bg-red-600 mx-2 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
         >
           Update
         </button>
