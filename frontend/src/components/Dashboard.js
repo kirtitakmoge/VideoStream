@@ -319,11 +319,11 @@ const LeftNavBar = () => {
       } lg:translate-x-0 lg:relative lg:flex lg:flex-col lg:justify-start lg:shadow-lg`}
     >
           <div className="p-4 flex items-center justify-between">
-            <img
-              src="https://placehold.it/50"
-              alt="Logo"
-              className="w-12 h-12 mr-2 rounded-full"
-            />
+          <img
+            src="https://th.bing.com/th?id=OIP.jLXDXo17XAjxbpkevv2kBAHaGV&w=270&h=231&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2"
+            alt="Taurean Surgical Logo"
+            className="w-12 h-12 rounded-full mr-2"
+          />
             <p className="text-lg font-semibold">Surgi Cloud</p>
           </div>
          <LeftNavBar/>
@@ -365,6 +365,7 @@ const LeftNavBar = () => {
             <Route path="/patient" element={<PatientDashboard />} />
             <Route path="/patientvideos" element={<PatientVideos />} />
             <Route path="/device" element={<DeviceList />} />
+            <Route path='/:role/reset-password/:token' element={<ResetPassword/>}/>
             <Route path="/createDepartment" element={<DepartmentForm />} />
             <Route path="/createCamera/:departmentId/:department_name" element={<CameraForm />} />
             <Route path='/updateCamera/:cameraId'element={<UpdateCamera/>}/>

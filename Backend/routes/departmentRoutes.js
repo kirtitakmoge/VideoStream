@@ -23,6 +23,7 @@ router.delete('/deleteDepartmentById/:departmentId/:adminId',verifyToken,isAdmin
 router.post('/createDepartment/:adminId',verifyToken,isAdmin1, departmentController.createDepartment);
 //route to all
 router.get('/getAllDepartmentsByHospitalId/:hospitalId',departmentController.getAllDepartmentsByHospitalId);
+router.get('/getAllDepartmentsByHospital_Id/:hospitalId',departmentController.getAllDepartmentsByHospital_Id);
 //hospital Admin to get all department from given hospitalId(checked)
 router.get('/getAllDepartmentsByHospitalId/:hospitalId/:adminId',verifyToken,isAdmin1,departmentController.getAllDepartmentsByHospitalId);
 module.exports = router;

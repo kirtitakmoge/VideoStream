@@ -104,6 +104,22 @@ exports.getAllDepartmentsByHospitalId = async (req, res) => {
     try {
         
         const hospitalId = req.params.hospitalId;
+        const departments = await Department.find({hospitalId});
+        console.log(departments);
+        if (!departments || departments.length === 0) {
+            return res.status(404).json({ message: 'No departments found for the provided Hospital ID' });
+        }
+ console.log(departments);
+        res.status(200).json({ departments });
+    } catch (error) {
+        console.error('Error fetching departments by Hospital ID:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+exports.getAllDepartmentsByHospital_Id = async (req, res) => {
+    try {
+        
+        const hospitalId = req.params.hospitalId;
         console.log(hospitalId);
         const hospital=await Hospital.findOne({
             hospital_Id

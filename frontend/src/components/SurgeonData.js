@@ -95,7 +95,7 @@ const SurgeonData = () => {
     return (
       <>
         <div className="flex justify-center ">
-          <div className="max-w-md w-full mt-5 pt-0 p-6 bg-gray-100 shadow-lg rounded-lg">
+          <div className="max-w-md w-full mt-5 pt-0 p-6 bg-gray-200 shadow-lg rounded-lg">
             <h2 className="text-lg font-bold m-4 text-center">Surgeon Details</h2>
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">First Name:</label>

@@ -29,8 +29,8 @@ const CreateSubscriptionPlan = () => {
   };
 
   return (
-    <div className="container mx-auto mt-2">
-      <div className="max-w-md mx-auto bg-white p-4 rounded-lg shadow-lg">
+    <div className="container mx-auto ">
+      <div className="max-w-md mx-auto bg-white p-4  rounded-xl shadow-xl">
         <h2 className="text-lg font-bold mb-3 text-center">Create Subscription Plan</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>

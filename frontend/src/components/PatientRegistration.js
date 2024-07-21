@@ -25,7 +25,7 @@ const PatientRegistration = () => {
     if (name === 'hospitalId' && value.length === 6) {
       try {
         alert(value)
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/department/getAllDepartmentsByHospitalId/${value}`, {
+        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/department/getAllDepartmentsByHospital_Id/${value}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

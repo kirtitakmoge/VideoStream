@@ -11,27 +11,27 @@ const DepartmentDetailsSuper=()=>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                 <div className="shadow-md">
                     <Link to={`/surgeonList/${departmentId}`} className="button h-full bg-gray-200 p-4 rounded-md block hover:bg-gray-200">
-                        <h2 className="text-2xl text-center font-bold mb-4">Surgeons</h2>
+                        <h2 className="text-xl text-center font-bold mb-4">Surgeons</h2>
                     </Link>
                 </div>
                 <div className="shadow-md">
-                    <Link to={`/cameraList/${departmentId}`} className="button bg-gray-200 p-4 rounded-md block hover:bg-gray-200">
-                        <h2 className="text-2xl text-center font-bold mb-4">Live stream from camera</h2>
+                    <Link to={`/cameraList/${departmentId}`} className="button h-full bg-gray-200 p-4 rounded-md block hover:bg-gray-200">
+                        <h2 className="text-xl text-center font-bold mb-4">Live stream from camera</h2>
                     </Link>
                 </div>
                 <div className="shadow-md">
-                    <Link to={`/devicelist/${departmentId}`} className="button bg-gray-200 p-4 rounded-md block hover:bg-gray-200">
-                        <h2 className="text-2xl text-center font-bold mb-4">Recorded Video from camera</h2>
+                    <Link to={`/devicelist/${departmentId}`} className="button h-full bg-gray-200 p-4 rounded-md block hover:bg-gray-200">
+                        <h2 className="text-xl text-center font-bold mb-4">Recorded Video from camera</h2>
                     </Link>
                 </div>
                 <div className="shadow-md">
                     <Link to={`/patientData/${departmentId}`} className="button h-full bg-gray-200 p-4 rounded-md block hover:bg-gray-200">
-                        <h2 className="text-2xl text-center font-bold mb-4">Patients</h2>
+                        <h2 className="text-xl text-center font-bold mb-4">Patients</h2>
                     </Link>
                 </div>
                 <div className="shadow-md">
                     <Link to={`/createCamera/${departmentId}/${department_name}`} className="button bg-gray-200 p-4 rounded-md block hover:bg-gray-200">
-                        <h2 className="text-2xl text-center font-bold mb-4">Register Camera</h2>
+                        <h2 className="text-xl text-center font-bold mb-4">Register Camera</h2>
                     </Link>
                 </div>
             </div>
