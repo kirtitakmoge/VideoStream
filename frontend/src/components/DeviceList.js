@@ -49,8 +49,8 @@ if(user)
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 m">
     
         {cameras.map((camera) => (
-          <div key={camera._id} className="bg-gray-200 h-23 p-4 rounded-md cursor-pointer hover:bg-gray-200 hover:box-border border-2" onClick={() => handleDeviceClick(camera)}>
-            <div className="text-black text-center"> {camera.deviceId}</div>
+          <div key={camera._id} className="button h-full bg-gray-200 p-4 rounded-md block hover:bg-gray-300" onClick={() => handleDeviceClick(camera)}>
+            <div className="text-xl text-center font-bold mb-4"> {camera.deviceId}</div>
         
           </div>
         ))}

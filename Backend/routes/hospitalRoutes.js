@@ -13,7 +13,7 @@ router.get('/getAllHospitalNames', hospitalController.getAllHospitalNames);
 
 router.get('/getAllHospitals',hospitalController.getAllHospitals);
 router.get('/getHospitalById/:adminId/:hospitalId',verifyToken,isAdmin1, hospitalController.getHospitalById);
-//router.put('/updateHospitalById/:hospitalId',hospitalController.updateHospital);
+router.put('/updateHospitalById/:adminId/:hospitalId',verifyToken,isAdmin1,hospitalController.updateHospitalById);
 //router.delete('/deleteHospital/:hospitalId', hospitalController.deleteHospital);
 router.post('/createHospital', hospitalController.createHospital);
 

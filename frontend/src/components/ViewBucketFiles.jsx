@@ -46,10 +46,13 @@ const ViewBucketFiles = () => {
 
   const toggleSelectMedia = (media) => {
     if (selectedMedia.length === 0) {
-      toast(`After your selection is finished, please click on finish selection`, {
-        duration: 3000,
-        position: "top-center",
-      });
+      toast(
+        `After your selection is finished, please click on finish selection`,
+        {
+          duration: 3000,
+          position: "top-center",
+        }
+      );
     }
     setSelectedMedia((prevSelectedMedia) => {
       if (prevSelectedMedia.some((item) => item.key === media.key)) {
@@ -98,36 +101,37 @@ const ViewBucketFiles = () => {
 
   return (
     <div className="m-5">
-
-<h1 className="text-2xl font-bold m-5 text-center">Media files</h1>
+      <h1 className="text-2xl font-bold m-5 text-center">Media files</h1>
       <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      <div className="flex flex-col gap-6 ">
-<div className="w-full h-full bg-gray-300 rounded-lg shadow-md hover:bg-slate-400  ">
-        <UploadBucketFile
-          surgeonId={surgeonId}
-          token={token}
-          cameraId={cameraId}
-          onMediaUpload={handleMediaUpload}
-        />
+        <div className="flex flex-col gap-6 ">
+          <div className="w-full h-full bg-gray-300 rounded-lg shadow-md hover:bg-slate-400  ">
+            <UploadBucketFile
+              surgeonId={surgeonId}
+              token={token}
+              cameraId={cameraId}
+              onMediaUpload={handleMediaUpload}
+            />
+          </div>
+          <div className="w-full h-full bg-gray-300 rounded-lg shadow-md hover:bg-slate-400">
+            <button
+              onClick={() => setIsFinish(true)}
+              className="flex flex-col gap-2 items-center justify-center p-4 w-full h-full font-bold text-gray-800 focus:outline-none"
+            >
+              <span>Please select file </span>
+              <span className="">Share</span>
+              <FaShare className="mr-2" />
+            </button>
+            {isFinish && (
+              <ShareBucketFile
+                cameraId={cameraId}
+                departmentId={departmentId}
+                mediaFiles={selectedMedia}
+                isShare={isFinish}
+                onShare={handleMediaShare}
+              />
+            )}
+          </div>
         </div>
-        <div className="w-full h-full bg-gray-300 rounded-lg shadow-md hover:bg-slate-400">
-        <button
-          onClick={() => setIsFinish(true)}
-         className="flex flex-col gap-2 items-center justify-center p-4 w-full h-full font-bold text-gray-800 focus:outline-none"
-        >
-          <span>Please select file </span><span className="">Share</span><FaShare className="mr-2" /> 
-        </button>
-        {isFinish && (
-          <ShareBucketFile
-            cameraId={cameraId}
-            departmentId={departmentId}
-            mediaFiles={selectedMedia}
-            isShare={isFinish}
-            onShare={handleMediaShare}
-          />
-        )}
-      </div>
-</div>
         {/* Render media files */}
         {mediaFiles.map((media) => (
           <div
@@ -137,7 +141,7 @@ const ViewBucketFiles = () => {
             {media.key.endsWith(".mp4") || media.key.endsWith(".mov") ? (
               <ReactPlayer
                 url={media.url}
-                light="/thumbnail.jpg" // Thumbnail image
+                // Thumbnail image
                 width="100%"
                 height="200px"
                 controls
@@ -184,15 +188,12 @@ const ViewBucketFiles = () => {
             </div>
           </div>
         ))}
-       
       </div>
-      
     </div>
   );
 };
 
 export default ViewBucketFiles;
-
 
 /*import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
@@ -296,7 +297,11 @@ const ViewBucketFiles = () => {
   return (
     <>
       <div className="grid grid-cols-3 gap-4">
-        */{/* Render media files */}{/*
+        */ {
+  /* Render media files */
+}
+{
+  /*
         {mediaFiles.map((media) => (
           <div key={media.key} className="relative">
             <div className="bg-gray-100 text-xl w-full overflow-hidden overflow-wrap break-word h-full font-bold p-6 rounded-lg shadow-md hover:bg-slate-300">
@@ -373,4 +378,5 @@ const ViewBucketFiles = () => {
   );
 };
 
-export default ViewBucketFiles;*/}
+export default ViewBucketFiles;*/
+}

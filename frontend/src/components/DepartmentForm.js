@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useAuth } from './AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useParams } from 'react-router-dom';
 const DepartmentForm = () => {
   const [formData, setFormData] = useState({
     department_name: '',
@@ -10,7 +10,7 @@ const DepartmentForm = () => {
   const { user } = useAuth();
   const adminId = localStorage.getItem('id');
   const token = localStorage.getItem('token');
-  const hospitalId = user ? user.hospitalId : null;
+  const {hospitalId}=useParams();
 const navigate=useNavigate();
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -80,7 +80,7 @@ const navigate=useNavigate();
 
           <button
             type="submit"
-            className="bg-blue-500 text-white px-3 py-1 rounded w-full mt-2 hover:bg-blue-600"
+            className="bg-red-500 text-white px-3 py-1 rounded w-full mt-2 hover:bg-red-600"
           >
             Create Department
           </button>

@@ -12,67 +12,72 @@ const {sendWelcomeEmail} = require('../auth/mailer');
 const { generateOTP, sendOTPSMS } = require('../auth/generateOtp');
 const jwt = require('jsonwebtoken');
 const Hospital=require("../models/Hospital");
+const upload=require("../auth/multerConfig");
 
 // Secret key for JWT
 const secretKey = 'KirtiTakmogeSuhasShelke';
-exports.signupUser = async (req, res) => {
+exports.signupUser = [
+  upload.fields([{ name: 'profilePicture', maxCount: 1 }, { name: 'idProof', maxCount: 1 }]), // multer middleware
+  async (req, res) => {
     try {
-        const {hospitalId}=req.body;
-       
-        console.log(req.body);
-        const hospital=await Hospital.findOne({
-            hospital_Id
-            :hospitalId});
-            const newUser=new User(req.body);
-        console.log(hospital);
-        newUser.hospitalId=hospital._id;
-        const hashedPassword = await bcrypt.hash(newUser.password, 10);
-        console.log(req.body);
-        // Finding department by name
-       /* const department=await Department.findById(newUser.departmentId);
-        if(!department)
-        {
-            return res.status(404).json({error:"not found hospital id"});
-        }*/
+      const { hospitalId, password, email, role } = req.body;
+      const files = req.files; // Files will be an object with arrays for each field
 
-        newUser.password = hashedPassword;
-        await newUser.save();
-        const notification = new Notification({
-            hospitalId: newUser.hospitalId,
-            userId: newUser._id,
-            message: "Activate user"
-          });
-          
-          // Save the notification to the database
-          notification.save()
-            .then(savedNotification => {
-              console.log("Notification saved:", savedNotification);
-            })
-            .catch(error => {
-              console.error("Error saving notification:", error);
-            });
-            
-            const mail=sendWelcomeEmail(newUser.email);
-            if(mail===true)
-            {
-                res.status(201).json({ user: newUser, message: 'User created successfully' ,success:true});
-            }
-            else
-            {
-                res.status(500).json({succces:false, error});
-            }
-      
-    } catch (error) {
-        if (error.name === 'ValidationError') {
-            // Extracting validation error messages
-            const validationErrors = Object.values(error.errors).map(error => error.message);
-            console.log(validationErrors);
-            return res.status(400).json({ errors: validationErrors });
+      console.log('Request Body:', req.body);
+      console.log('Files:', files);
+
+      if (role === "Hospital Admin") {
+        // Check if required files are present
+        if (!files || !files.profilePicture || !files.idProof) {
+          return res.status(400).json({ error: 'Profile picture and ID proof are required.' });
         }
-        console.error('Error creating user:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+      }
+
+      const hospital = await Hospital.findOne({ hospital_Id: hospitalId });
+      if (!hospital) {
+        return res.status(404).json({ error: 'Hospital not found.' });
+      }
+
+      const newUser = new User({
+        ...req.body,
+        hospitalId: hospital._id,
+        profilePicture: files?.profilePicture ? files.profilePicture[0]?.path : undefined,
+        idProof: files?.idProof ? files.idProof[0]?.path : undefined
+      });
+
+   
+      const hashedPassword = await bcrypt.hash(password, 10);
+      newUser.password = hashedPassword;
+
+      await newUser.save();
+
+      const notification = new Notification({
+        hospitalId: newUser.hospitalId,
+        userId: newUser._id,
+        message: "Activate user"
+      });
+
+      await notification.save();
+      console.log('New User:', newUser);
+
+      const mail = sendWelcomeEmail(newUser.email);
+      console.log('Mail:', mail);
+
+      if (mail) {
+        res.status(201).json({ user: newUser, message: 'User created successfully', success: true });
+      } else {
+        res.status(500).json({ success: false, error: 'Failed to send welcome email.' });
+      }
+    } catch (error) {
+      if (error.name === 'ValidationError') {
+        const validationErrors = Object.values(error.errors).map(err => err.message);
+        return res.status(400).json({ errors: validationErrors });
+      }
+      console.error('Error creating user:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
     }
-};
+  }
+];
 
 exports.getCameraUrlByUserId = async (req, res) => {
     const surgeonId = req.params.surgeonId;
@@ -168,7 +173,7 @@ exports.getUserByID=async (req,res)=>
 exports.getHospitalAdminByHospitalId=async (req,res)=>
 {
     const hospitalId=req.params.hospitalId;
-  
+  console.log(hospitalId)
     if(!isValidObjectId(hospitalId))
     {
       

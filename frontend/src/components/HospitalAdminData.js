@@ -102,7 +102,7 @@ if(user!=null)
           onChange={() => setIsActive(!isActive)}
           className="mr-2"
         />
-        {isActive ? 'Yes' : 'No'}
+        {isActive ? 'Deactivate' : 'Activate'}
       </div>
       
       <div className="flex items-center  justify-between">

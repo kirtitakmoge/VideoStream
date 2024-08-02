@@ -40,22 +40,46 @@ const token=localStorage.getItem("token");
             <h1 className="text-2xl  font-bold text-center mb-10">{hospital_name}</h1>
             <h1 className="text-2xl font-bold text-center mb-5"> Department Gallery</h1>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 m">
+            <div className="shadow-md">
+                    <Link to={`/hospitalProfile/${hospitalId}`} className="block bg-gray-200 p-4 rounded-md hover:bg-gray-300">
+                        <h2 className="text-xl text-center font-bold mb-2">Hospital Profile</h2>
+                    </Link>
+                </div>
                 {departments.map((department) => (
                     <div key={department.departmentId}  className="block bg-gray-200  p-4 rounded-md hover:bg-gray-300">
                         <Link
                             to={{
-                                pathname: `/departmentDetailSuper/${department.departmentId}/${department.department_name}`,
+                                pathname: `/department-details/${department.departmentId}/${department.department_name}`,
                                 // Pass updateDepartments function as state
                             }}
                             
                         >
-                            <h2 className="text-xl  font-bold mb-2">{department.department_name}</h2>
+                            <h2 className="text-xl text-center font-bold mb-2">{department.department_name}</h2>
                         </Link>
                     </div>
                 ))}
+                 <div className="block bg-gray-200  p-4 rounded-md hover:bg-gray-300">
+          <Link
+            to={`/createDepartment/${hospitalId}`}
+            className=""
+            style={{ minHeight: "120px" }} // Adjust the minHeight as needed
+          >
+            <h2 className="text-xl text-center font-bold">Add New Department</h2>
+          </Link>
+        </div>
                 <div className="shadow-md">
                     <Link to={`/activateHospitalAdmin/${hospitalId}`} className="block bg-gray-200 p-4 rounded-md hover:bg-gray-300">
-                        <h2 className="text-xl font-bold mb-2">Activate Hospital Admin</h2>
+                        <h2 className="text-xl text-center font-bold mb-2">Activate Hospital Admin</h2>
+                    </Link>
+                </div>
+                <div className="shadow-md">
+                    <Link to={`/registerHospitalAdmin/${hospitalId}/Hospital Admin`} className="block bg-gray-200 p-4 rounded-md hover:bg-gray-300">
+                        <h2 className="text-xl text-center font-bold mb-2">Register Hospital Admin</h2>
+                    </Link>
+                </div>
+                <div className="shadow-md">
+                    <Link to={`/registerHospitalAdmin/${hospitalId}/Surgeon`} className="block bg-gray-200 p-4 rounded-md hover:bg-gray-300">
+                        <h2 className="text-xl text-center font-bold mb-2">Register Surgeon</h2>
                     </Link>
                 </div>
             </div>

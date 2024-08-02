@@ -17,7 +17,9 @@ const Login = () => {
 
   const navigate = useNavigate();
   const { login } = useAuth();
-  const { userType } = useParams();
+  let { userType} = useParams();
+  userType=userType || "Surgeon";
+
   let apiUrl = userType === "Patient"
   ? `${process.env.REACT_APP_API_URL}/api/patient/request-password-reset`
   : `${process.env.REACT_APP_API_URL}/api/users/request-password-reset`;
@@ -172,41 +174,4 @@ if(response.ok){
   );
 };
 
-export default Login;{/*
-const LoginForm = () => {
-  return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="max-w-md w-full bg-white p-8 rounded shadow-lg">
-        <h2 className="text-3xl font-bold text-center mb-8">Login</h2>
-        <form className="space-y-4">
-          <div className="flex flex-col">
-            <label htmlFor="username" className="mb-1">Username</label>
-            <input type="text" id="username" className="input100" placeholder="Type your username" />
-          </div>
-          <div className="flex flex-col">
-            <label htmlFor="password" className="mb-1">Password</label>
-            <input type="password" id="password" className="input100" placeholder="Type your password" />
-          </div>
-          <div className="text-right">
-            <a href="#" className="text-sm">Forgot password?</a>
-          </div>
-          <button className="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded">
-            Login
-          </button>
-        </form>
-        <div className="flex justify-center items-center mt-4">
-          <span className="text-sm">Or Sign Up Using</span>
-          <div className="flex ml-2">
-            <a href="#" className="login100-social-item bg-blue-500 hover:bg-blue-600"><i className="fa fa-facebook"></i></a>
-            <a href="#" className="login100-social-item bg-gray-400 hover:bg-gray-500"><i className="fa fa-twitter"></i></a>
-            <a href="#" className="login100-social-item bg-red-500 hover:bg-red-600"><i className="fa fa-google"></i></a>
-          </div>
-        </div>
-        <div className="flex justify-center items-center mt-4">
-          <span className="text-sm">Don't have an account?</span>
-          <a href="#" className="ml-2 text-blue-500">Sign Up</a>
-        </div>
-      </div>
-    </div>
-  );
-};*/}
+export default Login;

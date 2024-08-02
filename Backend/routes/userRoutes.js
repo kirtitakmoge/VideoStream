@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const userController = require('../controller/userController');
 const adminController = require('../controller/adminController');
+const upload=require("../auth/multerConfig");
 
 const verifyToken = require('../auth/verifyToken');
 const requireSuperAdmin = require('../auth/requireSuperAdmin');
@@ -9,6 +10,7 @@ const isAdmin = require('../auth/adminAuthforvideo');
 
 
 //public routes
+router.post('/signup/Surgeon', userController.signupUser);
 router.post('/signup', userController.signupUser);
 router.post('/login', userController.loginUser);
 router.post('/verifyOtp',userController.verifyOtp);
