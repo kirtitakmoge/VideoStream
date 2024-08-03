@@ -104,7 +104,7 @@ const ViewBucketFiles = () => {
       <h1 className="text-2xl font-bold m-5 text-center">Media files</h1>
       <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         <div className="flex flex-col gap-6 ">
-          <div className="w-full h-full bg-gray-300 rounded-lg shadow-md hover:bg-slate-400  ">
+          <div className="w-full h-full bg-gray-300 rounded-lg shadow-md bg-transparent  ">
             <UploadBucketFile
               surgeonId={surgeonId}
               token={token}
@@ -154,7 +154,7 @@ const ViewBucketFiles = () => {
               />
             )}
             <div className="mt-5">
-              <div className="flex gap-4 justify-center">
+              <div className="flex gap-4 justify-center bg-transparent">
                 <DeleteBucketFile
                   media={media}
                   surgeonId={surgeonId}

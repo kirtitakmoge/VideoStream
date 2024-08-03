@@ -197,12 +197,13 @@ exports.getHospitalAdminByHospitalId=async (req,res)=>
 
 exports.deleteUserById=async(req,res)=>
 {
-    const id=req.params.Id;
-   
-    const user=await User.findByIdAndDelete(id);
+    const surgeonId=req.params.surgeonId;
+    console.log("request to delete");
+    const user=await User.findByIdAndDelete(surgeonId);
         
     if(user)
     {
+        console.log("User deleted");
         return res.status(200).json({message:"user deleted"});
     }
     else{

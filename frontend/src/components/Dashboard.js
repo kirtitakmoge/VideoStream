@@ -53,6 +53,7 @@ import ResetPassword from "./ResetPassword";
 import VideoCall from "./VideoCall";
 import Layout from './Layout';
 import HospitalProfile from './HosptialProfile';
+import SurgeonUpdate from './SurgeonUpdate';
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -341,6 +342,7 @@ const LeftNavBar = () => {
             <Route path="/" element={<Login />} />
             <Route path="/login/:userType?" element={<Login />} />
             <Route path="/signup" element={<Register />} />
+            <Route path='/cameraData/:cameraId'element={<CameraData/>}/>
             <Route path="/home" element={<Home />} />
             <Route path="/profileupdate" element={<ProfileUpdate />} />
             <Route path="/signout" element={<SignOut />} />
@@ -379,6 +381,7 @@ const LeftNavBar = () => {
             <Route path="/hospitalProfile/:hospitalId" element={<HospitalProfile/>}/>
             <Route path="/hospitalAdminData/:hospitalId" element={<HospitalAdminData/>}/>
             <Route path="/surgeonData/:surgeonId" element={<SurgeonData/>}/>
+            <Route path="/surgeonUpdate/:surgeonId" element={<SurgeonUpdate/>}/>
           <Route path="/superAllCameras" element={<SuperAllCamera/>}/>
           <Route path="/departmentGallerySuper/:hospitalId/:hospital_name" element={<DepartmentGallerySuper/>}></Route>
           <Route path="/departmentDetailSuper/:departmentId/:department_name" element={<DepartmentDetailsSuper/>}></Route></Routes></Layout>

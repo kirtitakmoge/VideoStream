@@ -94,7 +94,7 @@ const CameraList = () => {
                 />
               </div>
               {user.role === "Super Admin" && (
-                <div className="flex justify-around p-4 bg-gray-200">
+                <div className="flex justify-around p-4 bg-transparent">
                   <div onClick={() => handleUpdate(camera._id)} className="cursor-pointer flex flex-col items-center text-blue-500">
                     <FaEdit size={20} />
                     <span className="text-sm">Edit</span>

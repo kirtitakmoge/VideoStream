@@ -146,10 +146,10 @@ const UploadBucketFile = ({ surgeonId, cameraId, onMediaUpload }) => {
     <>
       <button
         onClick={toggleOverlay}
-        className="flex flex-col gap-4 items-center justify-center p-4 w-full h-full font-bold text-gray-800 focus:outline-none"
+        className="flex flex-col gap-4 bg-transparent items-center justify-center p-4 w-full h-full font-bold text-gray-800 focus:outline-none"
       >
         <span>Upload</span>
-        <FaUpload className="" />
+        <FaUpload className="bg-transparent" />
         
       </button>
 

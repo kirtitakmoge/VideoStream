@@ -52,7 +52,7 @@ exports.getCameraById = async (req, res) => {
     }
 
     try {
-        const camera = await Camera.findById(cameraId);
+        const camera = await Camera.findById(cameraId).populate("departmentId");
 
         // Check if camera is found
         if (camera) {
@@ -146,10 +146,11 @@ console.log(camera);
 exports.getCamerasByDepartmentId = async (req, res) => {
     try {
       const { departmentId } = req.params;
+  
       // Assuming you have a Camera model and a Department model
       const cameras = await Camera.find({ departmentId: departmentId }).populate('departmentId');
-      
-      res.json(cameras);
+      console.log(cameras);
+      res.status(200).json(cameras);
     } catch (error) {
       console.error('Error fetching cameras by department ID:', error);
       res.status(500).json({ error: 'An error occurred while fetching cameras' });
