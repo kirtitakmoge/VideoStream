@@ -54,6 +54,7 @@ import VideoCall from "./VideoCall";
 import Layout from './Layout';
 import HospitalProfile from './HosptialProfile';
 import SurgeonUpdate from './SurgeonUpdate';
+import AllSurgeon from './AllSurgeon';
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -383,6 +384,7 @@ const LeftNavBar = () => {
             <Route path="/surgeonData/:surgeonId" element={<SurgeonData/>}/>
             <Route path="/surgeonUpdate/:surgeonId" element={<SurgeonUpdate/>}/>
           <Route path="/superAllCameras" element={<SuperAllCamera/>}/>
+          <Route path="/AllSurgeon" element={<AllSurgeon/>}/>
           <Route path="/departmentGallerySuper/:hospitalId/:hospital_name" element={<DepartmentGallerySuper/>}></Route>
           <Route path="/departmentDetailSuper/:departmentId/:department_name" element={<DepartmentDetailsSuper/>}></Route></Routes></Layout>
           </div>

@@ -82,6 +82,7 @@ const token=localStorage.getItem("token");
                         <h2 className="text-xl text-center font-bold mb-2">Register Surgeon</h2>
                     </Link>
                 </div>
+               
             </div>
         </div>
     </>

@@ -137,7 +137,8 @@ exports.updateRole = async (req, res) => {
 
 exports.getAllUser = async (req, res) => {
     try {
-        const allUser = await User.find();
+        const allUser = await User.find().populate('hospitalId', 'Hospital_Name') // Populate with hospital's name field
+        .populate('departmentId', 'department_name'); // Populate with department's name field
   
         if (allUser.length > 0) {
             res.status(200).json(allUser);

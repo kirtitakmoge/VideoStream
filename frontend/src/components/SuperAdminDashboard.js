@@ -30,6 +30,12 @@ if(user)
         <div className="bg-gray-200 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
           <Link to={`/hospitalRegistration`}>Register Hospital</Link>
         </div>
+
+        <div className="shadow-md">
+                    <Link to={`/AllSurgeon`} className="block bg-gray-200 p-4 rounded-md hover:bg-gray-300">
+                        <h2 className="text-xl text-center font-bold mb-2">All Surgeon</h2>
+                    </Link>
+                </div>
         
         <div className="bg-gray-200 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
           <Link to={`/superAllCameras`}>All Registered Cameras</Link>

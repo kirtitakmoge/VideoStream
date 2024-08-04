@@ -7,7 +7,7 @@ const upload=require("../auth/multerConfig");
 const verifyToken = require('../auth/verifyToken');
 const requireSuperAdmin = require('../auth/requireSuperAdmin');
 const isAdmin = require('../auth/adminAuthforvideo');
-
+router.get("/allSurgeon",userController.getAllUser);
 
 //public routes
 router.post('/signup/Surgeon', userController.signupUser);
