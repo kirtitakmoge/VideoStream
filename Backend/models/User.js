@@ -1,89 +1,94 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Hospital = require("../models/Hospital");
 const { Schema } = mongoose;
 
-const userSchema = new Schema({
-    firstname: { 
-        type: String,
-        required: [true, "Enter First Name"]
+const userSchema = new Schema(
+  {
+    firstname: {
+      type: String,
+      required: [true, "Enter First Name"],
     },
-    lastname: { 
-        type: String, 
-        required: [true, "Enter Last Name"] 
+    lastname: {
+      type: String,
+      required: [true, "Enter Last Name"],
     },
-    password: { 
-        type: String, 
-        required: [true, "Enter Password"],
-        minlength: [6, "Password must be at least 6 characters long"]
+    password: {
+      type: String,
+      required: [true, "Enter Password"],
+      minlength: [6, "Password must be at least 6 characters long"],
     },
-    email: { 
-        type: String, 
-        required: [true, "Enter Email Address"], 
-        unique: true,
-        // Simple email format validation
-        match: [/^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/, "Please enter a valid email address"]
+    email: {
+      type: String,
+      required: [true, "Enter Email Address"],
+      unique: true,
+      // Simple email format validation
+      match: [
+        /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/,
+        "Please enter a valid email address",
+      ],
     },
-    role: { 
-        type: String, 
-        enum: ['Surgeon', 'Hospital Admin', 'Super Admin'], 
-        default: 'Surgeon'
+    role: {
+      type: String,
+      enum: ["Surgeon", "Hospital Admin", "Super Admin"],
+      default: "Surgeon",
     },
-    hospitalId: { 
-        type: Schema.Types.ObjectId, 
-        ref: 'Hospital',
-        // Custom validation to check if hospitalId references a valid hospital
-        validate: {
+    hospitals: [
+      {
+        hospitalId: {
+          type: Schema.Types.ObjectId,
+          ref: "Hospital",
+          // Custom validation to check if hospitalId references a valid hospital
+          validate: {
             validator: async function (value) {
-                if(value!=null){
+              if (value != null) {
                 const hospital = await Hospital.findById(value);
-                return !!hospital;}
+                return !!hospital;
+              }
             },
-            message: props => `Hospital with ID ${props.value} does not exist`
-        }
-    },
-    departmentId: {
-        type: Schema.Types.ObjectId,
-        ref: 'Department'
+            message: (props) =>
+              `Hospital with ID ${props.value} does not exist`,
+          },
+        },
+        departmentId: [
+          {
+            type: Schema.Types.ObjectId,
+            ref: "Department",
+          },
+        ],
       },
-    Specialization: { 
-        type: String, 
-         
+    ],
+    Specialization: {
+      type: String,
     },
-    mobile_no: { 
-        type: String, 
-        required: [true, "Enter Mobile Number"],
-    
-        // Simple mobile number format validation
-        match: [/^\d{10}$/, "Please enter a valid 10-digit mobile number"]
+    mobile_no: {
+      type: String,
+      required: [true, "Enter Mobile Number"],
+
+      // Simple mobile number format validation
+      match: [/^\d{10}$/, "Please enter a valid 10-digit mobile number"],
     },
-    bucketActive:{
-        type:Boolean,
-        required:true,
-        default:false
+    bucketActive: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
-    active:
-    {
-        type:Boolean,
-        required:true,
-        default:false
+    active: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
-    otp: {
-        type: String,
-        required: false
-    },
-    otpExpires: {
-        type: Date,
-        required: false
-    },
-    cameraActive:{
-        type:Boolean,
-        required:true,
-        default:false
+   
+    cameraActive: {
+      type: Boolean,
+      required: true,
+      default: false,
     },
     resetPasswordToken: { type: String },
-    resetPasswordExpires: { type: Date }
-} ,{ strict: false });
+    resetPasswordExpires: { type: Date },
+  },
+  { strict: false }
+);
 
-const User = mongoose.model('User', userSchema);
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;

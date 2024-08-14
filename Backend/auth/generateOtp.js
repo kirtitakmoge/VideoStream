@@ -15,7 +15,7 @@ exports.generateOTP = () => {
 }
 
 // Send OTP via SMS
-exports.sendOTPSMS = async (phone, otp) => {
+exports.sendOTPSMS = async (phone) => {
     const ph = "+91" + phone;
     console.log(`Sending OTP to ${ph} from ${serviceID}`);
     try {
@@ -35,7 +35,7 @@ exports.sendOTPSMS = async (phone, otp) => {
 if (require.main === module) {
     const phone = '9876543210'; // Replace with the recipient's phone number
     const otp = exports.generateOTP();
-    exports.sendOTPSMS(phone, otp)
+    exports.sendOTPSMS(phone)
         .then(() => console.log('OTP sending initiated'))
         .catch(error => console.error('Error in OTP sending process:', error));
 }

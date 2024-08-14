@@ -20,7 +20,7 @@ exports.signupUser = [
   upload.fields([{ name: 'profilePicture', maxCount: 1 }, { name: 'idProof', maxCount: 1 }]), // multer middleware
   async (req, res) => {
     try {
-      const { hospitalId, password, email, role } = req.body;
+      const { hospitalId,departmentId, password, email, role } = req.body;
       const files = req.files; // Files will be an object with arrays for each field
 
       console.log('Request Body:', req.body);
@@ -37,14 +37,26 @@ exports.signupUser = [
       if (!hospital) {
         return res.status(404).json({ error: 'Hospital not found.' });
       }
+      const department = await Department.findById( departmentId );
+      if (!department) {
+        return res.status(404).json({ error: 'department not found.' });
+      }
 
       const newUser = new User({
-        ...req.body,
-        hospitalId: hospital._id,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        password: req.body.password,
+        email: req.body.email,
+        role: req.body.role,
+        hospitals: [{
+          hospitalId: hospital._id,
+          departmentId: [department._id] // Single department in an array
+        }],
+        specialization: req.body.specialization,
+        mobile_no: req.body.mobile_no,
         profilePicture: files?.profilePicture ? files.profilePicture[0]?.path : undefined,
         idProof: files?.idProof ? files.idProof[0]?.path : undefined
       });
-
    
       const hashedPassword = await bcrypt.hash(password, 10);
       newUser.password = hashedPassword;
@@ -52,7 +64,7 @@ exports.signupUser = [
       await newUser.save();
 
       const notification = new Notification({
-        hospitalId: newUser.hospitalId,
+        hospitalId: newUser.hospitals[0].hospitalId,
         userId: newUser._id,
         message: "Activate user"
       });
@@ -78,7 +90,7 @@ exports.signupUser = [
     }
   }
 ];
-
+//no need to change for hospital
 exports.getCameraUrlByUserId = async (req, res) => {
     const surgeonId = req.params.surgeonId;
     
@@ -114,6 +126,7 @@ exports.getCameraUrlByUserId = async (req, res) => {
     }
 };
 
+// no need for change in hospital
 exports.updateRole = async (req, res) => {
     const surgeonId = req.params.surgeonId;
     
@@ -135,56 +148,204 @@ exports.updateRole = async (req, res) => {
     }
 }
 
-exports.getAllUser = async (req, res) => {
-    try {
-        const allUser = await User.find().populate('hospitalId', 'Hospital_Name') // Populate with hospital's name field
-        .populate('departmentId', 'department_name'); // Populate with department's name field
+exports.addDepartment= async (req, res) => {
+  const { surgeonId } = req.params;
+  const { hospitalId, departmentId } = req.body;
+console.log(req.body);
+  try {
+      // Find the user
+      const user = await User.findById(surgeonId);
+      
+      if (!user) return res.status(404).send('User not found');
+      const hospital = await Hospital.findOne({ hospital_Id: hospitalId });
+      if (!hospital) {
+        console.log("hospital not found");
+        return res.status(404).json({ error: 'Hospital not found.' });
+      }
+      // Check if hospitalId already exists
+      let hospitalEntry = user.hospitals.find(h => h.hospitalId.toString() ===hospital._id);
+
+      if (hospitalEntry) {
+          // Add the department to the existing entry
+          if (!hospitalEntry.departmentId.includes(departmentId)) {
+              hospitalEntry.departmentId.push(departmentId);
+          }
+      } else {
+          // Create a new hospital entry
+          user.hospitals.push({
+             hospitalId: hospital._id,
+              departmentId: [departmentId],
+          });
+      }
+
+      // Save the user
+      await user.save();
+
+      res.status(200).send('Department added successfully');
+  } catch (err) {
+      console.error(err);
+      res.status(500).send('Server error');
+  }
+}
+exports.updateDepartment = async (req, res) => {
+    const { surgeonId } = req.params;
+    const { hospitalId, departmentId } = req.body;
   
-        if (allUser.length > 0) {
-            res.status(200).json(allUser);
+    try {
+      // Find the user by ID
+      const user = await User.findById(surgeonId);
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+  
+      // Validate the hospital ID
+      const hospital = await Hospital.findOne({ hospital_Id: hospitalId }); // Use _id for querying
+      if (!hospital) {
+        return res.status(404).json({ error: 'Hospital not found.' });
+      }
+  
+      // Find the hospital entry in the user's hospitals array
+      user.hospitals= [{
+        hospitalId: hospital._id,
+        departmentId: [departmentId] // Single department in an array
+      }],
+      await user.markModified('hospitals');
+      await user.save();
+      
+      res.status(200).json({ message: 'Department updated successfully' });
+    } catch (err) {
+      console.error('Error updating department:', err);
+      res.status(500).json({ message: 'Server error' });
+    }
+  }
+  
+exports.getAllUser = async (req, res) => {
+  try {
+      const allUser = await User.find()
+          .populate({
+              path: 'hospitals.hospitalId', // Populate hospitalId field within the hospitals array
+              select: 'Hospital_Name', // Fields to include from the Hospital model
+              model: 'Hospital'
+          })
+          .populate({
+              path: 'hospitals.departmentId', // Populate departmentId field within the hospitals array
+              select: 'department_name', // Fields to include from the Department model
+              model: 'Department'
+          });
+
+      if (allUser.length > 0) {
+          res.status(200).json(allUser);
+      } else {
+          res.status(404).json({ error: "No users found" });
+      }
+  } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ error: "Internal server error" });
+  }
+}
+    
+
+// exports.getUserByID=async (req,res)=>
+// {
+//     const surgeonId=req.params.surgeonId;
+//     console.log("in getuserbyid:",surgeonId);
+//     if(!isValidObjectId(surgeonId))
+//     {
+      
+//      return res.status(400).json({message:"invalid id"});
+//     }
+//     const user=await User.findById(surgeonId).populate('departmentId').populate("hospitalId");
+//     console.log(user);
+//     if(user)
+//     {
+//         return res.status(200).json(user);
+//     }
+//     else{
+//         return res.status(404).json({error:"User not Found of this surgeonId"});
+//     }
+// }
+ // Ensure mongoose is required for isValidObjectId
+
+exports.getUserByID = async (req, res) => {
+    const surgeonId = req.params.surgeonId;
+    console.log("in getUserByID:", surgeonId);
+
+    if (!isValidObjectId(surgeonId)) {
+        return res.status(400).json({ message: "Invalid ID" });
+    }
+
+    try {
+        const user = await User.findById(surgeonId)
+            .populate({
+                path: 'hospitals.hospitalId', // Populate hospitalId within the hospitals array
+                select: 'Hospital_Name', // Adjust field names as per your schema
+                model: 'Hospital'
+            })
+            .populate({
+                path: 'hospitals.departmentId', // Populate departmentId within the hospitals array
+                select: 'department_name', // Adjust field names as per your schema
+                model: 'Department'
+            });
+
+        console.log(user);
+
+        if (user) {
+            return res.status(200).json(user);
         } else {
-            res.status(404).json({ error: "No users found" });
+            return res.status(404).json({ error: "User not found for this surgeonId" });
         }
     } catch (error) {
-        console.error("Error fetching users:", error);
-        res.status(500).json({ error: "Internal server error" });
+        console.error("Error fetching user:", error);
+        return res.status(500).json({ error: "Internal Server Error" });
     }
 }
 
-exports.getUserByID=async (req,res)=>
-{
-    const surgeonId=req.params.surgeonId;
-    console.log("in getuserbyid:",surgeonId);
-    if(!isValidObjectId(surgeonId))
-    {
-      
-     return res.status(400).json({message:"invalid id"});
-    }
-    const user=await User.findById(surgeonId).populate('departmentId').populate("hospitalId");
-    console.log(user);
-    if(user)
-    {
-        return res.status(200).json(user);
-    }
-    else{
-        return res.status(404).json({error:"User not Found of this surgeonId"});
-    }
-}
 
-exports.getHospitalAdminByHospitalId=async (req,res)=>
-{
-    const hospitalId=req.params.hospitalId;
-  console.log(hospitalId)
-    if(!isValidObjectId(hospitalId))
-    {
+// exports.getHospitalAdminByHospitalId=async (req,res)=>
+// {
+//     const hospitalId=req.params.hospitalId;
+//   console.log(hospitalId)
+//     if(!isValidObjectId(hospitalId))
+//     {
       
-     return res.status(400).json({message:"invalid id"});
-    }
+//      return res.status(400).json({message:"invalid id"});
+//     }
    
+//     try {
+//         const users = await User.findOne({ hospitalId ,role:"Hospital Admin"});
+//        console.log(users);
+//         if (users) {
+//             res.status(200).json(users);
+//         } else {
+//             res.status(404).json({ error: "No Hospital Admins found for the given hospital ID" });
+//         }
+//     } catch (error) {
+//         console.error('Error fetching Hospital Admins:', error);
+//         res.status(500).json({ error: 'Internal server error' });
+//     }
+// }
+
+
+
+exports.getHospitalAdminByHospitalId = async (req, res) => {
+    const hospitalId = req.params.hospitalId;
+    console.log(hospitalId);
+
+    if (!isValidObjectId(hospitalId)) {
+        return res.status(400).json({ message: "Invalid ID" });
+    }
+
     try {
-        const users = await User.findOne({ hospitalId ,role:"Hospital Admin"});
-       console.log(users);
-        if (users) {
+        // Find users where the hospitals array contains an object with the given hospitalId and role is "Hospital Admin"
+        const users = await User.find({
+            "hospitals.hospitalId": hospitalId,
+            role: "Hospital Admin"
+        });
+
+        console.log(users);
+
+        if (users.length > 0) {
             res.status(200).json(users);
         } else {
             res.status(404).json({ error: "No Hospital Admins found for the given hospital ID" });
@@ -194,6 +355,7 @@ exports.getHospitalAdminByHospitalId=async (req,res)=>
         res.status(500).json({ error: 'Internal server error' });
     }
 }
+
 
 
 exports.deleteUserById=async(req,res)=>
@@ -226,7 +388,16 @@ exports.updateUserById = async (req, res) => {
         }
 
         // Update the user with only the provided fields
-        const updatedUser = await User.findByIdAndUpdate(surgeonId, { $set: updateFields }, { new: true });
+        const updatedUser = await User.findByIdAndUpdate(surgeonId, { $set: updateFields }, { new: true }) .populate({
+          path: 'hospitals.hospitalId', // Populate hospitalId within the hospitals array
+          select: 'Hospital_Name', // Adjust field names as per your schema
+          model: 'Hospital'
+      })
+      .populate({
+          path: 'hospitals.departmentId', // Populate departmentId within the hospitals array
+          select: 'department_name', // Adjust field names as per your schema
+          model: 'Department'
+      });
 
         if (!updatedUser) {
             throw new Error("User not found");
@@ -235,7 +406,7 @@ exports.updateUserById = async (req, res) => {
         return res.status(200).json({ message: "Updated successfully", user: updatedUser });
     } catch (error) {
         if (error.name === 'ValidationError') {
-            // Validation error occurred
+            // Validation error occurred` 
             const validationErrors = Object.values(error.errors).map(error => error.message);
             return res.status(400).json({ message: validationErrors });
         } else {
@@ -249,7 +420,16 @@ exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     try {
-        const user = await User.findOne({ email }).populate("hospitalId").populate("departmentId");
+        const user = await User.findOne({ email }).populate({
+          path: 'hospitals.hospitalId', // Populate hospitalId within the hospitals array
+          select: 'Hospital_Name', // Adjust field names as per your schema
+          model: 'Hospital'
+      })
+      .populate({
+          path: 'hospitals.departmentId', // Populate departmentId within the hospitals array
+          select: 'department_name', // Adjust field names as per your schema
+          model: 'Department'
+      });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -260,14 +440,12 @@ exports.loginUser = async (req, res) => {
         }
 
         // Generate OTP
-        const otp = generateOTP();
-        user.otp = otp;
-        user.otpExpires = Date.now() + 2 * 60 * 1000;// OTP valid for 5 minutes
+       
         await user.save();
         console.log(accountSid);
         // Send OTP to user's phone using Twilio
-        sendOTPSMS(user.mobile_no, otp);
-        console.log("otp sent:",otp);
+        sendOTPSMS(user.mobile_no);
+      console.log("otp sent");
 
         res.status(200).json({ message: 'OTP sent to your phone', userId: user._id });
     } catch (error) {
@@ -312,7 +490,16 @@ exports.verifyOtp = async (req, res) => {
     console.log(email);
 
     try {
-        const user = await User.findOne({ email }).populate("departmentId").populate("hospitalId");
+        const user = await User.findOne({ email }).populate({
+          path: 'hospitals.hospitalId', // Populate hospitalId within the hospitals array
+          select: 'Hospital_Name', // Adjust field names as per your schema
+          model: 'Hospital'
+      })
+      .populate({
+          path: 'hospitals.departmentId', // Populate departmentId within the hospitals array
+          select: 'department_name', // Adjust field names as per your schema
+          model: 'Department'
+      });
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
@@ -334,8 +521,7 @@ exports.verifyOtp = async (req, res) => {
             const token = generateToken(user);
 
             // Optionally clear OTP-related fields if stored in the database
-            user.otp = undefined;
-            user.otpExpires = undefined;
+           
             await user.save();
 
             return res.status(200).json({ message: 'OTP verified successfully', success: true, user, token });
@@ -378,27 +564,56 @@ exports.requestPasswordReset = async (req, res) => {
 };
 
 
+// // Controller method to fetch all surgeons by hospitalId
+// exports.getSurgeonsByHospitalId = async (req, res) => {
+//     const hospitalId = req.params.hospitalId; // Assuming hospitalId is passed as a URL parameter
+//   console.log(hospitalId);
+//     try {
+//       // Query users with role 'Surgeon' and matching hospitalId
+//       const surgeons = await User.find({ role: 'Surgeon', hospitalId }).populate('departmentId');
+      
+//       // If there are no surgeons found, return 404 status
+//       if (!surgeons) {
+//         return res.status(404).json({ message: 'No surgeons found for the given hospital ID' });
+//       }
+  
+//       // If surgeons are found, return them in the response
+//       return res.status(200).json(surgeons);
+//     } catch (error) {
+//       // If an error occurs, return 500 status with the error message
+//       console.error('Error fetching surgeons:', error);
+//       return res.status(500).json({ message: 'Internal server error' });
+//     }
+//   };
 // Controller method to fetch all surgeons by hospitalId
 exports.getSurgeonsByHospitalId = async (req, res) => {
-    const hospitalId = req.params.hospitalId; // Assuming hospitalId is passed as a URL parameter
+  const hospitalId = req.params.hospitalId; // Assuming hospitalId is passed as a URL parameter
+
   console.log(hospitalId);
-    try {
-      // Query users with role 'Surgeon' and matching hospitalId
-      const surgeons = await User.find({ role: 'Surgeon', hospitalId }).populate('departmentId');
-      
+
+  try {
+      // Query users with role 'Surgeon' and matching hospitalId in the hospitals array
+      const surgeons = await User.find({
+          role: 'Surgeon',
+          'hospitals': {
+              $elemMatch: { hospitalId: hospitalId }
+          }
+      }).populate('departmentId');
+
       // If there are no surgeons found, return 404 status
-      if (!surgeons) {
-        return res.status(404).json({ message: 'No surgeons found for the given hospital ID' });
+      if (!surgeons || surgeons.length === 0) {
+          return res.status(404).json({ message: 'No surgeons found for the given hospital ID' });
       }
-  
+
       // If surgeons are found, return them in the response
       return res.status(200).json(surgeons);
-    } catch (error) {
+  } catch (error) {
       // If an error occurs, return 500 status with the error message
       console.error('Error fetching surgeons:', error);
       return res.status(500).json({ message: 'Internal server error' });
-    }
-  };
+  }
+};
+
 exports.getCamerasForUser=async (req,res) => {
     try {
         const surgeonId=req.params.surgeonId;
@@ -423,33 +638,63 @@ exports.getCamerasForUser=async (req,res) => {
         throw new Error('Error retrieving cameras for user: ' + error.message);
     }
 }
-exports. getUsersByDepartmentId = async (req, res) => {
-    try {
+// exports. getUsersByDepartmentId = async (req, res) => {
+//     try {
+//       const departmentId = req.params.departmentId;
+//       console.log(departmentId);
+//       // Validate departmentId if needed, e.g., check if it's a valid ObjectId
+//       if(!isValidObjectId(departmentId))
+//         {
+//             console.log("invalid");
+//             return res.status(404).json({error:"invalid department ID"});
+//         }
+//       // Fetch users by departmentId from the User collection
+//       const users = await User.find({ departmentId: departmentId });
+//     console.log(users);
+//     if (!users || users.length === 0) {
+//         console.log(users.length);
+//         return res.status(404).json({ error: 'Users not found for the department' });
+//       }
+  
+  
+//       // If users found, return them
+//      return res.status(200).json(users);
+//     } catch (error) {
+//       // Handle errors
+//       console.error('Error fetching users by department ID:', error);
+//       res.status(500).json({ error: 'Internal server error' });
+//     }
+//   };
+exports.getUsersByDepartmentId = async (req, res) => {
+  try {
       const departmentId = req.params.departmentId;
-      console.log(departmentId);
-      // Validate departmentId if needed, e.g., check if it's a valid ObjectId
-      if(!isValidObjectId(departmentId))
-        {
-            console.log("invalid");
-            return res.status(404).json({error:"invalid department ID"});
-        }
-      // Fetch users by departmentId from the User collection
-      const users = await User.find({ departmentId: departmentId });
-    console.log(users);
-    if (!users || users.length === 0) {
-        console.log(users.length);
-        return res.status(404).json({ error: 'Users not found for the department' });
+
+      // Validate departmentId
+      if (!isValidObjectId(departmentId)) {
+          console.log("Invalid department ID");
+          return res.status(400).json({ error: "Invalid department ID" });
       }
-  
-  
-      // If users found, return them
-     return res.status(200).json(users);
-    } catch (error) {
+
+      // Fetch users by departmentId
+      const users = await User.find({
+          'hospitals': {
+              $elemMatch: { departmentId: departmentId }
+          }
+      }).populate('hospitals.hospitalId', 'Hospital_Name') // Optionally populate hospital details
+      .populate('hospitals.departmentId', 'department_name'); // Optionally populate department details
+
+      if (!users || users.length === 0) {
+          return res.status(404).json({ error: 'No users found for the given department' });
+      }
+
+      // Return found users
+      return res.status(200).json(users);
+  } catch (error) {
       // Handle errors
       console.error('Error fetching users by department ID:', error);
       res.status(500).json({ error: 'Internal server error' });
-    }
-  };
+  }
+};
 
   
 exports.updateUserActiveStatus = async (req, res) => {
@@ -524,4 +769,4 @@ exports.resetPassword = async (req, res) => {
       console.error('Error resetting password:', error);
       res.status(500).json({ message: 'Internal server error' });
     }
-  };
+}

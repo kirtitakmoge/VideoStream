@@ -1,72 +1,117 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useAuth } from "./AuthContext";
-const UpdateProfileForm = ({ userId }) => {
-  const { user, login } = useAuth();
-  const initial = {
-    _id: user?._id,
-    firstname: user?.firstname || "",
-    lastname: user?.lastname || "",
-    email: user?.email || "",
-    hospitalId: user?.hospitalId || "",
-    departmentId: user?.departmentId || "",
-    mobile_no: user?.mobile_no || "",
-    role: user?.role || "",
 
-    // Add other fields as needed
-  };
-  const [userData, setUserData] = useState(initial);
+const UpdateProfileForm = () => {
+  const { user, login } = useAuth();
+  const [userData, setUserData] = useState({
+    _id: "",
+    firstname: "",
+    lastname: "",
+    email: "",
+    hospitals: [], // Array of hospital objects
+    mobile_no: "",
+    role: "",
+  });
+
   useEffect(() => {
-    // Update userData state when user changes (e.g., after login)
-    setUserData(initial);
+    if (user) {
+      // Convert user data to fit the form structure
+      setUserData({
+        _id: user._id || "",
+        firstname: user.firstname || "",
+        lastname: user.lastname || "",
+        email: user.email || "",
+        hospitals: user.hospitals.map(hospital => ({
+          hospitalId: hospital.hospitalId || "",
+          hospitalName: hospital.hospitalId.Hospital_Name || "", // Ensure you have the hospital name
+          departmentId: hospital.departmentId.map(dept => ({
+            deptId: dept._id || "",
+            deptName: dept.department_name || "", // Ensure you have the department name
+          })) || [],
+        })) || [],
+        mobile_no: user.mobile_no || "",
+        role: user.role || "",
+      });
+    }
   }, [user]);
-  if (userData === null) {
-    // If user is null (not yet loaded), render a loading indicator
+
+  if (!user) {
     return <div>Loading...</div>;
   }
 
-  //hospitalId: user?.hospitalId?.Hospital_Name || '',
-  //specialization: user?.departmentId?.department_name || '',
   const token = localStorage.getItem("token");
 
   const handleChange = (e) => {
     setUserData({ ...userData, [e.target.name]: e.target.value });
   };
+
+  const handleHospitalChange = (e, index) => {
+    const updatedHospitals = [...userData.hospitals];
+    updatedHospitals[index] = {
+      ...updatedHospitals[index],
+      hospitalName: e.target.value, // Update hospital name
+    };
+    setUserData({ ...userData, hospitals: updatedHospitals });
+  };
+
+  const handleDepartmentChange = (e, hospitalIndex, deptIndex) => {
+    const updatedHospitals = [...userData.hospitals];
+    const updatedDepartments = [...updatedHospitals[hospitalIndex].departmentId];
+    updatedDepartments[deptIndex] = {
+      ...updatedDepartments[deptIndex],
+      deptName: e.target.value, // Update department name
+    };
+    updatedHospitals[hospitalIndex] = {
+      ...updatedHospitals[hospitalIndex],
+      departmentId: updatedDepartments,
+    };
+    setUserData({ ...userData, hospitals: updatedHospitals });
+  };
+
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("button Clicked");
+  
+    // Filter out empty department objects
+    const sanitizedHospitals = userData.hospitals.map(hospital => ({
+      hospitalId: hospital.hospitalId,
+      departmentId: hospital.departmentId.map(dept => dept.deptId), // Remove empty department names and include ids
+    }));
+  console.log(sanitizedHospitals)
+    const dataToSend = { ...userData, hospitals: sanitizedHospitals };
+  console.log(dataToSend)
     try {
       const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/api/users/updateUserById/${userData?._id}`,
+        `${process.env.REACT_APP_API_URL}/api/users/updateUserById/${userData._id}`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify(userData),
+          body: JSON.stringify(dataToSend),
         }
       );
-
+  
       if (response.ok) {
         const data = await response.json();
-        toast.success(`Profile Updated SuccessFully`, {
+        toast.success(`Profile Updated Successfully`, {
           duration: 2000,
           position: "top-center",
         });
         login(data.user);
       } else {
         const errorMessage = await response.text();
-        toast.error(`Profile updation unsuccessfull  ${errorMessage}`, {
+        toast.error(`Profile update unsuccessful: ${errorMessage}`, {
           duration: 2000,
           position: "top-center",
         });
-
         console.error("Validation Error:", errorMessage);
       }
     } catch (error) {
       console.error("Error updating profile:", error);
-      toast.error(`Profile updation unsuccessfull `, {
+      toast.error(`Profile update unsuccessful`, {
         duration: 2000,
         position: "top-center",
       });
@@ -86,7 +131,7 @@ const UpdateProfileForm = ({ userId }) => {
               type="text"
               id="firstname"
               name="firstname"
-              value={userData?.firstname}
+              value={userData.firstname}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded px-3 py-2"
             />
@@ -99,7 +144,7 @@ const UpdateProfileForm = ({ userId }) => {
               type="text"
               id="lastname"
               name="lastname"
-              value={userData?.lastname}
+              value={userData.lastname}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded px-3 py-2"
             />
@@ -112,41 +157,43 @@ const UpdateProfileForm = ({ userId }) => {
               type="email"
               id="email"
               name="email"
-              value={userData?.email}
+              value={userData.email}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded px-3 py-2"
             />
           </div>
-          {/*<div className="mb-2">
-            <label htmlFor="password" className="block font-medium">Password</label>
-            <input type="password" id="password" name="password" value={userData.password} onChange={handleChange} className="w-full border border-gray-300 rounded px-3 py-2" />
-  </div> */}
-          <div className="mb-2">
-            <label htmlFor="hospitalId" className="block font-medium">
-              Hospital
-            </label>
-            <input
-              type="text"
-              id="hospitalId"
-              name="hospitalId"
-              value={userData?.hospitalId?.Hospital_Name}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-3 py-2"
-            />
-          </div>
-          <div className="mb-2">
-            <label htmlFor="specialization" className="block font-medium">
-              Specialization
-            </label>
-            <input
-              type="text"
-              id="specialization"
-              name="departmentId"
-              value={user?.departmentId?.department_name || ''}
-              onChange={handleChange}
-              className="w-full border border-gray-300 rounded px-3 py-2"
-            />
-          </div>
+          {userData.hospitals.map((hospital, hospitalIndex) => (
+            <div key={hospitalIndex} className="mb-2">
+              <label htmlFor={`hospital_${hospitalIndex}`} className="block font-medium">
+                Hospital
+              </label>
+              <input
+                type="text"
+                id={`hospital_${hospitalIndex}`}
+                name="hospitalName"
+                value={hospital.hospitalName}
+                onChange={(e) => handleHospitalChange(e, hospitalIndex)}
+                className="w-full border border-gray-300 rounded px-3 py-2 mb-2"
+              />
+              {hospital.departmentId.map((dept, deptIndex) => (
+                <div key={deptIndex} className="mb-2">
+                  <label htmlFor={`department_${hospitalIndex}_${deptIndex}`} className="block font-medium">
+                    Department
+                  </label>
+                  <input
+                    type="text"
+                    id={`department_${hospitalIndex}_${deptIndex}`}
+                    name="deptName"
+                    value={dept.deptName}
+                    onChange={(e) => handleDepartmentChange(e, hospitalIndex, deptIndex)}
+                    className="w-full border border-gray-300 rounded px-3 py-2 mb-2"
+                  />
+                </div>
+              ))}
+              
+            </div>
+          ))}
+         
           <div className="mb-2">
             <label htmlFor="mobile_no" className="block font-medium">
               Mobile Number
@@ -155,7 +202,7 @@ const UpdateProfileForm = ({ userId }) => {
               type="text"
               id="mobile_no"
               name="mobile_no"
-              value={userData?.mobile_no}
+              value={userData.mobile_no}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded px-3 py-2"
             />
@@ -168,7 +215,7 @@ const UpdateProfileForm = ({ userId }) => {
               type="text"
               id="role"
               name="role"
-              value={userData?.role}
+              value={userData.role}
               onChange={handleChange}
               className="w-full border border-gray-300 rounded px-3 py-2"
             />

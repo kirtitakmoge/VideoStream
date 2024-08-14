@@ -3,7 +3,7 @@ const router = express.Router();
 const userController = require('../controller/userController');
 const adminController = require('../controller/adminController');
 const upload=require("../auth/multerConfig");
-
+const isAdmin1=require("../auth/isAdmin1");
 const verifyToken = require('../auth/verifyToken');
 const requireSuperAdmin = require('../auth/requireSuperAdmin');
 const isAdmin = require('../auth/adminAuthforvideo');
@@ -41,6 +41,8 @@ router.get("/getCameraUrlByUserId/:surgeonId",userController.getCameraUrlByUserI
 
 //routes for super Admin
 router.put("/super/updateRoleById/:superAdminId/:surgeonId",verifyToken,requireSuperAdmin,userController.updateRole);
+router.post("/addDepartment/:adminId/:surgeonId",verifyToken,isAdmin1,userController.addDepartment);
+router.post("/updateDepartment/:adminId/:surgeonId",verifyToken,isAdmin1,userController.updateDepartment);
 router.get("/super/all-User",requireSuperAdmin,userController.getAllUser);
 router.get("/getUsersByDepartmentId/:departmentId",userController.getUsersByDepartmentId);
 router.put('/updateUserActiveStatus/:id/activate',verifyToken, userController.updateUserActiveStatus);
