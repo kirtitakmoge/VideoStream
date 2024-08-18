@@ -87,6 +87,7 @@ if(response.ok){
     localStorage.setItem("isLoggedIn", true);
     console.log(userData);
     dispatch(setUser(userData.user)); 
+    // navigate("/generalDashboard");
     if (userData.user.role === "Super Admin") navigate(`/superAdminDashboard`);
     else if (userData.user.role === "Patient") navigate("/patient");
     else if (userData.user.role === "Hospital Admin" && userData.user.active === true)

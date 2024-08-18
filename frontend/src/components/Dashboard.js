@@ -1,5 +1,5 @@
 import  { useState, useRef, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, RouterProvider } from 'react-router-dom';
 import DepartmentDetailsSuper from './DepartmentDetailsSuper';
 import {  FaHome, FaUser, FaHospital, FaVideo } from 'react-icons/fa';
 import React, { useMemo} from "react";
@@ -55,6 +55,8 @@ import Layout from './Layout';
 import HospitalProfile from './HosptialProfile';
 import SurgeonUpdate from './SurgeonUpdate';
 import AllSurgeon from './AllSurgeon';
+import GeneralDashboard from './GeneralDashboard';
+import HospitalDepartmentSelector from './HospitalDepartmentSelector';
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -114,7 +116,8 @@ const LeftNavBar = () => {
           </li>
           <Link to="/signout">Signout</Link></>
         )}
-        {user.role === "Surgeon" && (
+        {user.role === "Surgeon" && user.bucketActive && user.cameraActive
+&& (
           <>
             <li>
               <Link to={`/surgeonDashboard/${user.departmentId}`}>
@@ -135,7 +138,7 @@ const LeftNavBar = () => {
         </li>
           </>
         )}
-        {user.role === "Hospital Admin" && (
+        {user.role === "Hospital Admin" && user.active && (
           <>
             <li>
               <Link to="/hospitalAdmin">Hospital Admin Dashboard</Link>
@@ -342,6 +345,8 @@ const LeftNavBar = () => {
             <Layout><Routes>
             <Route path="/" element={<Login />} />
             <Route path="/login/:userType?" element={<Login />} />
+            <Route path='/generalDashboard' element={<GeneralDashboard/>}/>
+            <Route path='/surgeonDashboard/:departmentId' element={<SurgeonDashBoard/>}/>
             <Route path="/signup" element={<Register />} />
             <Route path='/cameraData/:cameraId'element={<CameraData/>}/>
             <Route path="/home" element={<Home />} />
@@ -383,10 +388,11 @@ const LeftNavBar = () => {
             <Route path="/hospitalAdminData/:hospitalId" element={<HospitalAdminData/>}/>
             <Route path="/surgeonData/:surgeonId" element={<SurgeonData/>}/>
             <Route path="/surgeonUpdate/:surgeonId" element={<SurgeonUpdate/>}/>
+            <Route path="/hospitaldepartment" element={<HospitalDepartmentSelector/>}/>
           <Route path="/superAllCameras" element={<SuperAllCamera/>}/>
           <Route path="/AllSurgeon" element={<AllSurgeon/>}/>
           <Route path="/departmentGallerySuper/:hospitalId/:hospital_name" element={<DepartmentGallerySuper/>}></Route>
-          <Route path="/departmentDetailSuper/:departmentId/:department_name" element={<DepartmentDetailsSuper/>}></Route></Routes></Layout>
+          <Route path="/departmentDetailSuper/:departmentId/:department_name" element={<DepartmentDetailsSuper/>}/></Routes></Layout>
           </div>
         </div>
       </div>

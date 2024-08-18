@@ -33,6 +33,7 @@ const sendWelcomeEmail = async (to) => {
 // Function to send password reset email
 const sendPasswordResetEmail = async (email, token, role) => {
   const resetLink = `${process.env.FRONTEND_URL}/${role}/reset-password/${token}`;
+  const rest=`${process.env.FRONTEND_URL1}/${role}/reset-password/${token}`
   console.log(resetLink, "link");
 
   const mailOptions = {
@@ -43,6 +44,7 @@ const sendPasswordResetEmail = async (email, token, role) => {
       <p>You are receiving this because you (or someone else) have requested the reset of the password for your account.</p>
       <p>Please click on the following link, or paste this into your browser to complete the process:</p>
       <p><a href="${resetLink}">${resetLink}</a></p>
+      <p><a href="${rest}">${rest}</a></p>
       <p>If you did not request this, please ignore this email and your password will remain unchanged.</p>`
   };
 

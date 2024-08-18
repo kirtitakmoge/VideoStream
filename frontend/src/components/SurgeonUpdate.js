@@ -9,8 +9,7 @@ const SurgeonUpdate = () => {
     firstname:"",
     lastname: "",
     email:  "",
-    hospitalId:  "",
-    departmentId:  "",
+   hospitals:[],
     mobile_no:  "",
     role: "",
 

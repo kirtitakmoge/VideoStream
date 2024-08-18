@@ -2,8 +2,8 @@ const generateToken = require('../auth/generateToken');
 const Camera = require('../models/Camera');
 const Department = require('../models/Department');
 const Notification=require("../models/Notification");
-const User = require('../models/User');const dotenv = require('dotenv');
-const result = dotenv.config();
+const User = require('../models/User');
+
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 const bcrypt = require('bcrypt');
@@ -15,7 +15,10 @@ const Hospital=require("../models/Hospital");
 const upload=require("../auth/multerConfig");
 
 // Secret key for JWT
-const secretKey = 'KirtiTakmogeSuhasShelke';
+
+const dotenv = require('dotenv').config();
+// Secret key for JWT
+const secretKey = process.env.JWT_SECRETE_KEY;
 exports.signupUser = [
   upload.fields([{ name: 'profilePicture', maxCount: 1 }, { name: 'idProof', maxCount: 1 }]), // multer middleware
   async (req, res) => {
@@ -338,14 +341,14 @@ exports.getHospitalAdminByHospitalId = async (req, res) => {
 
     try {
         // Find users where the hospitals array contains an object with the given hospitalId and role is "Hospital Admin"
-        const users = await User.find({
+        const users = await User.findOne({
             "hospitals.hospitalId": hospitalId,
             role: "Hospital Admin"
         });
 
         console.log(users);
 
-        if (users.length > 0) {
+        if (users) {
             res.status(200).json(users);
         } else {
             res.status(404).json({ error: "No Hospital Admins found for the given hospital ID" });
@@ -377,7 +380,7 @@ exports.deleteUserById=async(req,res)=>
 exports.updateUserById = async (req, res) => {
     const surgeonId = req.params.surgeonId;
     const updateUser = req.body;
-
+    console.log(updateUser)
     try {
         
 
@@ -552,7 +555,7 @@ exports.requestPasswordReset = async (req, res) => {
     user.resetPasswordToken = resetToken;
     user.resetPasswordExpires = Date.now() + 3600000; // Set expiration time to 1 hour from now
     await user.save();
- role="surgeon"
+ role="Surgeon"
     // Send password reset emailc:\Users\Kirti\AppData\Local\Packages\Microsoft.ScreenSketch_8wekyb3d8bbwe\TempState\Recordings\20240524-1052-10.7537932.mp4
     await sendPasswordResetEmail(user.email, resetToken,role);
 
@@ -684,10 +687,11 @@ exports.getUsersByDepartmentId = async (req, res) => {
       .populate('hospitals.departmentId', 'department_name'); // Optionally populate department details
 
       if (!users || users.length === 0) {
-          return res.status(404).json({ error: 'No users found for the given department' });
+          return res.status(200).json({ error: 'No users found for the given department',users:[] });
       }
 
       // Return found users
+      console.log("from department",users);
       return res.status(200).json(users);
   } catch (error) {
       // Handle errors
@@ -738,21 +742,22 @@ exports.updateUserActiveStatus = async (req, res) => {
 exports.resetPassword = async (req, res) => {
     const { token, newPassword } = req.body;
   console.log(token);
+  console.log(secretKey);
     try {
       // Verify the token
       const decoded =jwt.verify(token,secretKey);
    console.log(decoded);
       // Find the user by the reset token and ensure it's not expired
       const user = await User.findOne({
-        email: decoded.email,
+        email: decoded.context.user.name,
         resetPasswordToken: token,
         
       });
-  
+      console.log(user);
       if (!user) {
         return res.status(400).json({ message: 'Invalid or expired token' });
       }
-      console.log(user);
+      
   
       // Hash the new password
       const salt = await bcrypt.genSalt(10);

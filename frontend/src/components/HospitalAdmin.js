@@ -18,7 +18,8 @@ const HospitalAdmin = () => {
         try {
           const adminId = localStorage.getItem("id");
           const token = localStorage.getItem("token");
-          const data = await fetchDepartments(user.hospitalId, adminId, token);
+          console.log(user.hospitals[0].hospitalId.hospitalId);
+          const data = await fetchDepartments(user.hospitals[0].hospitalId.hospitalId, adminId, token);
           if (data) {
             setDepartments(data.departments);
           }
@@ -30,7 +31,6 @@ const HospitalAdmin = () => {
       fetchData();
     }
   }, [user]);
-
   useEffect(() => {
     if (user) {
       const fetchHospitalName = async () => {
@@ -39,7 +39,9 @@ const HospitalAdmin = () => {
           const token = localStorage.getItem("token");
           const data = await getHospitalById(adminId, user.hospitalId, token);
           if (data) {
-            setHospitalName(data.Hospital_Name);
+            console.log(data);
+            setHospitalName(data.hospitalId);
+
           }
         } catch (error) {
           console.error(error);
@@ -58,7 +60,7 @@ const HospitalAdmin = () => {
       </h1>
       <h2 className="text-center text-2xl font-bold mb-4"> Hospital Admin : {user ? user.firstname : 'Loading...'}</h2>
       <h1 className="text-2xl text-center font-bold mb-4 ml-6">Department Gallery</h1>
-      <DepartmentGallery departments={departments} />
+      <DepartmentGallery departments={departments} hospitalName={hospitalName} hospitalId={user?.hospitalId} />
     </div>
   );
 };

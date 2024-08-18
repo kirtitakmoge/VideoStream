@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const DepartmentGallery = ({ departments }) => {
+const DepartmentGallery = ({ departments ,hospitalId,hospital_name}) => {
   return (
     <div className="mx-6 items-center">
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -21,13 +21,13 @@ const DepartmentGallery = ({ departments }) => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-        <div className="shadow-md">
+      <div className="block bg-gray-200  p-4 rounded-md hover:bg-gray-300">
           <Link
-            to={`/createDepartment/`}
-            className="bg-gray-100 block p-4 rounded-md hover:bg-gray-200 h-full flex flex-col justify-center"
+            to={`/createDepartment/${hospitalId}`}
+            className=""
             style={{ minHeight: "120px" }} // Adjust the minHeight as needed
           >
-            <h2 className="text-1xl md:text-1xl lg:text-2xl text-center font-bold">Add New Department</h2>
+            <h2 className="text-xl text-center font-bold">Add New Department</h2>
           </Link>
         </div>
         <div className="shadow-md">

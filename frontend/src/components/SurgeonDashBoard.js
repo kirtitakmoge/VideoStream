@@ -3,7 +3,8 @@ import ShowVideo from "./ShowVideo";
 import { Link } from "react-router-dom";
 import {useAuth} from "./AuthContext"
 import { useParams } from "react-router-dom";
-import DeviceList from "./DeviceList";
+import DeviceList from "./DeviceList"; 
+
 const SurgeonDashboard = () => {
   const { departmentId } = useParams();
  const {user}=useAuth();
