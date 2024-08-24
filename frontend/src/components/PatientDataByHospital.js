@@ -2,20 +2,20 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAuth } from "./AuthContext";
 // Patient data by deoartmentID
-const PatientData = () => {
+const PatientDataByHospital = () => {
   const [patients, setPatients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { user } = useAuth();
   const token = localStorage.getItem("token");
-  const { departmentId } = useParams();
+  const { hospitalId } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (user) {
           const response = await fetch(
-            `${process.env.REACT_APP_API_URL}/api/patient/getAllPatientByDepartmentId/${departmentId}`,
+            `${process.env.REACT_APP_API_URL}/api/patient/getAllPatientByHospitalId/${hospitalId}/${user._id}`,
             {
               method: "GET",
               headers: {
@@ -36,7 +36,7 @@ const PatientData = () => {
     };
 
     fetchData();
-  }, [user, departmentId, token]);
+  }, [user,token]);
 
   if (!user) {
     return <p>Loading...</p>;
@@ -116,4 +116,4 @@ const PatientData = () => {
   );
 };
 
-export default PatientData;
+export default PatientDataByHospital;

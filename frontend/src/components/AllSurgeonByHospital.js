@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import UpdateDepartmentModel from "./UpdateDepartmentModel";
-
-const EditableTable = () => {
+import { useParams } from "react-router-dom";
+import { useAuth } from "./AuthContext";
+const AllSurgeonByHospital = () => {
   const [users, setUsers] = useState([]);
   const [editingRow, setEditingRow] = useState(null);
   const [formData, setFormData] = useState({});
@@ -9,12 +10,15 @@ const EditableTable = () => {
   const [showModal, setShowModal] = useState(false);
   const token = localStorage.getItem("token");
   const [refresh,setRefresh]=useState(false);
+  const {hospitalId}=useParams();
+  const {user}=useAuth();
 
   useEffect(() => {
     const fetchUsers = async () => {
+    
       try {
         const response = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/users/allSurgeon`,
+          `${process.env.REACT_APP_API_URL}/api/users/getSurgeonsByHospitalId/${hospitalId}/${user._id}`,
           {
             method: "GET",
             headers: {
@@ -32,7 +36,7 @@ const EditableTable = () => {
       }
     };
     fetchUsers();
-  }, [token,refresh]);
+  }, [token,user?._id,refresh]);
 
   const handleOpenModal = (user) => {
     setSelectedSurgeon(user);
@@ -311,4 +315,4 @@ const EditableTable = () => {
   );
 };
 
-export default EditableTable;
+export default AllSurgeonByHospital;

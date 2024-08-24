@@ -24,7 +24,7 @@ router.get("/getUserById/:surgeonId",verifyToken,userController.getUserByID);
 //routes for HospitalAdmin
 router.post("/admin/getAllUsers/:adminId",verifyToken,isAdmin,adminController.getAllUsers);
 router.get("/admin/all-User",isAdmin,userController.getAllUser);
-router.get('/getSurgeonsByHospitalId/:hospitalId', userController.getSurgeonsByHospitalId);
+router.get('/getSurgeonsByHospitalId/:hospitalId/:adminId',isAdmin1, userController.getSurgeonsByHospitalId);
 router.get("/getCamerasForUser/:surgeonId",userController.getCamerasForUser);
 
 

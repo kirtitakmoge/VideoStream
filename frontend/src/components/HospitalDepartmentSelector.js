@@ -8,18 +8,18 @@ const HospitalDepartmentSelector = ({ onSelection }) => {
   const { user } = useAuth();
   const hospitals = user?.hospitals || [];
 
-  // useEffect(() => {
-  //   if (hospitals?.length === 1) {
-  //     const singleHospital = hospitals[0];
-  //     setSelectedHospital(singleHospital?.hospitalId);
+  useEffect(() => {
+    if (hospitals.length === 1) {
+      const singleHospital = hospitals[0];
+      setSelectedHospital(singleHospital.hospitalId._id);
 
-  //     if (singleHospital?.departmentId.length === 1) {
-  //       setSelectedDepartment(singleHospital?.departmentId[0]._id);
-  //       setShowOverlay(false);
-  //       onSelection(singleHospital?.hospitalId, singleHospital?.departmentId[0]._id);
-  //     }
-  //   }
-  // }, [hospitals, onSelection]);
+      if (singleHospital.departmentId.length === 1) {
+        setSelectedDepartment(singleHospital.departmentId[0]._id);
+        setShowOverlay(false);
+        onSelection(singleHospital.hospitalId._id, singleHospital.departmentId[0]._id);
+      }
+    }
+  }, [hospitals, onSelection]);
 
   const handleHospitalChange = (event) => {
     const selectedHospitalId = event.target.value;
@@ -32,6 +32,7 @@ const HospitalDepartmentSelector = ({ onSelection }) => {
   };
 
   const handleSubmit = () => {
+    console.log(selectedHospital,selectedDepartment)
     onSelection(selectedHospital, selectedDepartment);
     setShowOverlay(false);
   };
@@ -53,9 +54,9 @@ const HospitalDepartmentSelector = ({ onSelection }) => {
           className="block w-full p-2 mb-4 border rounded"
         >
           <option value="">Select a hospital</option>
-          {hospitals.map((hospital, index) => (
-            <option key={index} value={hospital?.hospitalId}>
-              {hospital?.Hospital_Name} (ID: {hospital?.hospitalId})
+          {hospitals.map((hospital) => (
+            <option key={hospital._id} value={hospital.hospitalId._id}>
+              {hospital.hospitalId.Hospital_Name} (ID: {hospital.hospitalId._id})
             </option>
           ))}
         </select>
@@ -71,10 +72,10 @@ const HospitalDepartmentSelector = ({ onSelection }) => {
             >
               <option value="">Select a department</option>
               {hospitals
-                .find((hospital) => hospital.hospitalId === selectedHospital)
-                .departmentId.map((dept, index) => (
-                  <option key={index} value={dept._id}>
-                    {dept.name} (ID: {dept._id})
+                .find((hospital) => hospital.hospitalId._id === selectedHospital)
+                ?.departmentId.map((dept) => (
+                  <option key={dept._id} value={dept._id}>
+                    {dept.department_name} (ID: {dept._id})
                   </option>
                 ))}
             </select>

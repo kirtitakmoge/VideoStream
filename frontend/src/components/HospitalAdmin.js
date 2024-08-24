@@ -4,6 +4,7 @@ import DepartmentGallery from "./DepartmentGallery";
 import { useAuth } from './AuthContext';
 import { useHospitalContext } from "./HospitalContext";
 import { useDepartment } from './DepartmentContext';
+import { useParams } from "react-router-dom";
 
 const HospitalAdmin = () => {
   const [departments, setDepartments] = useState([]);
@@ -11,15 +12,15 @@ const HospitalAdmin = () => {
   const { user } = useAuth(); 
   const { fetchDepartments } = useDepartment();
   const { getHospitalById } = useHospitalContext();
-
+  const {hospitalId}=useParams();
   useEffect(() => {
     if (user) {
       const fetchData = async () => {
         try {
           const adminId = localStorage.getItem("id");
           const token = localStorage.getItem("token");
-          console.log(user.hospitals[0].hospitalId.hospitalId);
-          const data = await fetchDepartments(user.hospitals[0].hospitalId.hospitalId, adminId, token);
+         
+          const data = await fetchDepartments(hospitalId, adminId, token);
           if (data) {
             setDepartments(data.departments);
           }
@@ -37,10 +38,10 @@ const HospitalAdmin = () => {
         try {
           const adminId = localStorage.getItem("id");
           const token = localStorage.getItem("token");
-          const data = await getHospitalById(adminId, user.hospitalId, token);
+          const data = await getHospitalById(adminId, hospitalId, token);
           if (data) {
             console.log(data);
-            setHospitalName(data.hospitalId);
+            setHospitalName(data.Hospital_Name);
 
           }
         } catch (error) {
@@ -60,7 +61,7 @@ const HospitalAdmin = () => {
       </h1>
       <h2 className="text-center text-2xl font-bold mb-4"> Hospital Admin : {user ? user.firstname : 'Loading...'}</h2>
       <h1 className="text-2xl text-center font-bold mb-4 ml-6">Department Gallery</h1>
-      <DepartmentGallery departments={departments} hospitalName={hospitalName} hospitalId={user?.hospitalId} />
+      <DepartmentGallery departments={departments} hospitalName={hospitalName} hospitalId={hospitalId} />
     </div>
   );
 };

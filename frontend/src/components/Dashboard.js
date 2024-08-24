@@ -10,6 +10,7 @@ import Navbar from "./Navbar";
 import Home from "./Home";
 import Login from "./Login";
 import Register from "./Register";
+import PatientDataByHospital from './PatientDataByHospital';
 import ProfileUpdate from "./ProfileUpdate";
 import SignOut from "./Signout";
 import RegistrationPage from "./RegistrationPage";
@@ -57,6 +58,7 @@ import SurgeonUpdate from './SurgeonUpdate';
 import AllSurgeon from './AllSurgeon';
 import GeneralDashboard from './GeneralDashboard';
 import HospitalDepartmentSelector from './HospitalDepartmentSelector';
+import AllSurgeonByHospital from './AllSurgeonByHospital';
 
 const Dashboard = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -83,7 +85,7 @@ const LeftNavBar = () => {
   const { user } = useAuth();
 
   const navLinks = useMemo(() => {
-    
+    alert(user.role)
     return (
       <ul>{user==null?(
       <>
@@ -355,19 +357,21 @@ const LeftNavBar = () => {
             <Route path="/registration/:userType?" element={<RegistrationPage />} />
             <Route path="/showvideo" element={<ShowVideo />} />
             <Route path='/patientData/:departmentId' element={<PatientData/>}/>
+            <Route path='/patientDataByHospital/:hospitalId' element={<PatientDataByHospital/>}/>
             <Route path="/subscriptionPlan" element={<SubscriptionPlanPage />} />
             <Route path="/subscription/:id" element={<SubscriptionDetailsPage />} />
             <Route path="/hospitalRegistration" element={<HospitalRegistrationForm />} />
             <Route path="/surgeonDashboard/:departmentId" element={<SurgeonDashBoard />} />
             <Route path="/surgeonList/:departmentId" element={<SurgeonList />} />
-            <Route path="/cameralist/:departmentId" element={<CameraList />} />{/*  for surgeon  */}
+            <Route path="/cameralist/:departmentId?" element={<CameraList />} />{/*  for surgeon  */}
             <Route path="/deviceList/:departmentId" element={<DeviceList />} />{/*  for surgeon device list  */}
             <Route path="/deviceListadmin/:departmentId" element={<DeviceListAdmin />} />
             <Route path="/department-details/:departmentId/:department_name" element={<DepartmentDetails />} />
             <Route path="/showvideo/:departmentId" element={<ShowVideo />} />
             <Route path="/createCamera/:departmentId" element={<CameraForm />} />
+<Route path='/AllSurgeonByHospital/:hospitalId' element={<AllSurgeonByHospital/>}/>
             <Route path="/notactive/:name" element={<MessageComponent />} />
-            <Route path="/hospitalAdmin" element={<HospitalAdmin />} />
+            <Route path="/hospitalAdmin/:hospitalId" element={<HospitalAdmin />} />
             <Route path='/activateHospitalAdmin/:hospitalId' element={<HospitalAdminData/>}/>            
             <Route path="/device/:cameraId/:departmentId" element={<ViewBucketFiles />} />
             <Route path="/signupPatient" element={<PatientRegistration />} />
@@ -381,7 +385,7 @@ const LeftNavBar = () => {
             <Route path='/updateCamera/:cameraId'element={<UpdateCamera/>}/>
             <Route path="/createSubscriptionPlan" element={<CreateSubScriptionPlan />} />
             <Route path="/superAdminDashboard" element={<SuperAdminDashboard />} />
-            <Route path="/surgeonBucket/:cameraId" element={<SurgeonBucket />} />
+            <Route path="/surgeonbucket/:cameraId/:departmentId" element={<SurgeonBucket />} />
             <Route path="/patientprofileupdate" element={<PatientUpdate />} />
             <Route path="/allHospitals" element={<AllHospitals />} />
             <Route path="/hospitalProfile/:hospitalId" element={<HospitalProfile/>}/>

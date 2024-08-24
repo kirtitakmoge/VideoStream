@@ -14,22 +14,21 @@ const SurgeonDashboard = () => {
       Surgeon {user.firstname} Dashboard
     </h1>
 
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md hover:bg-slate-300">
+   
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="bg-gray-200 text-xl font-bold p-6 rounded-lg shadow-md hover:bg-slate-300">
         <Link to="/profileupdate">Surgeon Profile Update</Link>
       </div>
-      <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
-        <Link to={`/cameralist/${user.departmentId}`}>Live Streaming Camera</Link>
+      <div className="bg-gray-200 text-xl font-bold p-6 rounded-lg shadow-md hover:bg-slate-300">
+        <Link to={`/cameralist/${departmentId}`}>Live Streaming Camera</Link>
       </div>
-      <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
-        <Link to={`/deviceList/${user.departmentId}`}>Recorded Videos from Camera</Link>
+      <div className="bg-gray-200 text-xl font-bold p-6 rounded-lg shadow-md hover:bg-slate-300">
+        <Link to={`/deviceList/${departmentId}`}>Recorded Videos from Camera</Link>
       </div>
-      <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
-        <Link to={`/patientData/${user.departmentId}`}>Patients</Link>
+      <div className="bg-gray-200 text-xl font-bold p-6 rounded-lg shadow-md hover:bg-slate-300">
+        <Link to={`/patientData/${departmentId}`}>Patients</Link>
       </div>
-      <div className="bg-gray-100 text-xl font-bold p-6 rounded-lg shadow-md  hover:bg-slate-300">
-        <Link to={`/videoCall`}>Video Call</Link>
-      </div>
+    
     </div>
   </div>
   );

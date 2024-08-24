@@ -1,152 +1,167 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { FaShare } from "react-icons/fa"; // Import the share icon from react-icons/fa
+import ShareBucketFile from "./ShareBucketFiles";
 import toast from "react-hot-toast";
-import { FaCheckCircle} from "react-icons/fa"; 
+import { FaCheckCircle, FaCircle, FaShare } from "react-icons/fa";
+import ReactPlayer from "react-player";
+import DownloadBucketFile from "./DownloadBucketFile";
 const SurgeonBucket = () => {
-  const [devicePhotos, setDevicePhotos] = useState([]);
-  const [deviceVideos, setDeviceVideos] = useState([]);
-  const { cameraId } = useParams();
-  const [userId, setUserId] = useState("");
-  const [input, setInput] = useState(false);
-  const[selectedMedia,setSelectedMedia]=useState([]);
- const token=localStorage.getItem("token");
- const surgeonId=localStorage.getItem("id");
+  const [mediaFiles, setMediaFiles] = useState([]);
+  const { cameraId, departmentId } = useParams();
+  const [selectedMedia, setSelectedMedia] = useState([]);
+  const [isFinish, setIsFinish] = useState(false);
+  const ActionType = {
+    NONE: "none",
+    UPLOAD: "upload",
+    DELETE: "delete",
+    RENAME: "rename",
+  };
+  const [actionType, setActionType] = useState(ActionType.NONE); // State to track action type
+
+  // Function to handle media deletion
+  const handleMediaDelete = (deletedMediaKey) => {
+    setActionType(ActionType.DELETE);
+    // Other logic to delete media
+  };
+
+  // Function to handle media upload
+  const handleMediaUpload = () => {
+    setActionType(ActionType.UPLOAD);
+    // Other logic to upload media
+  };
+
+  // Function to handle media rename
+  const handleMediaRename = () => {
+    setActionType(ActionType.RENAME);
+    // Other logic to rename media
+  };
+
+  const handleMediaShare = () => {
+    setIsFinish(false);
+  };
+
+  const toggleSelectMedia = (media) => {
+    if (selectedMedia.length === 0) {
+      toast(
+        `After your selection is finished, please click on finish selection`,
+        {
+          duration: 3000,
+          position: "top-center",
+        }
+      );
+    }
+    setSelectedMedia((prevSelectedMedia) => {
+      if (prevSelectedMedia.some((item) => item.key === media.key)) {
+        // If the media is already selected, remove it
+        return prevSelectedMedia.filter((item) => item.key !== media.key);
+      } else {
+        // If the media is not selected, add it
+        return [...prevSelectedMedia, media];
+      }
+    });
+    setIsFinish(false);
+  };
+
+  const surgeonId = localStorage.getItem("id");
+  const token = localStorage.getItem("token");
+
   useEffect(() => {
-    async function fetchData() {
+    const fetchMedia = async () => {
       try {
-        const photosResponse = await fetch(
-          `${process.env.REACT_APP_API_URL}/api/bucket/device/getObjectFromBucket/${cameraId}`, {
+        const data = await fetch(
+          `${process.env.REACT_APP_API_URL}/api/bucket/device/getObjectFromBucket/${cameraId}`,
+          {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`
+              Authorization: `Bearer ${token}`, // Include the token in the Authorization header
             },
-          });
-        
+          }
+        );
 
-        if (!photosResponse.ok) {
+        if (!data.ok) {
           throw new Error("Network response was not ok");
         }
-
-        const photosData = await photosResponse.json();
-        console.log(photosData);
-
-        setDevicePhotos(photosData.photoUrls);
-        setDeviceVideos(photosData.videoUrls);
+        if (data.ok) {
+          const data1 = await data.json();
+          console.log(data1.objectUrls);
+          setMediaFiles(data1.objectUrls);
+        }
       } catch (error) {
-        console.error("Error fetching camera media:", error);
+        console.error("Error fetching media files:", error);
       }
-    }
+    };
 
-    fetchData();
-  }, [cameraId]);
-
-  
-const toggleSelectMedia = (media) => {
-  setInput(true);
-  alert(`selected or deselected ${selectedMedia.length}`);
-  setSelectedMedia(prevSelectedMedia => {
-    if (prevSelectedMedia.some(item => item.key === media.key)) {
-      // If the media is already selected, remove it
-      return prevSelectedMedia.filter(item => item.key !== media.key);
-    } else {
-      // If the media is not selected, add it
-      return [...prevSelectedMedia, media];
-    }
-  });
-};
-
-  // Function to handle sharing of media
-const handleShareMedia = async () => {
-  if (selectedMedia.length === 0 || !userId.trim()) {
-      toast.error("Please select media and enter user ID.");
-      return;
-  }
-  console.log(selectedMedia);
-  const link = selectedMedia.map(media => media.url);
- alert(link.length);
-  try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/patientcontent/createPatientContents`, {
-          method: 'POST',
-          headers: {
-              'Content-Type': 'application/json',
-              "Authorization": `Bearer ${token}`
-          },
-          body: JSON.stringify({
-              userId,
-              surgeonId,
-              link: link
-          }),
-      });
-
-      const responseData = await response.json();
-
-      if (!response.ok) {
-          throw new Error(responseData.message || 'Failed to assign media.');
-      }
-
-      toast.success(`Shared ${selectedMedia.length} media items to patient ${userId}`, {
-          duration: 2000,
-          position: "top-center",
-      });
-
-      console.log(`Assigned ${selectedMedia.length} media items to user ${userId}`);
-  } catch (error) {
-      console.log('Error sharing media:', error);
-     
-          toast.error(` ${error}`, {
-              duration: 2000,
-              position: "top-center",
-          });
-      
-  }
-};
+    fetchMedia();
+  }, [cameraId, actionType]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h2 className="text-2xl font-bold mb-4">Camera Media</h2>
-      {input && (<>
-        <div>
-          <label htmlFor="userId" className="block mb-2">
-            User ID:
-          </label>
-          <input
-            type="text"
-            id="userId"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            className="border border-gray-400 rounded px-3 py-1 mb-4"
-          />
-        </div>
-      
-      <button
-        className="bg-blue-500 text-white font-bold py-2 px-4 rounded mb-4"
-        onClick={() =>  handleShareMedia()}
-      >
-        Share Media
-      </button></>)}
-      <div className="grid grid-cols-3 gap-4">
-        {devicePhotos.map((photo) => (
-          <div key={photo.id} className="relative">
-            <img
-              src={photo.url}
-              alt="Photo"
-              className="object-cover w-full h-48"
-              onClick={() => toggleSelectMedia(photo)}
-            />
-            {selectedMedia.includes(photo) && <FaCheckCircle className="text-green-500 cursor-pointer" />}
-          </div>
-        ))}
-        {deviceVideos.map((video) => (
-          <div key={video.id} className="relative">
-            <video controls className="object-cover w-full h-48"  onClick={() => toggleSelectMedia(video)}>
-              <source src={video.url} type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-            {selectedMedia.includes(video) && (
-              <FaCheckCircle className="text-green-500 cursor-pointer absolute top-2 right-2" />
+    <div className="m-5">
+      <h1 className="text-2xl font-bold m-5 text-center">Media files</h1>
+      <div className=" grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="flex flex-col gap-6 ">
+          
+          <div className="w-full h-full bg-gray-300 rounded-lg shadow-md hover:bg-slate-400">
+            <button
+              onClick={() => setIsFinish(true)}
+              className="flex flex-col gap-2 items-center justify-center p-4 w-full h-full font-bold text-gray-800 focus:outline-none"
+            >
+              <span>Please select file </span>
+              <span className="">Share</span>
+              <FaShare className="mr-2" />
+            </button>
+            {isFinish && (
+              <ShareBucketFile
+                cameraId={cameraId}
+                departmentId={departmentId}
+                mediaFiles={selectedMedia}
+                isShare={isFinish}
+                onShare={handleMediaShare}
+              />
             )}
+          </div>
+        </div>
+        {/* Render media files */}
+        {mediaFiles.map((media) => (
+          <div
+            key={media.key}
+            className="relative bg-gray-200 text-xl w-full overflow-hidden overflow-wrap break-word h-full font-bold p-4 rounded-lg shadow-md hover:bg-slate-300 transition-transform transform hover:scale-105"
+          >
+            {media.key.endsWith(".mp4") || media.key.endsWith(".mov") ? (
+              <ReactPlayer
+                url={media.url}
+                // Thumbnail image
+                width="100%"
+                height="200px"
+                controls
+              />
+            ) : (
+              <img
+                src={media.url}
+                alt={media.key}
+                className="w-full h-48 object-cover rounded-md"
+              />
+            )}
+            <div className="mt-5">
+              <div className="flex gap-4 justify-center bg-transparent">
+               
+                <DownloadBucketFile
+                  media={media}
+                  surgeonId={surgeonId}
+                  token={token}
+                  cameraId={cameraId}
+                />
+                <div onClick={() => toggleSelectMedia(media)}>
+                  {selectedMedia.find(
+                    (selectedFile) => selectedFile.key === media.key
+                  ) ? (
+                    <FaCheckCircle className="text-green-500" />
+                  ) : (
+                    <FaCircle className="text-gray-500" />
+                  )}
+                </div>
+              </div>
+            </div>
           </div>
         ))}
       </div>

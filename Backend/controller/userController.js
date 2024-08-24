@@ -601,7 +601,16 @@ exports.getSurgeonsByHospitalId = async (req, res) => {
           'hospitals': {
               $elemMatch: { hospitalId: hospitalId }
           }
-      }).populate('departmentId');
+      }).populate({
+        path: 'hospitals.hospitalId', // Populate hospitalId within the hospitals array
+        select: 'Hospital_Name', // Adjust field names as per your schema
+        model: 'Hospital'
+    })
+    .populate({
+        path: 'hospitals.departmentId', // Populate departmentId within the hospitals array
+        select: 'department_name', // Adjust field names as per your schema
+        model: 'Department'
+    });
 
       // If there are no surgeons found, return 404 status
       if (!surgeons || surgeons.length === 0) {

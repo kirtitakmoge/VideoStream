@@ -87,21 +87,21 @@ if(response.ok){
     localStorage.setItem("isLoggedIn", true);
     console.log(userData);
     dispatch(setUser(userData.user)); 
-    // navigate("/generalDashboard");
-    if (userData.user.role === "Super Admin") navigate(`/superAdminDashboard`);
-    else if (userData.user.role === "Patient") navigate("/patient");
-    else if (userData.user.role === "Hospital Admin" && userData.user.active === true)
-      navigate(`/hospitalAdmin`);
-    else if (
-      userData.user.role === "Surgeon" &&
-      (userData.user.bucketActive === true || userData.user.cameraActive === true)
-    ) {
-      navigate(`/surgeonDashboard/${userData.user.departmentId}`);
-    } else if (userType === "Patient") {
-      navigate("/patient");
-    } else {
-      navigate(`/notactive/${userData.user.firstname}`);
-    }
+    navigate("/generalDashboard");
+    // if (userData.user.role === "Super Admin") navigate(`/superAdminDashboard`);
+    // else if (userData.user.role === "Patient") navigate("/patient");
+    // else if (userData.user.role === "Hospital Admin" && userData.user.active === true)
+    //   navigate(`/hospitalAdmin`);
+    // else if (
+    //   userData.user.role === "Surgeon" &&
+    //   (userData.user.bucketActive === true || userData.user.cameraActive === true)
+    // ) {
+    //   navigate(`/surgeonDashboard/${userData.user.departmentId}`);
+    // } else if (userType === "Patient") {
+    //   navigate("/patient");
+    // } else {
+    //   navigate(`/notactive/${userData.user.firstname}`);
+    // }
   };
 
   return (

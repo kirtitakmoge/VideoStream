@@ -38,7 +38,7 @@ const{departmentId}=useParams();
       navigate(`/device/${camera._id}/${departmentId}`)
     else
 
-    navigate(`/surgeonbucket/${camera._id}`);
+    navigate(`/surgeonbucket/${camera._id}/${departmentId}`);
     
 
   };

@@ -158,6 +158,7 @@ const getAllPatientsByDepartmentId = async (req, res, next) => {
 };
 const getAllPatientsByHospitalId = async (req, res) => {
     const { hospitalId } = req.params;
+    console.log(hospitalId);
   
     try {
         const patients = await Patient.find({ hospitalId }).populate("patientcontentId");
@@ -165,7 +166,7 @@ const getAllPatientsByHospitalId = async (req, res) => {
         if (!patients || patients.length === 0) {
             return res.status(404).json({ message: "No patients found for the given hospital ID" });
         }
-
+        console.log(patients);
         res.status(200).json(patients);
     } catch (error) {
         console.error("Error fetching patients:", error);
